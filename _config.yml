@@ -2,5 +2,5 @@ remote_theme: pages-themes/tactile@v0.2.0
 plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
 
-title: [Viktor Vidman's site - A Developer’s Learning Journal]
-description: [Welcome to my blog, where I document my journey through the ever-evolving world of programming. Here, I share newly learned concepts, interesting challenges, and insights from my experiences with different technologies. Whether it’s a deep dive into a new framework, debugging adventures, or just cool coding tricks, this space is dedicated to continuous learning and growth. Join me as I explore, experiment, and improve—one line of code at a time!]
+title: Viktor Vidman's site - A Developer’s Learning Journal
+description: [A documented journey through the ever-evolving world of programming.]
