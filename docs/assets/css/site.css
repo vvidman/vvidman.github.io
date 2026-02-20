@@ -79,3 +79,21 @@ nav a:hover {
 .content li {
   margin-bottom: 0.4rem;
 }
+
+.lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.lang-col h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+@media (max-width: 800px) {
+  .lang-grid {
+    grid-template-columns: 1fr;
+  }
+}
