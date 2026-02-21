@@ -1,11 +1,23 @@
 ﻿using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
 using Markdig;
+using VVidman.BlogBuild.Models;
 
-var inputPath = "../content/about/about.md";
-var templatePath = "templates/page.html";
-var outputPath = "../docs/about/index.html";
+// crafting the configuration builder
+var config = new ConfigurationBuilder()
+    .AddJsonFile(
+        Path.Combine(
+            Directory.GetParent(AppContext.BaseDirectory)!.FullName,
+            "appsettings.json"),
+        optional: false)
+    .Build();
 
-var source = File.ReadAllText(inputPath);
+// parsing the configuration
+var buildConfig = config.Get<BuildConfig>()
+    ?? throw new InvalidOperationException("Failed to bind configuration");
+
+
+var source = File.ReadAllText(buildConfig.Paths.Input);
 
 // --- Front matter ---
 var frontMatterMatch = Regex.Match(
@@ -58,7 +70,7 @@ var combinedContent = $@"
 ";
 
 // --- Apply template ---
-var template = File.ReadAllText(templatePath);
+var template = File.ReadAllText(buildConfig.Paths.Templates);
 
 var finalHtml = template
     .Replace("{{title}}", title)
@@ -66,7 +78,7 @@ var finalHtml = template
     .Replace("{{content}}", combinedContent);
 
 // --- Write output ---
-Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
-File.WriteAllText(outputPath, finalHtml);
+Directory.CreateDirectory(Path.GetDirectoryName(buildConfig.Paths.Output)!);
+File.WriteAllText(buildConfig.Paths.Output, finalHtml);
 
 Console.WriteLine("✔ About page generated.");
