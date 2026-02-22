@@ -110,3 +110,29 @@ nav a:hover {
   font-weight: bold;
   text-decoration: underline;
 }
+
+.btn-icon-en {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url('/assets/images/icon-en.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-icon-hu {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url('/assets/images/icon-hu.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
