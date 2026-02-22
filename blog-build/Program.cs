@@ -1,84 +1,72 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.Extensions.Configuration;
-using Markdig;
+﻿using Microsoft.Extensions.Configuration;
 using VVidman.BlogBuild.Models;
+using VVidman.BlogBuild.Renderers;
 
-// crafting the configuration builder
-var config = new ConfigurationBuilder()
-    .AddJsonFile(
-        Path.Combine(
-            Directory.GetParent(AppContext.BaseDirectory)!.FullName,
-            "appsettings.json"),
-        optional: false)
-    .Build();
+namespace VVidman.BlogBuild;
 
-// parsing the configuration
-var buildConfig = config.Get<BuildConfig>()
-    ?? throw new InvalidOperationException("Failed to bind configuration");
-
-
-var source = File.ReadAllText(buildConfig.Paths.Input);
-
-// --- Front matter ---
-var frontMatterMatch = Regex.Match(
-    source,
-    @"^---\s*(.*?)\s*---\s*(.*)$",
-    RegexOptions.Singleline);
-
-var frontMatter = frontMatterMatch.Groups[1].Value;
-var body = frontMatterMatch.Groups[2].Value;
-
-string GetMeta(string key) =>
-    Regex.Match(frontMatter, $@"{key}:\s*(.+)").Groups[1].Value.Trim();
-
-var title = GetMeta("title");
-
-// --- Language blocks ---
-string ExtractLang(string markdown, string lang)
+public class Program
 {
-    var match = Regex.Match(
-        markdown,
-        $@":::lang {lang}\s*(.*?)\s*:::",
-        RegexOptions.Singleline);
+    private static BuildConfig s_Config;
 
-    return match.Success ? match.Groups[1].Value : "";
+    public static void Main(string[] args)
+    {
+        #region First we read the config
+
+        // crafting the configuration builder
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
+
+        s_Config = config.Get<BuildConfig>()
+                    ?? throw new InvalidOperationException("Failed to bind configuration");
+        #endregion
+
+        // Process markdowns, starting from the input root folder
+        ScanDirectory(s_Config.Paths.Input);
+
+        Console.WriteLine("Processing completed");
+    }
+
+    /// <summary>
+    /// Iterate through the folders and search for markdowns
+    /// </summary>
+    /// <param name="currentPath">Top level folder</param>
+    private static void ScanDirectory(string currentPath)
+    {
+        // search for markdowns on the same level
+        foreach (var file in Directory.EnumerateFiles(currentPath, "*.md"))
+        {
+            ProcessMarkdownFile(file);
+        }
+
+        // iterate the sub-level folders
+        foreach (var dir in Directory.EnumerateDirectories(currentPath))
+        {
+            ScanDirectory(dir);
+        }
+    }
+
+    private static void ProcessMarkdownFile(string filePath)
+    {
+        // ---- load template ----
+        var templatePath = Path.Combine(s_Config.Paths.Templates, $"{s_Config.Defaults.Layout}.html");
+        var templateHtml = File.ReadAllText(templatePath);
+
+        // ---- parse markdown ----        
+        var page = MarkdownDslParser.Parse(filePath);
+
+        // ---- render ----
+        var html = PageRenderer.Render(page, templateHtml, s_Config.Defaults.Languages);        
+
+        // ---- write output ----
+        string mdPath = Path.GetDirectoryName(filePath);
+        string relativePath = Path.GetRelativePath(s_Config.Paths.Input, mdPath);  
+        var outputDir = Path.Combine(s_Config.Paths.Output, relativePath);
+        
+        Directory.CreateDirectory(outputDir);
+
+        File.WriteAllText(Path.Combine(outputDir, "index.html"), html);             
+
+        Console.WriteLine($"Markdown processed: {filePath}");
+    }    
 }
-
-var enMd = ExtractLang(body, "en");
-var huMd = ExtractLang(body, "hu");
-
-// --- Markdown to HTML ---
-var pipeline = new MarkdownPipelineBuilder()
-    .UseAdvancedExtensions()
-    .Build();
-
-var enHtml = Markdown.ToHtml(enMd, pipeline);
-var huHtml = Markdown.ToHtml(huMd, pipeline);
-
-// --- Two-column layout ---
-var combinedContent = $@"
-<div class=""lang-grid"">
-  <div class=""lang-col"">
-    <h2>English</h2>
-    {enHtml}
-  </div>
-  <div class=""lang-col"">
-    <h2>Magyar</h2>
-    {huHtml}
-  </div>
-</div>
-";
-
-// --- Apply template ---
-var template = File.ReadAllText(buildConfig.Paths.Templates);
-
-var finalHtml = template
-    .Replace("{{title}}", title)
-    .Replace("{{lang}}", "en")
-    .Replace("{{content}}", combinedContent);
-
-// --- Write output ---
-Directory.CreateDirectory(Path.GetDirectoryName(buildConfig.Paths.Output)!);
-File.WriteAllText(buildConfig.Paths.Output, finalHtml);
-
-Console.WriteLine("✔ About page generated.");

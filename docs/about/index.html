@@ -9,6 +9,10 @@
 <body>
   <header class="site-header">
     <h1>About</h1>
+    <div class="lang-switch">
+      <button onclick="setLang('en')" id="btn-en">EN</button>
+      <button onclick="setLang('hu')" id="btn-hu">HU</button>
+    </div>
     <nav>
       <a href="/">Home</a>
       <a href="/about/">About</a>
@@ -17,29 +21,84 @@
   </header>
 
   <main class="content">
-    
-<div class="lang-grid">
-  <div class="lang-col">
-    <h2>English</h2>
-    <h2 id="who-i-am">Who I am</h2>
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="whoiam">
+  <h2 id="who-i-am">Who I am</h2>
 <p>I am a backend-focused software engineer working with <strong>C# and .NET</strong>.</p>
 <p>I enjoy working with systems that already exist and need to evolve safely.</p>
 
-  </div>
-  <div class="lang-col">
-    <h2>Magyar</h2>
-    <h2 id="ki-vagyok">Ki vagyok</h2>
+</section>
+<section class="page-section" data-key="focus">
+  <h2 id="what-i-focus-on">What I focus on</h2>
+<ul>
+<li>Designing maintainable backend architectures</li>
+<li>Refactoring and stabilizing legacy systems</li>
+<li>Pragmatic data access patterns beyond CRUD</li>
+<li>Containerized development and deployment workflows</li>
+</ul>
+
+</section>
+<section class="page-section" data-key="thinking">
+  <h2 id="how-i-think-about-software">How I think about software</h2>
+<p>I believe good software is shaped by constraints: existing users, existing data, and existing code.
+Most real-world systems are not greenfield, and design decisions must respect reality.</p>
+
+</section>
+<section class="page-section" data-key="about">
+  <h2 id="about-this-blog">About this blog</h2>
+<p>This blog is a collection of practical notes, architectural decisions, and real-world examples from backend development. The goal is clarity, not hype.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="whoiam">
+  <h2 id="ki-vagyok">Ki vagyok</h2>
 <p>Backend fókuszú szoftverfejlesztő vagyok, főként <strong>C# és .NET</strong> környezetben.</p>
 <p>Szeretem azokat a rendszereket, amelyek már élesben futnak,
 és óvatosan kell őket továbbfejleszteni.</p>
 
-  </div>
-</div>
+</section>
+<section class="page-section" data-key="focus">
+  <h2 id="mire-figyelek">Mire figyelek</h2>
+<ul>
+<li>Továbbfejleszthető backend architektúrákat tervezek</li>
+<li>Öröklött rendszereket tervezek át és fejlesztem őket tovább</li>
+<li>Pragmatikus adathozzáférési minták a CRUD-on túl</li>
+<li>Konténerizált fejlesztési és telepítési munkafolyamatok</li>
+</ul>
 
+</section>
+<section class="page-section" data-key="thinking">
+  <h2 id="hogyan-gondolkodom-a-szoftverekrol">Hogyan gondolkodom a szoftverekről</h2>
+<p>Úgy hiszem, hogy a jó szoftvert a korlátok alakítják: a meglévő felhasználók, a meglévő adatok és a meglévő kód.
+A legtöbb valós rendszer nem zöldmezős, és a tervezési döntéseknek tiszteletben kell tartaniuk a valóságot.</p>
+
+</section>
+<section class="page-section" data-key="about">
+  <h2 id="a-blogrol">A blogról</h2>
+<p>Ez a blog gyakorlati megjegyzések, architektúrális döntések és valós példák gyűjteménye a háttérfejlesztésből. A cél az érthetőség, nem a divat.</p>
+
+</section>
+
+    </div>
   </main>
 
   <footer class="site-footer">
     <p>© 2026 Viktor Vidman</p>
   </footer>
+
+  <script>
+    function setLang(lang) {
+      document.querySelectorAll('.lang-content').forEach(el => el.style.display = 'none');
+      document.getElementById('content-' + lang).style.display = 'block';
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-hu').classList.toggle('active', lang === 'hu');
+      localStorage.setItem('lang', lang);
+    }
+
+    const saved = localStorage.getItem('lang') || 'en';
+    setLang(saved);
+  </script>
 </body>
 </html>

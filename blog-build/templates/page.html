@@ -9,6 +9,10 @@
 <body>
   <header class="site-header">
     <h1>{{title}}</h1>
+    <div class="lang-switch">
+      <button onclick="setLang('en')" id="btn-en">EN</button>
+      <button onclick="setLang('hu')" id="btn-hu">HU</button>
+    </div>
     <nav>
       <a href="/">Home</a>
       <a href="/about/">About</a>
@@ -17,11 +21,29 @@
   </header>
 
   <main class="content">
-    {{content}}
+    <div class="lang-content" id="content-en">
+      {{content_en}}
+    </div>
+    <div class="lang-content" id="content-hu">
+      {{content_hu}}
+    </div>
   </main>
 
   <footer class="site-footer">
     <p>© 2026 Viktor Vidman</p>
   </footer>
+
+  <script>
+    function setLang(lang) {
+      document.querySelectorAll('.lang-content').forEach(el => el.style.display = 'none');
+      document.getElementById('content-' + lang).style.display = 'block';
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-hu').classList.toggle('active', lang === 'hu');
+      localStorage.setItem('lang', lang);
+    }
+
+    const saved = localStorage.getItem('lang') || '{{lang}}';
+    setLang(saved);
+  </script>
 </body>
 </html>

@@ -97,3 +97,16 @@ nav a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+.lang-content {
+  display: none;
+}
+
+.lang-content:first-of-type {
+  display: block;
+}
+
+.lang-switch button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
