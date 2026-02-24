@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Viktor Vidman – Software Engineer</title>
+  <title>Software Engineer - Viktor Vidman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/css/site.css" />
 </head>
 <body>
   <header class="site-header">
     <h1>Viktor Vidman</h1>
+    <div class="lang-switch">
+      <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+      <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+    </div>
     <p class="tagline">Backend Software Engineer · C# · .NET</p>
-
     <nav>
       <a href="/">Home</a>
       <a href="/about/">About</a>
@@ -19,24 +22,44 @@
   </header>
 
   <main class="content">
-    <section>
-      <h2>Welcome</h2>
-      <p>
-        I write about backend architecture, legacy refactoring,
-        data access patterns, and pragmatic software design.
-      </p>
-    </section>
-
-    <section>
-      <h2>Recent posts</h2>
-      <ul class="post-list">
-        <!--li>
-          <a href="/posts/first-post.html">
-            Refactoring Legacy .NET Code – Where to Start
-          </a>
-        </li-->
-      </ul>
-    </section>
+    <div class="lang-content" id="content-en">
+      <section>
+        <h2>Welcome</h2>
+        <p>
+          I write about backend architecture, legacy refactoring,
+          data access patterns, and pragmatic software design.
+        </p>
+      </section>
+      <section>
+        <h2>Recent posts</h2>
+        <ul class="post-list">
+          <!--li>
+            <a href="/posts/first-post.html">
+              Refactoring Legacy .NET Code – Where to Start
+            </a>
+          </li-->
+        </ul>
+      </section>
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section>
+        <h2>Üdvözlöm</h2>
+        <p>
+          A backend architektúráról, az örökölt kód refaktorálásról, 
+          az adathozzáférési mintákról és a pragmatikus szoftvertervezésről írok.
+        </p>
+      </section>      
+      <section>
+        <h2>Legutóbbi bejegyzések</h2>
+        <ul class="post-list">
+          <!--li>
+            <a href="/posts/first-post.html">
+              Refactoring Legacy .NET Code – Where to Start
+            </a>
+          </li-->
+        </ul>
+      </section>      
+    </div>
   </main>
 
   <footer class="site-footer">

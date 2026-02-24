@@ -5,13 +5,14 @@
   <title>{{title}} – Viktor Vidman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
 </head>
 <body>
   <header class="site-header">
     <h1>{{title}}</h1>
     <div class="lang-switch">
-      <button class="btn-icon-en" onclick="setLang('en')" id="btn-en">EN</button>
-      <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu">HU</button>
+      <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+      <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
     </div>
     <nav>
       <a href="/">Home</a>
@@ -32,18 +33,5 @@
   <footer class="site-footer">
     <p>© 2026 Viktor Vidman</p>
   </footer>
-
-  <script>
-    function setLang(lang) {
-      document.querySelectorAll('.lang-content').forEach(el => el.style.display = 'none');
-      document.getElementById('content-' + lang).style.display = 'block';
-      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-      document.getElementById('btn-hu').classList.toggle('active', lang === 'hu');
-      localStorage.setItem('lang', lang);
-    }
-
-    const saved = localStorage.getItem('lang') || '{{lang}}';
-    setLang(saved);
-  </script>
 </body>
 </html>
