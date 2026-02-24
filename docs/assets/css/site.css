@@ -139,6 +139,7 @@ nav a:hover {
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  margin-right: 6px;
 }
 
 .btn-icon-hu {
@@ -152,4 +153,5 @@ nav a:hover {
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  margin-right: 6px;
 }
