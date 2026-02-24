@@ -1,6 +1,6 @@
 ---
 title: About
-slug: about
+slug: index
 layout: page
 ---
 :::section whoiam

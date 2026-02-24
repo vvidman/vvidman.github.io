@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{lang}}">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>{{title}} – Viktor Vidman</title>
+  <title>Curriculum Vitae – Viktor Vidman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/css/site.css" />
   <script src="/assets/javascript/site.js" defer></script>
@@ -11,7 +11,7 @@
 </head>
 <body>
   <header class="site-header">
-    <h1>{{title}}</h1>
+    <h1>Curriculum Vitae</h1>
     <div class="indented">
       <div class="lang-switch">
         <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
@@ -27,10 +27,30 @@
 
   <main class="content">
     <div class="lang-content" id="content-en">
-      {{content_en}}
+      <section class="page-section" data-key="intro">
+  <h3 id="post-intro">Post intro</h3>
+<p>On the next page I will summarize my professional background in headlines only. You can find out more on my LinkedIn profile.</p>
+
+</section>
+<section class="page-section" data-key="linkedin">
+  <h3 id="linkedin">LinkedIn</h3>
+<p>My profile is available here: <a href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">https://www.linkedin.com/in/viktor-vidman-55a2a197/</a></p>
+
+</section>
+
     </div>
     <div class="lang-content" id="content-hu">
-      {{content_hu}}
+      <section class="page-section" data-key="intro">
+  <h3 id="poszt-bevezetes">Poszt bevezetés</h3>
+<p>A következő oldalon csak címszavakban fogom összefoglalni az eddigi szakmai hátteremet. Bővebben a linkedin profilomon tudsz tájékozódni.</p>
+
+</section>
+<section class="page-section" data-key="linkedin">
+  <h3 id="linkedin">LinkedIn</h3>
+<p>Itt érhető el a profilom: <a href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">https://www.linkedin.com/in/viktor-vidman-55a2a197/</a></p>
+
+</section>
+
     </div>
   </main>
 

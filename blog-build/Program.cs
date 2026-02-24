@@ -65,7 +65,7 @@ public class Program
         
         Directory.CreateDirectory(outputDir);
 
-        File.WriteAllText(Path.Combine(outputDir, "index.html"), html);             
+        File.WriteAllText(Path.Combine(outputDir, $"{page.Metadata.Slug}.html"), html);             
 
         Console.WriteLine($"Markdown processed: {filePath}");
     }    

@@ -6,19 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/css/site.css" />
   <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 </head>
 <body>
   <header class="site-header">
     <h1>About</h1>
-    <div class="lang-switch">
-      <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
-      <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+    <div class="indented">
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>
     </div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/about/">About</a>
-      <a href="/posts/">Blog</a>
-    </nav>
   </header>
 
   <main class="content">
@@ -86,7 +90,9 @@ A legtöbb valós rendszer nem zöldmezős, és a tervezési döntéseknek tiszt
   </main>
 
   <footer class="site-footer">
-    <p>© 2026 Viktor Vidman</p>
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
   </footer>
 </body>
 </html>
