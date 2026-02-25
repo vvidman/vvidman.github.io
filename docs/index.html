@@ -10,18 +10,23 @@
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 </head>
 <body>
+
   <header class="site-header">
-    <h1>Viktor Vidman - Backend Software Engineer · C# · .NET</h1>
+    <div class="page-header">
+      <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>      
+      <h1>Viktor Vidman</h1>
+      <p>Backend Engineer · C# · .NET</p>
+    </div>
     <div class="indented">
-      <div class="lang-switch">
-        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English"/>
-        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
-      </div>
       <nav>
         <a href="/">Home</a>
         <a href="/about/">About</a>
         <a href="/posts/">Blog</a>
       </nav>
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English"></button>
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra"></button>
+      </div>      
     </div>
   </header>
 
@@ -38,31 +43,28 @@
         <h2>Recent posts</h2>
         <ul class="post-list">
           <li>
-            <a href="/posts/post-01.html">
-              Professional experience
-            </a>
+            <a href="/posts/post-01.html">Professional experience</a>
           </li>
         </ul>
       </section>
     </div>
+
     <div class="lang-content" id="content-hu">
       <section>
         <h2>Üdvözlöm</h2>
         <p>
-          A backend architektúráról, az örökölt kód refaktorálásról, 
+          A backend architektúráról, az örökölt kód refaktorálásról,
           az adathozzáférési mintákról és a pragmatikus szoftvertervezésről írok.
         </p>
-      </section>      
+      </section>
       <section>
         <h2>Legutóbbi bejegyzések</h2>
         <ul class="post-list">
           <li>
-            <a href="/posts/post-01.html">
-              Szakmai tapasztalat
-            </a>
+            <a href="/posts/post-01.html">Szakmai tapasztalat</a>
           </li>
         </ul>
-      </section>      
+      </section>
     </div>
   </main>
 
@@ -71,5 +73,6 @@
       <p>© 2026 Viktor Vidman</p>
     </div>
   </footer>
+
 </body>
 </html>

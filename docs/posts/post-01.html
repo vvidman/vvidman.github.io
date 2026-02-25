@@ -10,18 +10,22 @@
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 </head>
 <body>
+
   <header class="site-header">
-    <h1>Curriculum Vitae</h1>
+    <div class="page-header">
+      <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>    
+      <h1>Curriculum Vitae</h1>
+    </div>
     <div class="indented">
-      <div class="lang-switch">
-        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
-        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
-      </div>
       <nav>
         <a href="/">Home</a>
         <a href="/about/">About</a>
         <a href="/posts/">Blog</a>
-      </nav>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
     </div>
   </header>
 
@@ -59,5 +63,6 @@
       <p>© 2026 Viktor Vidman</p>
     </div>
   </footer>
+  
 </body>
 </html>
