@@ -236,6 +236,7 @@ nav a + a::before {
   }
 
   .content {
+    margin: 0;
     padding: 1.5rem 1rem;
   }
 
