@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Text;
 using VVidman.BlogBuild.Models;
 
@@ -62,7 +63,7 @@ public static class MarkdownDslParser
 
         index++; // skip '---'
 
-        string title = "", slug = "", layout = "";
+        string title = "", slug = "", layout = "", description = "";
 
         while (index < lines.Length && lines[index].Trim() != "---")
         {
@@ -85,6 +86,8 @@ public static class MarkdownDslParser
                 slug = value;
             else if (key == "layout")
                 layout = value;
+            else if (key == "description")
+                description = value;
             else 
                 throw new InvalidOperationException($"Unknown metadata key: {key}");
         }
@@ -93,7 +96,7 @@ public static class MarkdownDslParser
             throw new InvalidOperationException("Missing front-matter end '---'");
 
         index++; // skip closing '---'
-        return new() { Title = title, Layout = "", Slug = slug };
+        return new() { Title = title, Layout = layout, Description = description, Slug = slug };
     }
 
     // ============================

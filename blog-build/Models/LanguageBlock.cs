@@ -8,9 +8,4 @@ public sealed class LanguageBlock
     /// Raw markdown content inside the lang block
     /// </summary>
     public string Markdown { get; init; } = string.Empty;
-
-    /// <summary>
-    /// Generated HTML (filled during render phase)
-    /// </summary>
-    public string? Html { get; set; }
 }

@@ -30,6 +30,8 @@ public static class PageRenderer
         return templateHtml
             .Replace("{{title}}", document.Metadata.Title)
             .Replace("{{lang}}", defaultLang)
+            .Replace("{{slug}}", document.Metadata.Slug)
+            .Replace("{{description}}", document.Metadata.Description)
             .Replace("{{content_en}}", renderedByLang.GetValueOrDefault("en", ""))
             .Replace("{{content_hu}}", renderedByLang.GetValueOrDefault("hu", ""));
     }

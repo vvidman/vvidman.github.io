@@ -59,14 +59,10 @@ public class Program
         var html = PageRenderer.Render(page, templateHtml, s_Config.Defaults.Languages);        
 
         // ---- write output ----
-        string mdPath = Path.GetDirectoryName(filePath);
-        string relativePath = Path.GetRelativePath(s_Config.Paths.Input, mdPath);  
-        var outputDir = Path.Combine(s_Config.Paths.Output, relativePath);
+        var pagePath = Path.Combine(s_Config.Paths.Output, page.Metadata.Slug);
+        Directory.CreateDirectory(Path.GetDirectoryName(pagePath));
+        File.WriteAllText(pagePath, html);             
         
-        Directory.CreateDirectory(outputDir);
-
-        File.WriteAllText(Path.Combine(outputDir, $"{page.Metadata.Slug}.html"), html);             
-
         Console.WriteLine($"Markdown processed: {filePath}");
     }    
 }

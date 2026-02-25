@@ -1,7 +1,8 @@
 ---
 title: About
-slug: index
+slug: about/index.html
 layout: page
+description: Backend engineer with experience in C# and .NET, and many more.
 ---
 :::section whoiam
 :::lang en

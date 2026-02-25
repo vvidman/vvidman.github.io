@@ -1,18 +1,21 @@
 param(
-    [int]$Port = 8080
+    [int]$Port = 8080,
+    [switch]$Build 
 )
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "🔨 Building blog..."
-dotnet run --project .\blog-build\blog-build.csproj
+if($Build) {
+    Write-Host "🔨 Building blog..."
+    dotnet run --project .\blog-build\blog-build.csproj
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Build failed."
-    exit 1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Build failed."
+        exit 1
+    }
+
+    Write-Host "📦 Build completed."
 }
-
-Write-Host "📦 Build completed."
 
 $docsPath = Join-Path $PSScriptRoot "docs"
 

@@ -1,7 +1,8 @@
 ---
 title: Curriculum Vitae
-slug: post-01
+slug: posts/post-01.html
 layout: page
+description: Professional references.
 ---
 
 :::section intro
