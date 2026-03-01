@@ -4,6 +4,16 @@ slug: about/index.html
 layout: page
 description: Backend engineer with experience in C# and .NET, and many more.
 ---
+
+:::section me
+:::lang en
+![Viktor Vidman](/assets/images/vv-profile.png){width=380}
+:::lang
+:::lang hu
+![Vidman Viktor](/assets/images/vv-profile.png){width=380}
+:::lang
+:::section
+
 :::section whoiam
 :::lang en
 ## Who I am
