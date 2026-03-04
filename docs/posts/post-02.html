@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - Why I built my own static site generator — not because the others are bad</title>
+
+  <meta name="description" content="Why I built my own static site generator — not because the others are bad">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/post-02.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/post-02.html">
+  <meta property="og:title" content="Viktor Vidman - Why I built my own static site generator — not because the others are bad">
+  <meta property="og:description" content="Why I built my own static site generator — not because the others are bad">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>Why I built my own static site generator — not because the others are bad</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="title">
+  <h3 id="why-i-built-my-own-static-site-generator-not-because-the-others-are-bad">Why I built my own static site generator — not because the others are bad</h3>
+<h4 id="i-never-had-a-problem-with-jekyll.i-never-tried-it.that-was-intentional">I never had a problem with Jekyll. I never tried it. That was intentional.</h4>
+
+</section>
+<section class="page-section" data-key="intro">
+  <p>Most articles like this start with: &quot;I tried X and hated it.&quot; This isn't that article.</p>
+<p>When I started building this blog, I never got to the question of which generator to choose. The first question I asked myself was different: <em>what is this, exactly?</em></p>
+<p>A blog. Static HTML pages. Bilingual content. Hosted on GitHub Pages. From a software engineering perspective, this is a transformation pipeline: structured text goes in, HTML comes out. That's a programming problem — not a content management problem.</p>
+<p>If you look at it that way, the question isn't <em>which generator to pick</em>. The question is: <em>why would you delegate that decision</em> to a general-purpose tool that knows nothing about your specific constraints?</p>
+
+</section>
+<section class="page-section" data-key="details">
+  <p><strong>The actual constraints</strong></p>
+<p>In my case, the main constraint was bilingual content — but not in the way most tools handle it. I didn't want two separate Markdown files for the same article. No translation keys, no locale mappings, no duplicated directory trees. I wanted one file per article, from which the generator knows what's Hungarian and what's English.</p>
+<p>That's not a standard feature in any general-purpose generator. You can solve it with plugins and template hacks — but then your solution is built on top of someone else's conventions. When that tool changes, your content suffers.</p>
+<p><strong>The simpler path is the custom tool</strong></p>
+<p>This sounds counterintuitive, but it's true: a custom tool is simpler in the long run when your problem is small and well-defined. Mine was:</p>
+<ul>
+<li>Read Markdown input</li>
+<li>Use a DSL to mark structure (sections, languages)</li>
+<li>Render HTML from a template</li>
+<li>Write output to <code>docs/</code>, served directly by GitHub Pages</li>
+</ul>
+<p>That's it. No plugin system, no theme engine, no configuration mysticism. I wrote it in C# because that's the tool I know best — and because if someone wants to understand how I think, the code I write shows them.</p>
+<p><strong>This isn't a manifesto against Jekyll</strong></p>
+<p>This isn't a &quot;build your own, it's better&quot; manifesto. If someone wants to start a simple blog tomorrow, recommend them Hugo. Fast, well-documented, great community.</p>
+<p>But when you have specific constraints and know exactly what you want — a custom tool isn't a hobby project. It's an engineering decision.</p>
+<p>In the next part, I'll show the DSL I designed and why it ended up looking the way it does.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="title">
+  <h3 id="miert-irtam-sajat-statikus-oldalgeneratort-nem-azert-mert-a-tobbi-rossz">Miért írtam saját statikus oldalgenerátort? (Nem azért, mert a többi rossz.)</h3>
+<h4 id="nem-volt-bajom-a-jekyll-lel.soha-nem-is-probaltam.szandekos-dontes-volt">Nem volt bajom a Jekyll-lel. Soha nem is próbáltam. Szándékos döntés volt.</h4>
+
+</section>
+<section class="page-section" data-key="intro">
+  <p>A legtöbb ilyen cikk úgy kezdődik: „Kipróbáltam X-et, és utáltam.&quot; Ez nem olyan cikk.</p>
+<p>Amikor elkezdtem ezt a blogot felépíteni, el sem jutottam odáig, hogy melyik generátort válasszam. Az első kérdés, amit feltettem magamnak, más volt: <em>mi ez valójában?</em></p>
+<p>Egy blog, statikus HTML oldalakból, kétnyelvű tartalommal, GitHub Pages-en. Szoftvermérnöki szempontból ez egy transzformációs pipeline: strukturált szöveg bemegy, HTML kijön. Ez egy programozási feladat – nem egy tartalomkezelési probléma.</p>
+<p>Ha így nézel rá, a kérdés nem az, hogy <em>melyik generátort</em> válaszd. A kérdés az, hogy <em>miért delegálnád ezt a döntést</em> egy általános célú eszközre, amelynek fogalma sincs a te korlátaidról?</p>
+
+</section>
+<section class="page-section" data-key="details">
+  <p><strong>A konkrét korlátok</strong></p>
+<p>Az én esetemben a legfontosabb megkötés a kétnyelvűség volt – de nem úgy, ahogy a legtöbb eszköz kezeli. Nem akarok két külön Markdown fájlt ugyanahhoz a tartalomhoz. Nem akarok fordítási kulcsokat, locale-mappingeket, duplikált könyvtárstruktúrát. Azt akarom, hogy egy cikk egy fájl legyen, amelyből a generátor tudja, mi a magyar és mi az angol rész.</p>
+<p>Ez egyetlen általános generátorban sem alapfunkció. Pluginnel, template-hackkel meg lehet oldani – de ekkor már egy más rendszer konvencióira épül a megoldásod, és ha az a rendszer változik, a te tartalmad szenved.</p>
+<p><strong>Az egyszerűbb út a saját megoldás</strong></p>
+<p>Ez furán hangzik, de igaz: a saját eszköz hosszú távon egyszerűbb, ha a problémád pici és jól definiált. Az enyém az volt:</p>
+<ul>
+<li>Markdown bemenetet olvasok</li>
+<li>DSL-lel jelölöm a struktúrát (szekciók, nyelvek)</li>
+<li>HTML-t generálok egy template alapján</li>
+<li>A kimenet a <code>docs/</code> mappába kerül, amit a GitHub Pages közvetlenül kiszolgál</li>
+</ul>
+<p>Ennyi. Nincs plugin-rendszer, nincs témarendszer, nincs konfigurációs misztikum. C#-ban írtam, mert az az eszköz, amelyet a legjobban ismerek – és mert ha egy fejlesztőt az érdekel, hogy hogyan gondolkodom, akkor az általam írt kód megmutatja.</p>
+<p><strong>Nem versenyezni akarok a Jekyll-lel</strong></p>
+<p>Ez nem egy &quot;csináld magad, mert jobb&quot; kiáltvány. Ha holnap valaki egy egyszerű blogot akar indítani, ajánlom neki a Hugo-t. Gyors, jól dokumentált, nagy közösség áll mögötte.</p>
+<p>De ha valakinek specifikus korlátai vannak, és tudja pontosan, mit akar – a saját eszköz nem hobby-projekt. Ez mérnöki döntés.</p>
+<p>A következő részben megmutatom, hogyan néz ki a DSL, amit terveztem, és miért pont ilyen lett.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>
