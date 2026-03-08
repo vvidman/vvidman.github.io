@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - Designing a minimal DSL for bilingual Markdown content</title>
+
+  <meta name="description" content="One file. Two languages. No duplication. Here's the syntax that makes it work.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/post-03.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/post-03.html">
+  <meta property="og:title" content="Viktor Vidman - Designing a minimal DSL for bilingual Markdown content">
+  <meta property="og:description" content="One file. Two languages. No duplication. Here's the syntax that makes it work.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>Designing a minimal DSL for bilingual Markdown content</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="title">
+  <h3 id="designing-a-minimal-dsl-for-bilingual-markdown-content">Designing a minimal DSL for bilingual Markdown content</h3>
+<h4 id="one-file.two-languages.no-duplication.heres-the-syntax-that-makes-it-work">One file. Two languages. No duplication. Here's the syntax that makes it work.</h4>
+
+</section>
+<section class="page-section" data-key="intro">
+  <p>The first design decision was the hardest to explain: every article lives in a single file.
+Not one file per language. Not a source file with a translation sidecar. One file — and the
+generator figures out the rest.</p>
+<p>This sounds obvious until you try to make it work. Plain Markdown has no concept of language
+blocks. You need a way to tell the parser: <em>this part is English, that part is Hungarian,
+and they belong to the same section of the same article.</em></p>
+<p>That's where the DSL comes in.</p>
+
+</section>
+<section class="page-section" data-key="details">
+  <p><strong>What the file actually looks like</strong></p>
+<p>Here's the real structure of an article file — this is the source of the post you're reading now:</p>
+<pre><code>---
+title: Why I built my own static site generator
+slug: posts/post-02.html
+layout: page
+description: Why I built my own static site generator — not because the others are bad
+---
+
+:::section intro
+:::lang en
+Most articles like this start with: &quot;I tried X and hated it.&quot;
+This isn't that article.
+:::lang
+
+:::lang hu
+A legtöbb ilyen cikk úgy kezdődik: „Kipróbáltam X-et, és utáltam.&quot;
+Ez nem olyan cikk.
+:::lang
+:::section
+</code></pre>
+<p>The file has two parts: a YAML frontmatter block at the top, followed by an ordered sequence
+of sections. Each section contains one or more language blocks. Each language block is plain
+Markdown.</p>
+<p><strong>Why <code>:::</code>?</strong></p>
+<p>The <code>:::</code> prefix was the first candidate and it stayed. The reasoning was simple:</p>
+<ul>
+<li>it doesn't appear in normal prose or code</li>
+<li>it's visually distinct from Markdown syntax</li>
+<li>it reads as a block delimiter without needing an end-tag on the same line</li>
+<li>it's easy to parse with a line-by-line scanner</li>
+</ul>
+<p>An alternative would have been HTML comments (<code>&lt;!-- section:intro --&gt;</code>), but that would mix
+HTML into Markdown source, which felt wrong. YAML frontmatter extensions were another option,
+but putting structural content into metadata quickly becomes unreadable.</p>
+<p>The <code>:::</code> felt like the right amount of ceremony — enough to be explicit, not enough to get
+in the way.</p>
+<p><strong>Two levels, not one</strong></p>
+<p>The DSL has two nesting levels:</p>
+<ol>
+<li><code>:::section name</code> — a named content block within the page</li>
+<li><code>:::lang en</code> / <code>:::lang hu</code> — a language-specific block within a section</li>
+</ol>
+<p>Sections give the content explicit structure: <code>title</code>, <code>intro</code>, <code>details</code>, <code>conclusion</code> —
+whatever makes sense for the article. This matters for rendering, but also for long-term
+maintainability: when you open a file six months later, you know exactly where each part is.</p>
+<p>Language blocks are always paired inside a section. Both languages live together, which means
+if you update a section, you see both versions side by side. No drift between translations.</p>
+<p><strong>What the template receives</strong></p>
+<p>The generator renders each language block independently into HTML, then injects the result
+into the page template via simple placeholders:</p>
+<pre><code class="language-html">&lt;div class=&quot;lang-content&quot; id=&quot;content-en&quot;&gt;
+  &#123;&#123;content_en&#125;&#125;
+&lt;/div&gt;
+&lt;div class=&quot;lang-content&quot; id=&quot;content-hu&quot;&gt;
+  &#123;&#123;content_hu&#125;&#125;
+&lt;/div&gt;
+</code></pre>
+<p>Both language versions exist in the DOM at the same time. A small JavaScript snippet handles
+switching — no server round-trips, no re-renders, no framework needed. The active language
+is shown, the other is hidden.</p>
+<p>This also means both languages are indexable by search engines, and the page works without
+JavaScript enabled.</p>
+<p><strong>What the parser does</strong></p>
+<p>The parser is a pure C# component — input is a file path, output is a structured document
+model. It processes the file line by line:</p>
+<ul>
+<li>YAML frontmatter → <code>Metadata</code></li>
+<li><code>:::section name</code> → opens a new <code>Section</code></li>
+<li><code>:::lang en</code> → opens a <code>LanguageBlock</code> within the current section</li>
+<li><code>:::lang</code> (closing) → closes the current language block</li>
+<li><code>:::section</code> (closing) → closes the current section</li>
+<li>anything else → content line, appended to the current language block</li>
+</ul>
+<p>No regex. No recursive descent. A simple state machine, because the grammar doesn't need
+anything more complex.</p>
+<p><strong>What I'd change</strong></p>
+<p>The DSL works well for articles. If I ever needed nested sections, or per-section metadata,
+the syntax would need to evolve — but that's a problem I don't have yet. Extending it would
+be straightforward: the parser is isolated, the model is typed, and the renderer doesn't
+care about grammar details.</p>
+<p>Explicit over clever. That was the principle. I think it held.</p>
+<p>In the next part: the generator pipeline — how the parser output becomes a finished HTML file,
+and how the build integrates with GitHub Pages.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="title">
+  <h3 id="minimalis-dsl-tervezese-ketnyelvu-markdown-tartalomhoz">Minimális DSL tervezése kétnyelvű Markdown tartalomhoz</h3>
+<h4 id="egy-fajl.ket-nyelv.duplikacio-nelkul.ez-a-szintaxis-ami-mukodove-teszi">Egy fájl. Két nyelv. Duplikáció nélkül. Ez a szintaxis, ami működővé teszi.</h4>
+
+</section>
+<section class="page-section" data-key="intro">
+  <p>Az első tervezési döntés volt a legnehezebben megmagyarázható: minden cikk egyetlen fájlban él.
+Nem egy fájl nyelvenként. Nem forrásfájl mellé fordítási melléklet. Egy fájl — a generátor
+kitalálja a többit.</p>
+<p>Ez nyilvánvalónak hangzik, amíg meg nem próbálod megvalósítani. A sima Markdown nem ismeri
+a nyelvi blokkok fogalmát. Kell valami, amivel el lehet mondani a parsernek: <em>ez a rész
+angol, az a rész magyar, és ugyanannak a cikknek ugyanabba a szekciójába tartoznak.</em></p>
+<p>Erre való a DSL.</p>
+
+</section>
+<section class="page-section" data-key="details">
+  <p><strong>Hogyan néz ki valójában egy fájl</strong></p>
+<p>Ez az egyik valódi cikkfájl struktúrája — pontosan az, amit most olvasol forrásként:</p>
+<pre><code>---
+title: Miért írtam saját statikus oldalgenerátort?
+slug: posts/post-02.html
+layout: page
+description: Miért írtam saját statikus oldalgenerátort? (Nem azért, mert a többi rossz.)
+---
+
+:::section intro
+:::lang en
+Most articles like this start with: &quot;I tried X and hated it.&quot;
+This isn't that article.
+:::lang
+
+:::lang hu
+A legtöbb ilyen cikk úgy kezdődik: „Kipróbáltam X-et, és utáltam.&quot;
+Ez nem olyan cikk.
+:::lang
+:::section
+</code></pre>
+<p>A fájlnak két része van: felül egy YAML frontmatter blokk, utána egy szekciókból álló,
+rendezett struktúra. Minden szekció egy vagy több nyelvi blokkot tartalmaz. Minden nyelvi
+blokk sima Markdown.</p>
+<p><strong>Miért <code>:::</code>?</strong></p>
+<p>A <code>:::</code> prefix volt az első jelölt, és maradt is. Az indoklás egyszerű volt:</p>
+<ul>
+<li>nem fordul elő normál szövegben vagy kódban</li>
+<li>vizuálisan elkülönül a Markdown szintaxistól</li>
+<li>blokk-határolóként olvasható anélkül, hogy ugyanabban a sorban záró tag-re lenne szükség</li>
+<li>egyszerűen értelmezhető soros scannerrel</li>
+</ul>
+<p>Alternatíva lett volna a HTML komment (<code>&lt;!-- section:intro --&gt;</code>), de HTML-t keverni Markdown
+forrásba pontatlannak éreztem. YAML frontmatter kiterjesztés is szóba jött, de strukturális
+tartalmat metaadatba tenni gyorsan olvashatatlanná válik.</p>
+<p>A <code>:::</code> pont annyi ceremóniának érződött, amennyi szükséges — elég explicit, de nem tolakodó.</p>
+<p><strong>Két szint, nem egy</strong></p>
+<p>A DSL-nek két egymásba ágyazott szintje van:</p>
+<ol>
+<li><code>:::section name</code> — egy elnevezett tartalmi blokk az oldalon belül</li>
+<li><code>:::lang en</code> / <code>:::lang hu</code> — egy nyelv-specifikus blokk a szekción belül</li>
+</ol>
+<p>A szekciók explicit struktúrát adnak a tartalomnak: <code>title</code>, <code>intro</code>, <code>details</code>,
+<code>conclusion</code> — ami az adott cikknek illik. Ez a renderelés szempontjából fontos, de
+hosszú távú karbantarthatóság miatt is: ha hat hónap múlva megnyitom a fájlt, pontosan
+tudom, hol van minden rész.</p>
+<p>A nyelvi blokkok mindig párban vannak egy szekción belül. Mindkét nyelv egymás mellett él,
+ami azt jelenti, hogy ha frissíted a szekciót, egyszerre látod mindkét verziót.
+Nem csúszik el a fordítás.</p>
+<p><strong>Mit kap a template</strong></p>
+<p>A generátor minden nyelvi blokkot önállóan renderel HTML-be, majd az eredményt egyszerű
+placeholder-eken keresztül injektálja az oldalsablonba:</p>
+<pre><code class="language-html">&lt;div class=&quot;lang-content&quot; id=&quot;content-en&quot;&gt;
+  &#123;&#123;content_en&#125;&#125;
+&lt;/div&gt;
+&lt;div class=&quot;lang-content&quot; id=&quot;content-hu&quot;&gt;
+  &#123;&#123;content_hu&#125;&#125;
+&lt;/div&gt;
+</code></pre>
+<p>Mindkét nyelvi verzió egyszerre él a DOM-ban. Egy kis JavaScript snippet kezeli a váltást —
+nincs szerver-kommunikáció, nincs újrarenderelés, nem kell framework. Az aktív nyelv látható,
+a másik el van rejtve.</p>
+<p>Ez azt is jelenti, hogy mindkét nyelv indexálható a keresők számára, és az oldal JavaScript
+nélkül is működik.</p>
+<p><strong>Mit csinál a parser</strong></p>
+<p>A parser egy tiszta C# komponens — bemenet egy fájlútvonal, kimenet egy strukturált
+dokumentummodell. Soronként dolgozza fel a fájlt:</p>
+<ul>
+<li>YAML frontmatter → <code>Metadata</code></li>
+<li><code>:::section name</code> → új <code>Section</code> nyílik</li>
+<li><code>:::lang en</code> → <code>LanguageBlock</code> nyílik az aktuális szekción belül</li>
+<li><code>:::lang</code> (záró) → az aktuális nyelvi blokk lezárul</li>
+<li><code>:::section</code> (záró) → az aktuális szekció lezárul</li>
+<li>minden más → tartalomsor, az aktuális nyelvi blokkhoz hozzáfűzve</li>
+</ul>
+<p>Nincs regex. Nincs rekurzív leszállás. Egyszerű állapotgép, mert a grammatika nem igényel
+ennél bonyolultabbat.</p>
+<p><strong>Mit változtatnék</strong></p>
+<p>A DSL cikkekre jól működik. Ha valaha egymásba ágyazott szekciókra vagy szekció-szintű
+metaadatokra lenne szükség, a szintaxisnak fejlődnie kellene — de ez még nem megoldandó
+probléma. A kiterjesztés egyértelmű lenne: a parser izolált, a modell típusos, a renderer
+nem foglalkozik grammatikai részletekkel.</p>
+<p>Explicit a trükkös helyett. Ez volt az elv. Azt hiszem, tartotta magát.</p>
+<p>A következő részben: a generátor pipeline — hogyan lesz a parser kimenetéből kész HTML fájl,
+és hogyan illeszkedik a build a GitHub Pages-be.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>

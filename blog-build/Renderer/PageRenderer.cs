@@ -22,7 +22,10 @@ public static class PageRenderer
                     SectionRenderer.RenderForLanguage(section, lang));
             }
 
-            renderedByLang[lang] = sb.ToString();
+            // Escape any {{ }} sequences in rendered content before
+            // injecting into the template, to prevent accidental
+            // placeholder substitution inside code examples.
+            renderedByLang[lang] = EscapeTemplateLiterals(sb.ToString());
         }
 
         var defaultLang = languages.FirstOrDefault() ?? "en";
@@ -35,4 +38,14 @@ public static class PageRenderer
             .Replace("{{content_en}}", renderedByLang.GetValueOrDefault("en", ""))
             .Replace("{{content_hu}}", renderedByLang.GetValueOrDefault("hu", ""));
     }
+
+    /// <summary>
+    /// Escapes {{ and }} in rendered HTML content to prevent accidental
+    /// template placeholder substitution inside code blocks.
+    /// The browser renders &#123; and &#125; as { and } respectively.
+    /// </summary>
+    private static string EscapeTemplateLiterals(string renderedHtml)
+        => renderedHtml
+            .Replace("{{", "&#123;&#123;")
+            .Replace("}}", "&#125;&#125;");
 }

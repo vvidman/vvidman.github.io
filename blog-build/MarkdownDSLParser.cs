@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Text;
 using VVidman.BlogBuild.Models;
 
@@ -80,7 +79,7 @@ public static class MarkdownDslParser
             var key = parts[0].Trim();
             var value = parts[1].Trim();
 
-            if(key == "title")
+            if (key == "title")
                 title = value;
             else if (key == "slug")
                 slug = value;
@@ -88,7 +87,7 @@ public static class MarkdownDslParser
                 layout = value;
             else if (key == "description")
                 description = value;
-            else 
+            else
                 throw new InvalidOperationException($"Unknown metadata key: {key}");
         }
 
@@ -108,36 +107,46 @@ public static class MarkdownDslParser
         ref int index,
         string sectionKey)
     {
-        var section = new Section
-        {
-            Key = sectionKey
-        };
-
+        var section = new Section { Key = sectionKey };
         index++; // skip :::section <key>
+        var insideCodeFence = false;
 
         while (index < lines.Length)
         {
-            if (IsSectionEnd(lines[index]))
+            var line = lines[index];
+            var trimmed = line.Trim();
+
+            if (trimmed.StartsWith("```"))
+                insideCodeFence = !insideCodeFence;
+
+            if (!insideCodeFence)
             {
-                index++; // skip :::section
-                return section;
+                if (IsSectionEnd(line))
+                {
+                    index++; // skip :::section
+                    return section;
+                }
+
+                if (IsEmpty(line))
+                {
+                    index++;
+                    continue;
+                }
+
+                if (IsLangStart(line, out var lang))
+                {
+                    var block = ParseLanguageBlock(lines, ref index, lang);
+                    section.AddLanguage(block);
+                    continue;
+                }
+
+                throw new InvalidOperationException(
+                    $"Unexpected content in section '{sectionKey}' at line {index + 1}: {line}");
             }
 
-            if (IsEmpty(lines[index]))
-            {
-                index++;
-                continue;
-            }
-
-            if (IsLangStart(lines[index], out var lang))
-            {
-                var block = ParseLanguageBlock(lines, ref index, lang);
-                section.AddLanguage(block);
-                continue;
-            }
-
-            throw new InvalidOperationException(
-                $"Unexpected content in section '{sectionKey}' at line {index + 1}");
+            // Inside a code fence at section level — shouldn't normally happen
+            // (fences are expected inside lang blocks), but advance safely.
+            index++;
         }
 
         throw new InvalidOperationException(
@@ -156,10 +165,18 @@ public static class MarkdownDslParser
         index++; // skip :::lang <code>
 
         var sb = new StringBuilder();
+        var insideCodeFence = false;
 
         while (index < lines.Length)
         {
-            if (IsLangEnd(lines[index]))
+            var line = lines[index];
+            var trimmed = line.Trim();
+
+            if (trimmed.StartsWith("```"))
+                insideCodeFence = !insideCodeFence;
+
+            // Only interpret DSL tokens outside code fences
+            if (!insideCodeFence && IsLangEnd(line))
             {
                 index++; // skip :::lang
                 return new LanguageBlock
@@ -169,7 +186,7 @@ public static class MarkdownDslParser
                 };
             }
 
-            sb.AppendLine(lines[index]);
+            sb.AppendLine(line);
             index++;
         }
 
