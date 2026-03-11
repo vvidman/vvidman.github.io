@@ -8,12 +8,12 @@ description: One file. Two languages. No duplication. Here's the syntax that mak
 :::section title
 :::lang en
 ### Designing a minimal DSL for bilingual Markdown content
-#### One file. Two languages. No duplication. Here's the syntax that makes it work.
+> One file. Two languages. No duplication. Here's the syntax that makes it work.
 :::lang
 
 :::lang hu
 ### Minimális DSL tervezése kétnyelvű Markdown tartalomhoz
-#### Egy fájl. Két nyelv. Duplikáció nélkül. Ez a szintaxis, ami működővé teszi.
+> Egy fájl. Két nyelv. Duplikáció nélkül. Ez a szintaxis, ami működővé teszi.
 :::lang
 :::section
 

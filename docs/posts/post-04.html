@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - The generator pipeline — from Markdown to GitHub Pages</title>
+
+  <meta name="description" content="No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/post-04.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/post-04.html">
+  <meta property="og:title" content="Viktor Vidman - The generator pipeline — from Markdown to GitHub Pages">
+  <meta property="og:description" content="No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>The generator pipeline — from Markdown to GitHub Pages</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="title">
+  <h3 id="the-generator-pipeline-from-markdown-to-github-pages">The generator pipeline — from Markdown to GitHub Pages</h3>
+<blockquote>
+<p>No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.</p>
+</blockquote>
+
+</section>
+<section class="page-section" data-key="intro">
+  <p>The first two parts covered the <em>why</em> and the <em>what</em> — why a custom generator, and what the
+DSL looks like. This part is the <em>how</em>: what actually happens when the build runs, what comes
+out the other end, and how it ends up on GitHub Pages.</p>
+
+</section>
+<section class="page-section" data-key="details">
+  <p><strong>The full pipeline in one sentence</strong></p>
+<p>The generator reads a configuration file, walks the content directory, parses each Markdown
+DSL file into a structured document model, renders language-specific HTML, applies the page
+template, and writes the result into the <code>docs/</code> folder.</p>
+<p>That's it. No watch mode, no hot reload, no dev server. A single command, a single pass,
+deterministic output.</p>
+<p><strong>Configuration: appsettings.json</strong></p>
+<p>The generator is a standard .NET console application. Configuration lives in
+<code>appsettings.json</code>, which keeps the build logic decoupled from file system assumptions:</p>
+<pre><code class="language-json">{
+  &quot;Paths&quot;: {
+    &quot;Input&quot;: &quot;../content&quot;,
+    &quot;Templates&quot;: &quot;templates&quot;,
+    &quot;Output&quot;: &quot;../docs&quot;
+  },
+
+  &quot;Defaults&quot;: {
+    &quot;Languages&quot;: [ &quot;en&quot;, &quot;hu&quot; ],
+    &quot;Layout&quot;: &quot;page&quot;
+  }
+}
+</code></pre>
+<p>Nothing is hardcoded. If the content directory moves, or the output structure changes, the
+configuration changes — the generator doesn't.</p>
+<p><strong>What the generator does, step by step</strong></p>
+<ol>
+<li>Load configuration from <code>appsettings.json</code></li>
+<li>Read the HTML page template into memory</li>
+<li>Walk the <code>content/</code> directory and collect all <code>.md</code> files</li>
+<li>For each file: parse → render → write</li>
+<li>Copy static assets from <code>assets/</code> to <code>docs/assets/</code></li>
+</ol>
+<p>Step 4 is where the work happens. The parser produces a <code>PageDocument</code>, the renderer
+produces a finished HTML string, and the writer places it in <code>docs/</code> at the path defined
+by the file's <code>slug</code> metadata field.</p>
+<p>The slug determines the output path directly:</p>
+<pre><code>slug: posts/post-02.html  →  docs/posts/post-02.html
+</code></pre>
+<p>This means the URL structure is explicit and author-controlled — not derived from the
+file system layout of the content directory.</p>
+<p><strong>The docs/ folder structure</strong></p>
+<p>GitHub Pages serves whatever is in the <code>docs/</code> folder of the repository. The output
+mirrors the final public URL structure exactly:</p>
+<pre><code>docs/
+├── index.html
+├── about/
+│   └── index.html
+├── posts/
+│   ├── index.html
+│   ├── post-01.html
+│   └── post-02.html
+└── assets/
+    ├── css/
+    │   └── site.css
+    ├── javascript/
+    │   └── site.js
+    └── icons/
+        └── favicon.ico
+</code></pre>
+<p>The <code>docs/</code> folder is committed alongside the source. GitHub Pages serves it directly —
+no build step on the server side, no Jekyll processing, no <code>.nojekyll</code> complications
+beyond placing an empty <code>.nojekyll</code> file in the repo root to disable GitHub's default
+processing.</p>
+<p><strong>Local preview workflow</strong></p>
+<p>Before pushing, the output is always previewed locally using <code>preview.ps1</code> — a small
+PowerShell script with two modes:</p>
+<pre><code class="language-powershell"># Build and serve in one command
+.\preview.ps1 -Build
+
+# Serve the existing output without rebuilding
+.\preview.ps1
+</code></pre>
+<p>The script runs the generator, then serves the <code>docs/</code> folder over a local HTTP server —
+Python's built-in <code>http.server</code> if available, with a fallback to <code>dotnet-serve</code>:</p>
+<pre><code class="language-powershell">param(
+    [int]$Port = 8080,
+    [switch]$Build
+)
+
+if ($Build) {
+    dotnet run --project .\blog-build\blog-build.csproj
+}
+
+Push-Location (Join-Path $PSScriptRoot &quot;docs&quot;)
+
+try {
+    python -m http.server $Port
+}
+catch {
+    dotnet tool install --global dotnet-serve --version 1.11.0
+    dotnet serve -p $Port
+}
+
+Pop-Location
+</code></pre>
+<p>The preview serves the exact same output that GitHub Pages will — same HTML, same assets,
+same URL structure. What you see locally is what ships.</p>
+<p><strong>Why manual, and why that's a deliberate choice</strong></p>
+<p>Setting up a GitHub Actions workflow here would be straightforward — a YAML file that runs
+<code>dotnet run</code> and commits the <code>docs/</code> folder back to the repository. I know how to do it.
+I chose not to.</p>
+<p>The reason is that I review every change before it goes live — not just new posts, but
+CSS tweaks, SEO metadata updates, fixes to older articles. And I don't just check it on
+desktop. I open it on mobile too, because that's where layout issues hide.</p>
+<p>This is human orchestration, and for my own blog it's non-negotiable. A CI/CD pipeline
+would remove the friction — but that friction is the review step. Automating it would
+mean trusting the build output without looking at it. That's a trade-off I'm not willing
+to make here.</p>
+<p>The flow is: write, build, review on desktop, review on mobile, push. It takes a few
+minutes. It catches things that automated checks never would.</p>
+<p><strong>What this series covered</strong></p>
+<p>This was the third and final part of the static site generator series:</p>
+<ul>
+<li>Part 1: <a href="/posts/post-02.html">Why a custom generator — the constraints and the decision</a></li>
+<li>Part 2: <a href="/posts/post-03.html">The DSL — one file, two languages, explicit structure</a></li>
+<li>Part 3: <a href="/posts/post-04.html">The pipeline — configuration, build, output, local preview</a></li>
+</ul>
+<p>The generator itself is not a framework and not a product. It's a small, focused tool
+that does exactly what this blog needs. That's the point.</p>
+<p><strong>Next up:</strong></p>
+<blockquote>
+<p>A different kind of project — one that's still being built.</p>
+</blockquote>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="title">
+  <h3 id="a-generator-pipeline-markdowntol-a-github-pages-ig">A generátor pipeline — Markdowntól a GitHub Pages-ig</h3>
+<blockquote>
+<p>Nincs CI/CD. Nincs build szerver. Egy lokális parancs, egy docs/ mappa, és egy git push. Ez az egész.</p>
+</blockquote>
+
+</section>
+<section class="page-section" data-key="intro">
+  <p>Az első két rész a <em>miérttel</em> és a <em>mivel</em> foglalkozott — miért saját generátor, és hogyan
+néz ki a DSL. Ez a rész a <em>hogyan</em>: mi történik valójában, amikor a build lefut, mi kerül
+a kimenetbe, és hogyan jut el a GitHub Pages-re.</p>
+
+</section>
+<section class="page-section" data-key="details">
+  <p><strong>A teljes pipeline egy mondatban</strong></p>
+<p>A generátor beolvassa a konfigurációs fájlt, végigjárja a tartalom mappát, minden Markdown
+DSL fájlt strukturált dokumentummodelként olvas fel, rendereli a nyelv-specifikus HTML-t,
+alkalmazza a web sablont, és az eredményt a <code>docs/</code> mappába írja.</p>
+<p>Ennyi. Nincs watch mode, nincs hot reload, nincs dev szerver. Egyetlen parancs, egyetlen
+menet, determinisztikus kimenet.</p>
+<p><strong>Konfiguráció: appsettings.json</strong></p>
+<p>A generátor egy standard .NET konzolalkalmazás. A konfiguráció <code>appsettings.json</code>-ban él,
+ami elválasztja a build logikát a fájlrendszer-feltevésektől:</p>
+<pre><code class="language-json">{
+  &quot;Paths&quot;: {
+    &quot;Input&quot;: &quot;../content&quot;,
+    &quot;Templates&quot;: &quot;templates&quot;,
+    &quot;Output&quot;: &quot;../docs&quot;
+  },
+
+  &quot;Defaults&quot;: {
+    &quot;Languages&quot;: [ &quot;en&quot;, &quot;hu&quot; ],
+    &quot;Layout&quot;: &quot;page&quot;
+  }
+}
+</code></pre>
+<p>Semmi sincs hardcode-olva. Ha a tartalom mappa megváltozik, vagy a kimenet struktúrája
+módosul, a konfiguráció változik — a generátor nem.</p>
+<p><strong>Mit csinál a generátor, lépésről lépésre</strong></p>
+<ol>
+<li>Beolvassa a konfigurációt az <code>appsettings.json</code>-ból</li>
+<li>Betölti a HTML oldalsablont a memóriába</li>
+<li>Végigjárja a <code>content/</code> mappát és összegyűjti az összes <code>.md</code> fájlt</li>
+<li>Minden fájlra: parse → render → írás</li>
+<li>Átmásolja a statikus asseteket az <code>assets/</code>-ből a <code>docs/assets/</code>-be</li>
+</ol>
+<p>A 4. lépésben történik a munka. A parser előállít egy <code>PageDocument</code>-et, a renderer
+egy kész HTML stringet, az író pedig a fájl <code>slug</code> metaadat mezője által meghatározott
+helyre teszi a <code>docs/</code>-ba.</p>
+<p>A slug közvetlenül meghatározza a kimeneti útvonalat:</p>
+<pre><code>slug: posts/post-02.html  →  docs/posts/post-02.html
+</code></pre>
+<p>Ez azt jelenti, hogy az URL struktúra explicit és szerző által kontrollált — nem a
+tartalom mappa fájlrendszer-elrendezéséből van levezetva.</p>
+<p><strong>A docs/ mappa struktúra</strong></p>
+<p>A GitHub Pages a repository <code>docs/</code> mappájának tartalmát szolgálja ki. A kimenet
+pontosan tükrözi a végső publikus URL struktúrát:</p>
+<pre><code>docs/
+├── index.html
+├── about/
+│   └── index.html
+├── posts/
+│   ├── index.html
+│   ├── post-01.html
+│   └── post-02.html
+└── assets/
+    ├── css/
+    │   └── site.css
+    ├── javascript/
+    │   └── site.js
+    └── icons/
+        └── favicon.ico
+</code></pre>
+<p>A <code>docs/</code> mappa a forrás mellett kerül commitolásra. A GitHub Pages közvetlenül kiszolgálja
+— nincs szerver oldali build lépés, nincs Jekyll feldolgozás, a repo gyökerében lévő
+<code>.nojekyll</code> fájl kikapcsolja a GitHub alapértelmezett feldolgozását.</p>
+<p><strong>Lokális preview workflow</strong></p>
+<p>Push előtt a kimenet mindig lokálisan ellenőrzöm a <code>preview.ps1</code> scripttel — egy kis
+PowerShell eszközzel, ami két módban tud futni:</p>
+<pre><code class="language-powershell"># Build és kiszolgálás egyben
+.\preview.ps1 -Build
+
+# Csak kiszolgálás, újrabuild nélkül
+.\preview.ps1
+</code></pre>
+<p>A script lefuttatja a generátort, majd egy lokális HTTP szerveren kiszolgálja a <code>docs/</code>
+mappát — Python beépített <code>http.server</code>-ével, ha elérhető, különben <code>dotnet-serve</code>-vel:</p>
+<pre><code class="language-powershell">param(
+    [int]$Port = 8080,
+    [switch]$Build
+)
+
+if ($Build) {
+    dotnet run --project .\blog-build\blog-build.csproj
+}
+
+Push-Location (Join-Path $PSScriptRoot &quot;docs&quot;)
+
+try {
+    python -m http.server $Port
+}
+catch {
+    dotnet tool install --global dotnet-serve --version 1.11.0
+    dotnet serve -p $Port
+}
+
+Pop-Location
+</code></pre>
+<p>A preview pontosan azt szolgálja ki, amit a GitHub Pages fog — ugyanaz a HTML, ugyanazok
+az assetek, ugyanaz az URL struktúra. Amit lokálisan látsz, az kerül ki élesbe.</p>
+<p><strong>Miért manuális, és miért szándékos döntés</strong></p>
+<p>Egy GitHub Actions workflow felállítása itt triviális lenne — egy YAML fájl, ami lefuttatja
+a <code>dotnet run</code>-t és visszacommitálja a <code>docs/</code> mappát. Tudom, hogyan kell megcsinálni.
+Szándékosan nem csináltam meg.</p>
+<p>Az ok az, hogy minden változtatást átnézek, mielőtt élesbe kerül — nemcsak új posztokat,
+hanem CSS módosításokat, SEO metaadat frissítéseket, régebbi cikkek javításait is. És nem
+csak asztali gépen ellenőrzöm. Mobilon is megnézem, mert ott bújnak meg az elrendezési
+hibák.</p>
+<p>Ez humán orchestrálás, és a saját blogom esetén ez nem kompromisszumozható. Egy CI/CD
+pipeline eltávolítaná a súrlódást — de az a súrlódás maga az ellenőrzési lépés.
+Az automatizálás azt jelentené, hogy a build kimenetét megtekintés nélkül elfogadom.
+Ez egy olyan trade-off, amit itt nem vagyok hajlandó megtenni.</p>
+<p>A flow: írás, build, ellenőrzés asztalon, ellenőrzés mobilon, push. Néhány percet vesz
+igénybe. Olyan dolgokat is megfog, amit automatizált ellenőrzés soha nem venne észre.</p>
+<p><strong>Mit fedett le ez a sorozat</strong></p>
+<p>Ez volt a statikus oldalgenerátor sorozat harmadik és egyben utolsó része:</p>
+<ul>
+<li>
+<ol>
+<li>rész: <a href="/posts/post-02.html">Miért saját generátor — a korlátok és a döntés</a></li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>rész: <a href="/posts/post-03.html">A DSL — egy fájl, két nyelv, explicit struktúra</a></li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>rész: <a href="/posts/post-04.html">A pipeline — konfiguráció, build, kimenet, lokális preview</a></li>
+</ol>
+</li>
+</ul>
+<p>Maga a generátor nem framework és nem termék. Egy kis, fókuszált eszköz, ami pontosan
+azt csinálja, amire ennek a blognak szüksége van. Ez a lényeg.</p>
+<p><strong>Következő:</strong></p>
+<blockquote>
+<p>Egy másféle projekt — ami még épül.</p>
+</blockquote>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -161,6 +161,26 @@ nav a + a::before {
   color: var(--text);
 }
 
+blockquote {
+    border-left: 2px solid #e6e6e6;
+    margin: 0;
+    padding: 0 0 0 20px;
+    font-style: italic
+}
+
+code,pre {
+    font-family: var(--font-serif);
+    color: #333
+}
+
+pre {
+    padding: 8px 15px;
+    background: #e6e6e6;
+    border-radius: 5px;
+    border: 1px solid #333;
+    overflow-x: auto
+}
+
 /* ── Post list ───────────────────────────── */
 .post-list {
   list-style: none;
@@ -234,6 +254,10 @@ nav a + a::before {
   nav {
     padding: 0 1rem;
     flex-wrap: wrap;
+  }
+
+  pre,code {
+    word-wrap: normal
   }
 
   .content {
