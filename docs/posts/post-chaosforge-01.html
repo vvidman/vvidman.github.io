@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - ChaosForge - Let Go of the Reins</title>
+
+  <meta name="description" content="From Scaffold Protocol to ChaosForge – why I stopped trying to control every AI step, and what I built instead.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/post-chaosforge-01.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/post-chaosforge-01.html">
+  <meta property="og:title" content="Viktor Vidman - ChaosForge - Let Go of the Reins">
+  <meta property="og:description" content="From Scaffold Protocol to ChaosForge – why I stopped trying to control every AI step, and what I built instead.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/chaosforge-infographic-01.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>ChaosForge - Let Go of the Reins</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h1 id="chaosforge-let-go-of-the-reins">ChaosForge - Let Go of the Reins</h1>
+<p>There's a moment in every engineering project where you stop and ask: <em>am I solving the right problem?</em></p>
+<p>For me, that moment came midway through building Scaffold Protocol – a human-in-the-loop, step-by-step AI workflow tool for .NET development. The system worked. Agents produced output. Validators caught bad results. The human reviewed everything. Controlled. Predictable.</p>
+<p>Too predictable.</p>
+<p>I was watching my validation layer generate refinement loop after refinement loop on outputs that were, by any reasonable measure, <em>fine</em>. The system was busy. It just wasn't going anywhere.</p>
+<p>That's when I asked the real question: <strong>what if the goal isn't to control every step – but to trust the process?</strong></p>
+<p>This is ChaosForge.</p>
+
+</section>
+<section class="page-section" data-key="scaffold_context">
+  <h2 id="where-this-came-from">Where This Came From</h2>
+<p>Scaffold Protocol was built on a simple principle: the AI transforms, the human decides. Every step had its own YAML configuration, its own system prompt, its own validation rules. The human reviewed output at each checkpoint. Nothing moved forward without approval.</p>
+<p>It worked well for deterministic, structured tasks. The problem emerged when I tried to make the validation layer do too much – not just catch <em>clearly wrong</em> outputs, but enforce <em>stylistic correctness</em> that only I could judge. The result was a loop that felt productive but wasn't.</p>
+<p>The insight was simple: <strong>I was trying to make the machine do the human's job.</strong></p>
+<p>ChaosForge inverts the assumption. Instead of a tightly controlled single-agent pipeline, it's a multi-agent team working in parallel – with human review gates at the <em>right</em> moments, not every moment.</p>
+
+</section>
+<section class="page-section" data-key="the_idea">
+  <h2 id="a-development-team-that-doesnt-sleep">A Development Team That Doesn't Sleep</h2>
+<p>ChaosForge simulates a real Scrum team – except every team member is an AI agent. You define the project, the use cases, the team composition. Then you hand it off.</p>
+<p>The Business Analyst reads your use cases and produces User Requirements Specifications. The Architect turns those into Software Requirements and breaks them into implementable tasks. The Scrum Master builds the sprint plan. Then developers, testers, reviewers, and technical writers run in parallel – pulling tasks, implementing, reviewing, testing, documenting.</p>
+<p>The human's role is the judge. Not the manager of every micro-decision – the judge at three revision gates. Three moments where everything stops and you decide: <strong>accept, edit and accept, or reject.</strong></p>
+<pre><code class="language-yaml"># Agent configuration example
+agent:
+  role: business_analyst
+  model_provider: groq
+  model: llama-3.3-70b
+  system_prompt: |
+    You are a senior Business Analyst.
+    Input: a user-defined use case.
+    Output: a structured URS document.
+  input_from: use_cases
+  output_format: markdown
+  output_to: urs_documents
+</code></pre>
+<p>Each agent role has its own configuration – its own model, its own system prompt, its own input and output contract. The Architect runs on a large cloud model for deep reasoning. Developers run locally for fast, repetitive generation. The infrastructure doesn't care which provider is behind the interface.</p>
+
+</section>
+<section class="page-section" data-key="butterfly_effect">
+  <h2 id="the-butterfly-effect-is-the-feature">The Butterfly Effect Is the Feature</h2>
+<p>The system is named ChaosForge for a reason. At each revision gate, you have three choices: accept the output unchanged, reject it with a reason, or – most powerfully – <strong>edit and accept</strong>.</p>
+<p>Modify the URS. Adjust the SRS. Rewrite a sprint task.</p>
+<p>That single edit ripples through everything downstream. A modified URS produces different SRS documents. Different SRS documents produce different tasks. Different tasks produce a different sprint plan. By the time the developer agents pick up their first task, the project is already shaped by your intervention – not just approved, but <em>directed</em>.</p>
+<p>This is what Scaffold Protocol was missing. In a step-by-step single-agent system, an edit is a correction. In a multi-agent team, it's a strategic decision with consequences.</p>
+<p>The butterfly effect isn't a risk to be managed. It's the design.</p>
+
+</section>
+<section class="page-section" data-key="design_decisions">
+  <h2 id="the-decisions-that-mattered">The Decisions That Mattered</h2>
+<p><strong>Singleton roles at the domain level.</strong> The Business Analyst, Architect, and Scrum Master are singletons – enforced by the domain model, not just convention. Having two Business Analysts produce competing URS documents isn't parallelism; it's noise.</p>
+<p><strong>TaskAttempt as a first-class entity.</strong> Every development cycle – implement, review, test – is stored as a separate record. When a developer picks up a rejected task, they see the previous attempt's output and the reviewer's exact comment. The full context of failure is preserved.</p>
+<p><strong>Provider abstraction from day one.</strong> The LLM provider is swappable per agent role. The Architect runs on a 70B cloud model for deep reasoning. Developers run on LlamaSharp locally for fast, repetitive code generation. This isn't premature abstraction – it's a hardware constraint turned into a design principle.</p>
+<p><strong>No automatic pipeline.</strong> Errors accumulate in automated chains. If the Architect produces a flawed SRS, every downstream task is built on that flaw. Human revision gates aren't ceremony – they're the guarantee that each phase rests on reviewed ground.</p>
+
+</section>
+<section class="page-section" data-key="closing">
+  <h2 id="where-it-stands">Where It Stands</h2>
+<p>ChaosForge is a hobby project. A learning project. There's no product pressure and no deadline.</p>
+<p>The domain model is taking shape – entities, state machine, revision gates, TaskAttempt audit trail. The LLM provider abstraction is designed. The agent worker architecture is sketched.</p>
+<p>What I don't know yet: what a multi-agent development team actually produces when you let it run. That's the experiment.</p>
+<p><em>Next in the series: domain model design and the task lifecycle state machine.</em></p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h1 id="chaosforge-engedd-el-a-gyeplot">ChaosForge - Engedd el a gyeplőt</h1>
+<p>Minden mérnöki projektben eljön az a pillanat, amikor megállsz és megkérdezed magadtól: <em>tényleg a jó problémát oldom meg?</em></p>
+<p>Nekem ez a pillanat a Scaffold Protocol fejlesztésének közepén érkezett – egy human-in-the-loop, lépésenkénti AI workflow eszköz .NET fejlesztéshez. A rendszer működött. Az ágensek outputot adtak. A validátor kiszűrte a rosszakat. Az ember minden lépést átnézett. Kontrollált. Kiszámítható.</p>
+<p>Túl kiszámítható.</p>
+<p>Néztem, ahogy a validációs rétegem refinement kört generál refinement kör után olyan outputokon, amik – minden ésszerű mércével mérve – <em>rendben voltak</em>. A rendszer dolgozott. Csak nem haladt.</p>
+<p>Akkor tettem fel a valódi kérdést: <strong>mi van ha a cél nem minden lépés kontrollálása, hanem a folyamatban való bizalom?</strong></p>
+<p>Ez a ChaosForge.</p>
+
+</section>
+<section class="page-section" data-key="scaffold_context">
+  <h2 id="honnan-jott-ez-az-otlet">Honnan jött ez az ötlet?</h2>
+<p>A Scaffold Protocol egy egyszerű elven alapult: az AI transzformál, az ember dönt. Minden lépésnek volt saját YAML konfigurációja, saját system promptja, saját validációs szabályai. Az ember minden ellenőrzési ponton átnézte az outputot. Semmi sem mozdult előre jóváhagyás nélkül.</p>
+<p>Jól működött determinisztikus, strukturált feladatoknál. A probléma akkor jött elő, amikor a validációs réteggel túl sokat akartam elvégeztetni – nemcsak a <em>nyilvánvalóan rossz</em> outputokat szűrni, hanem olyan <em>stílusbeli helyességet</em> kikényszeríteni, amit csak én tudtam megítélni. Az eredmény egy olyan kör lett, ami produktívnak tűnt, de nem volt az.</p>
+<p>A felismerés egyszerű volt: <strong>azt próbáltam a géppel elvégeztetni, ami az ember feladata.</strong></p>
+<p>A ChaosForge megfordítja az alapfeltevést. Egy szorosan kontrollált, single-agent pipeline helyett párhuzamosan dolgozó multi-agent csapat – emberi revíziós kapukkal a <em>megfelelő</em> pillanatokban, nem minden pillanatban.</p>
+
+</section>
+<section class="page-section" data-key="the_idea">
+  <h2 id="egy-fejlesztocsapat-ami-nem-alszik">Egy fejlesztőcsapat, ami nem alszik</h2>
+<p>A ChaosForge egy valódi Scrum csapatot szimulál – azzal a különbséggel, hogy minden csapattag AI ágens. Te definiálod a projektet, a use case-eket, a csapat összetételét. Aztán átadod.</p>
+<p>A Business Analyst elolvassa a use case-eket és User Requirements Specificationöket állít elő. Az Architect ezekből Software Requirementseket csinál, és lebontja implementálható taskokra. A Scrum Master sprint tervet épít. Aztán a developerek, tesztelők, reviewerek és technical writerek párhuzamosan futnak – taskokat vesznek fel, implementálnak, reviewznak, tesztelnek, dokumentálnak.</p>
+<p>Az ember szerepe a bíróé. Nem minden mikrodöntés menedzsere – a bíró három revíziós kapunál. Három pillanat, ahol minden megáll és te döntesz: <strong>elfogad, szerkeszt és elfogad, vagy visszadob.</strong></p>
+<pre><code class="language-yaml"># Ágens konfiguráció példa
+agent:
+  role: business_analyst
+  model_provider: groq
+  model: llama-3.3-70b
+  system_prompt: |
+    Senior Business Analyst vagy.
+    Input: felhasználó által definiált use case.
+    Output: strukturált URS dokumentum.
+  input_from: use_cases
+  output_format: markdown
+  output_to: urs_documents
+</code></pre>
+<p>Minden ágens szerepkörnek saját konfigurációja van – saját modellje, saját system promptja, saját input és output kontraktusa. Az Architect nagy felhős modellen fut a mély gondolkodáshoz. A developerek lokálisan futnak a gyors, ismétlő generáláshoz. Az infrastruktúra nem érdekli, melyik provider van az interfész mögött.</p>
+
+</section>
+<section class="page-section" data-key="butterfly_effect">
+  <h2 id="a-pillango-effektus-nem-mellekhatas-ez-a-feature">A pillangó effektus nem mellékhatás – ez a feature</h2>
+<p>A rendszer neve ChaosForge, és ennek oka van. Minden revíziós kapunál három választásod van: elfogadod az outputot változatlanul, visszadobod indoklással, vagy – a legerősebb opció – <strong>szerkesztesz és elfogadsz</strong>.</p>
+<p>Módosítod az URS-t. Igazítasz az SRS-en. Átírsz egy sprint taskot.</p>
+<p>Ez az egy szerkesztés végiggyűrűzik mindenen, ami utána következik. Egy módosított URS más SRS dokumentumokat eredményez. Más SRS dokumentumok más taskokat. Más taskok más sprint tervet. Mire a developer ágensek felveszik az első taskjukat, a projektet már alakította a beavatkozásod – nem csak jóváhagytad, <em>irányítottad</em>.</p>
+<p>Ezt hiányoltam a Scaffold Protocolból. Egy lépésenkénti, single-agent rendszerben egy szerkesztés javítás. Egy multi-agent csapatban stratégiai döntés, következményekkel.</p>
+<p>A pillangó effektus nem kezelt kockázat. Ez a terv.</p>
+
+</section>
+<section class="page-section" data-key="design_decisions">
+  <h2 id="a-dontesek-amik-szamitottak">A döntések, amik számítottak</h2>
+<p><strong>Singleton szerepkörök domain szinten.</strong> A Business Analyst, az Architect és a Scrum Master singleton – nem konvenció alapján, hanem a domain modell által kikényszerítve. Ha két Business Analyst versengő URS dokumentumokat produkál, az nem párhuzamosság – az zaj.</p>
+<p><strong>TaskAttempt mint első osztályú entitás.</strong> Minden fejlesztési kör – implementálás, review, teszt – külön rekordként tárolódik. Amikor egy developer felvesz egy visszadobott taskot, látja az előző attempt outputját és a reviewer pontos megjegyzését. A kudarc teljes kontextusa megmarad.</p>
+<p><strong>Provider absztrakció az első naptól.</strong> Az LLM provider ágensenként cserélhető. Az Architect 70B-es felhős modellen fut a mély gondolkodáshoz. A developerek LlamaSharp-on futnak lokálisan a gyors, ismétlő kódgeneráláshoz. Ez nem korai absztrakció – egy hardverkényszert design elvvé fordítottam.</p>
+<p><strong>Nincs automatikus pipeline.</strong> A hibák akkumulálódnak az automatikus láncokban. Ha az Architect hibás SRS-t produkál, minden downstream task arra a hibára épül. Az emberi revíziós kapuk nem ceremónia – ezek a garancia arra, hogy minden fázis reviewzott alapra épül.</p>
+
+</section>
+<section class="page-section" data-key="closing">
+  <h2 id="ahol-most-tart">Ahol most tart</h2>
+<p>A ChaosForge hobbi projekt. Tanulási projekt. Nincs product kényszer, nincs határidő.</p>
+<p>A domain modell formát ölt – entitások, state machine, revíziós kapuk, TaskAttempt audit trail. Az LLM provider absztrakció megtervezett. Az agent worker architektúra felvázolt.</p>
+<p>Amit még nem tudok: egy multi-agent fejlesztőcsapat mit produkál valójában, ha hagyjuk futni. Ez a kísérlet.</p>
+<p><em>Sorozat következő része: domain modell tervezés és a task életciklus state machine.</em></p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>
