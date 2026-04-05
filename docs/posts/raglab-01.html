@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - Building a RAG Pipeline from Scratch</title>
+
+  <meta name="description" content="What I learned by building a RAG pipeline in .NET without a framework — every component written from scratch, every decision made consciously.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/raglab-01.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/raglab-01.html">
+  <meta property="og:title" content="Viktor Vidman - Building a RAG Pipeline from Scratch">
+  <meta property="og:description" content="What I learned by building a RAG pipeline in .NET without a framework — every component written from scratch, every decision made consciously.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/raglab-infographic-02.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>Building a RAG Pipeline from Scratch</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h2 id="problem-statement">Problem statement</h2>
+<p>There is a pattern I keep seeing in the developer community around AI tooling. Someone discovers LangChain or LlamaIndex, chains together a few abstractions, gets a working demo in an afternoon, and walks away feeling like they understand Retrieval-Augmented Generation. Then someone asks them why their retrieval is returning irrelevant results, or why swapping the embedding model broke everything, and the answer is silence.</p>
+<p>I did not want that to be me. So I built RagLab — a hand-crafted RAG pipeline in .NET/C#, with no high-level framework magic. Every component written from scratch, every decision made consciously. This is what I learned.</p>
+
+</section>
+<section class="page-section" data-key="what-is-rag">
+  <h2 id="what-is-rag-and-why-does-it-matter">What is RAG, and why does it matter?</h2>
+<p>Large language models are powerful, but their knowledge is frozen at training time. Ask a model about something that happened last month, or about a document on your company's internal server, and it either hallucinates or admits it does not know.</p>
+<p>RAG solves this by separating two concerns: <strong>knowing</strong> and <strong>generating</strong>.</p>
+<p>Instead of asking the model to know everything, you build a searchable knowledge base from your own documents. When a question comes in, you first retrieve the relevant pieces from that knowledge base, then hand those pieces — and only those pieces — to the model as context. The model's job is just to synthesize an answer from what you give it. The knowledge comes from your data, not from the model's parameters.</p>
+<p>The practical consequence is significant: you can give the model access to any document, updated at any time, without retraining anything.</p>
+
+</section>
+<section class="page-section" data-key="the-pipeline">
+  <h2 id="the-two-flows">The Two Flows</h2>
+<p>A RAG system has two distinct flows. Understanding the difference between them is essential.</p>
+<p><strong>Indexing</strong> runs once, or whenever your documents change. This is the preparation phase.</p>
+<pre><code>File → Loader → Document → Chunker → Chunks → Embedder → Vectors → Vector Store
+</code></pre>
+<p><strong>Querying</strong> runs for every question a user asks.</p>
+<pre><code>Question → Embedder → Vector → Search → Top Chunks → Generator → Answer
+</code></pre>
+<p>Notice that the embedder appears in both flows. This is not a coincidence — it is one of the most important architectural constraints in any RAG system. The same embedding model must be used during indexing and querying. Vectors produced by different models live in incompatible mathematical spaces. Swap the embedding model and you have to re-index everything from scratch.</p>
+
+</section>
+<section class="page-section" data-key="component-loader">
+  <h2 id="the-loader">The Loader</h2>
+<p>The loader's job is to read a file and produce a clean, normalized internal representation. Nothing more, nothing less.</p>
+<p>&quot;RAG-ready&quot; is not a file format. It is a set of properties: clean text, consistent encoding, preserved structure where it matters, attached metadata. A PDF, a Markdown file, and a Word document all need to go through different parsing logic, but they all produce the same thing at the end: a <code>Document</code> with content and metadata.</p>
+<p>This is a textbook application of the adapter pattern. Each loader adapts a specific format into a common representation, and the rest of the pipeline never has to care about where the document came from.</p>
+<pre><code class="language-csharp">public interface IDocumentLoader
+{
+    bool CanLoad(string filePath);
+    Task&lt;Document&gt; LoadAsync(string filePath, CancellationToken ct = default);
+}
+</code></pre>
+<p>The <code>CanLoad</code> method is the key: the pipeline asks each registered loader in turn whether it can handle a given file. The first one that says yes takes the job. Adding a new format means implementing this interface — nothing else changes.</p>
+
+</section>
+<section class="page-section" data-key="component-chunker">
+  <h2 id="the-chunker">The Chunker</h2>
+<p>You cannot give an entire document to a language model. Context windows are finite, and even when they are large, flooding the model with irrelevant text degrades the quality of its answers. The chunker splits a document into manageable pieces.</p>
+<p>RagLab uses fixed-size character-based chunking with overlap. The overlap is the part that surprises people: if you split text at hard boundaries, you risk cutting a sentence — or a concept — in half. With overlap, every semantic unit is guaranteed to appear whole in at least one chunk.</p>
+<p><strong>Why characters and not tokens?</strong></p>
+<p>Tokens are the unit language models use internally. Token-based chunking would be more precise — you could guarantee that no chunk exceeds a model's context limit. But every model family has its own tokenizer. Tying the chunker to a specific tokenizer creates a coupling that makes the system brittle when you swap models. Character-based chunking is a deliberate simplification: modestly less precise, but completely model-independent.</p>
+<p>The right way to handle this in production is to treat the tokenizer as part of the model provider configuration, not part of the chunker. RagLab encodes this through the vertical slice pattern — each model provider registers its own chunk size and overlap tuned to its context window.</p>
+
+</section>
+<section class="page-section" data-key="component-embedder">
+  <h2 id="the-embedder">The Embedder</h2>
+<p>This is where the demystification really begins.</p>
+<p>An embedding model takes a piece of text and produces a list of numbers — a vector. For the model used in RagLab (<code>nomic-embed-text</code>), that list is 768 numbers long. What those numbers represent is the <em>meaning</em> of the text, encoded as a position in a 768-dimensional space.</p>
+<p>Texts with similar meanings end up close to each other in that space. &quot;The dog barked&quot; and &quot;The hound made noise&quot; will produce vectors that point in roughly the same direction. &quot;The stock market fell&quot; will point somewhere completely different.</p>
+<p>The key insight — and this took me a while to internalize — is that <strong>vectors are not passed to the language model</strong>. They exist exclusively to make the knowledge base searchable. The language model never sees a vector. It sees text — specifically, the text of the chunks the search retrieved.</p>
+<p>The embedder is also where the system becomes model-specific. Vectors produced by <code>nomic-embed-text</code> live in a completely different mathematical space than vectors produced by OpenAI's <code>text-embedding-ada-002</code>. They are incompatible. If you swap the embedding model, you have to re-index your entire knowledge base from scratch. The original documents are the source of truth; the vectors are a derived artifact.</p>
+
+</section>
+<section class="page-section" data-key="component-vectorstore">
+  <h2 id="the-vector-store">The Vector Store</h2>
+<p>The vector store holds all the embedded chunks and answers one question: given a query vector, which stored vectors are closest to it?</p>
+<p>RagLab implements this in memory using cosine similarity. The intuition is simple: two vectors can be compared by the angle between them. A small angle means they point in the same direction — similar meaning. Cosine similarity measures the cosine of that angle, producing a score between -1 and 1.</p>
+<pre><code class="language-csharp">private static float CosineSimilarity(float[] a, float[] b)
+{
+    float dot = 0, normA = 0, normB = 0;
+    for (int i = 0; i &lt; a.Length; i++)
+    {
+        dot   += a[i] * b[i];
+        normA += a[i] * a[i];
+        normB += b[i] * b[i];
+    }
+    return dot / (MathF.Sqrt(normA) * MathF.Sqrt(normB));
+}
+</code></pre>
+<p>The division by the vector lengths is the key operation: it removes the effect of length and isolates direction. The same text at different lengths should mean the same thing — and with cosine similarity, it does.</p>
+<p>The store returns the top-K most similar chunks. In RagLab, K defaults to 3. This is derived from the generation model's context window size minus the prompt template overhead. Too few chunks and you risk missing relevant information; too many and the model's attention gets diluted — a phenomenon sometimes called &quot;lost in the middle.&quot;</p>
+<p>RagLab uses a dual vector store: one for document knowledge, one for conversation history. Both are queried independently with separate topK allocations, preventing conversation history from pushing out relevant document chunks.</p>
+
+</section>
+<section class="page-section" data-key="component-generator">
+  <h2 id="the-generator">The Generator</h2>
+<p>The generator is the only component that involves a generative language model. Everything before it was preparation. Here, the assembled context and the original question are formatted into a prompt and sent to the model.</p>
+<pre><code>You are a helpful assistant.
+Answer exclusively based on the provided context.
+If the context does not contain relevant information, say so clearly.
+
+Context:
+[1] {chunk_1}
+[2] {chunk_2}
+[3] {chunk_3}
+
+Question: {query}
+</code></pre>
+<p>The &quot;answer exclusively based on the provided context&quot; instruction is load-bearing. Without it, the model will blend its own parametric knowledge with the retrieved context, making it impossible to know whether an answer came from your documents or from the model's training data. This constraint is what makes RAG auditable.</p>
+<p>The model itself is stateless. It has no memory of previous questions. The illusion of continuity in a conversation is always constructed by the application layer — by deciding what to include in the prompt for each call. This is not a limitation to work around; it is the correct mental model.</p>
+
+</section>
+<section class="page-section" data-key="architectural-decisions">
+  <h2 id="architectural-decisions">Architectural Decisions</h2>
+<h3 id="interfaces-over-implementations">Interfaces over implementations</h3>
+<p>Every component in RagLab is hidden behind an interface: <code>IDocumentLoader</code>, <code>IChunker</code>, <code>IEmbedder</code>, <code>IVectorStore</code>, <code>IGenerator</code>. The pipeline orchestrator depends on abstractions, not on concrete types.</p>
+<p>This is not cargo-culting SOLID principles. It reflects a real constraint: the components that are easy to swap (document loaders, generators) and the components that are expensive to swap (the embedder, because of re-indexing) are different. Having clear interfaces makes those swap points explicit — even when the swap itself requires work.</p>
+<h3 id="there-is-no-general-rag-only-model-specific-rag">There is no general RAG, only model-specific RAG</h3>
+<p>This was the most important thing I internalized while building this. Chunk size, overlap, topK — these are all downstream consequences of which embedding model and generation model you use. They travel together. A system that pretends they are independent configuration knobs will be fragile in practice.</p>
+<p>RagLab encodes this through the vertical slice pattern. Each model provider is a self-contained slice that owns its entire registration logic:</p>
+<pre><code class="language-csharp">// Program.cs — the only place a concrete type is instantiated
+IModelSlice slice = new LlamaSlice();
+// or: new ClaudeSlice();
+slice.Register(builder.Services, builder.Configuration);
+</code></pre>
+<p>Each slice brings its own <code>IEmbedder</code>, <code>IGenerator</code>, chunk size, overlap, and recommended topK as a coherent unit. Switching providers means changing one line.</p>
+<h3 id="records-for-data-sealed-classes-for-implementations">Records for data, sealed classes for implementations</h3>
+<p>Domain models are C# records — immutable, value-semantic, no behavior. Implementations are sealed classes. This keeps the distinction between &quot;data that flows through the pipeline&quot; and &quot;logic that transforms the data&quot; structurally clear.</p>
+
+</section>
+<section class="page-section" data-key="what-i-learned">
+  <h2 id="what-i-actually-learned">What I Actually Learned</h2>
+<p><strong>Basic math is enough.</strong> Cosine similarity is taught in secondary school. The only reason it feels exotic in ML contexts is the number of dimensions. The operation is identical whether you have 3 dimensions or 768.</p>
+<p><strong>Simplicity wins.</strong> Character-based chunking is less precise than token-based chunking. It is also trivially understandable, completely model-independent, and sufficient for the vast majority of use cases. The right question is never &quot;what is the most sophisticated approach?&quot; but &quot;what is the simplest approach that solves the actual problem?&quot;</p>
+<p><strong>Understanding the limits of a pattern matters more than knowing the pattern.</strong> RAG is not magic. It will return irrelevant results if the chunking is wrong. It will fail silently if you swap the embedding model without re-indexing. It will hallucinate if the prompt does not constrain the model to the provided context. Knowing <em>why</em> these failure modes exist is what lets you prevent and diagnose them.</p>
+<p><strong>Frameworks hide the interesting parts.</strong> LangChain and LlamaIndex are excellent tools for shipping. They are poor tools for understanding. Building from scratch forced me to make every decision explicitly — and every decision taught me something.</p>
+
+</section>
+<section class="page-section" data-key="whats-next">
+  <h2 id="what-comes-next">What Comes Next</h2>
+<p>RagLab is a living project. The planned next steps:</p>
+<p><strong>Phase 2</strong> replaces the in-memory vector store with Qdrant — a production-ready vector database — and adds a Claude API generator alongside the local LlamaSharp one. The Core interfaces remain unchanged; only new Infrastructure implementations are added.</p>
+<p><strong>Phase 3</strong> introduces hybrid search: combining semantic vector search with BM25 keyword search, plus reranking. This is where production RAG systems typically diverge from tutorial RAG systems.</p>
+<p>A <strong>vertical slice refactor</strong> will enforce the coupling between model provider and pipeline parameters structurally, not just by convention. The goal is compile-time guarantees, not runtime surprises.</p>
+<p>The code is available on <a href="https://github.com/vvidman/RagLab">GitHub</a>. Every component is intentionally minimal — the goal is always clarity over cleverness.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h2 id="problema-megfogalmazas">Probléma megfogalmazás</h2>
+<p>Egy mintát látok újra és újra az AI eszközök körüli fejlesztői közösségben. Valaki felfedezi a LangChain-t vagy a LlamaIndex-et, összefűz néhány absztrakciót, egy délután alatt kap egy működő demót — és azzal a meggyőződéssel megy el, hogy érti a Retrieval-Augmented Generation-t. Aztán valaki megkérdezi, miért ad vissza irreleváns eredményeket a retrieval, vagy miért tört el minden, amikor kicserélte az embedding modellt. Csönd a válasz.</p>
+<p>Én nem akartam ilyen lenni. Ezért építettem meg a RagLab-et — egy kézzel írt RAG pipeline-t .NET/C#-ban, framework varázslat nélkül. Minden komponens nulláról megírva, minden döntés tudatosan meghozva. Ez az, amit megtanultam.</p>
+
+</section>
+<section class="page-section" data-key="what-is-rag">
+  <h2 id="mi-az-a-rag-es-miert-fontos">Mi az a RAG, és miért fontos?</h2>
+<p>A nagy nyelvi modellek erősek, de tudásuk befagy a tanítás időpontjában. Kérdezz egy modellt valamiről, ami múlt hónapban történt, vagy a céged belső szerverén lévő dokumentumról — és vagy hallucinálja a választ, vagy bevallja, hogy nem tudja.</p>
+<p>A RAG ezt két szempont szétválasztásával oldja meg: <strong>tudás</strong> és <strong>generálás</strong>.</p>
+<p>Ahelyett, hogy mindent tudnia kellene a modellnek, egy kereshető tudásbázist építesz a saját dokumentumaidból. Amikor kérdés érkezik, először lekéred a releváns részeket ebből a tudásbázisból, majd csak ezeket adod át a modellnek kontextusként. A modell feladata csupán annyi, hogy szintetizáljon egy választ abból, amit kap. A tudás a te adataidból származik, nem a modell paramétereiből.</p>
+<p>A gyakorlati következmény jelentős: hozzáférést adhatsz a modellnek bármilyen dokumentumhoz, bármikor frissítve — anélkül, hogy bármit újra kellene tanítani.</p>
+
+</section>
+<section class="page-section" data-key="the-pipeline">
+  <h2 id="a-ket-folyamat">A két folyamat</h2>
+<p>Egy RAG rendszernek két különálló folyamata van. A kettő közötti különbség megértése elengedhetetlen.</p>
+<p>Az <strong>indexelés</strong> egyszer fut le, vagy amikor a dokumentumaid megváltoznak. Ez az előkészítési fázis.</p>
+<pre><code>Fájl → Loader → Document → Chunker → Chunks → Embedder → Vektorok → Vector Store
+</code></pre>
+<p>A <strong>lekérdezés</strong> minden felhasználói kérdésnél lefut.</p>
+<pre><code>Kérdés → Embedder → Vektor → Keresés → Top Chunks → Generator → Válasz
+</code></pre>
+<p>Figyeld meg, hogy az embedder mindkét folyamatban szerepel. Ez nem véletlen — ez az egyik legfontosabb architektúrális megszorítás bármely RAG rendszerben. Ugyanazt az embedding modellt kell használni az indexeléskor és a lekérdezéskor. Különböző modellek által előállított vektorok inkompatibilis matematikai terekben élnek. Cseréld ki az embedding modellt, és mindent újra kell indexelned nulláról.</p>
+
+</section>
+<section class="page-section" data-key="component-loader">
+  <h2 id="a-loader">A Loader</h2>
+<p>A loader feladata: beolvas egy fájlt, és egy tiszta, normalizált belső reprezentációt állít elő. Nem több, nem kevesebb.</p>
+<p>A &quot;RAG-ready&quot; nem fájlformátum. Tulajdonságok halmaza: tiszta szöveg, konzisztens kódolás, megőrzött struktúra ahol számít, csatolt metaadatok. Egy PDF, egy Markdown fájl és egy Word dokumentum mind különböző parsing logikán megy keresztül, de a végén ugyanazt adja vissza: egy <code>Document</code>-et, tartalommal és metaadatokkal.</p>
+<p>Ez az adapter pattern tankönyvi alkalmazása. Minden loader adaptál egy specifikus formátumot egy közös reprezentációra — a pipeline többi része soha nem törődik azzal, honnan jött a dokumentum.</p>
+<pre><code class="language-csharp">public interface IDocumentLoader
+{
+    bool CanLoad(string filePath);
+    Task&lt;Document&gt; LoadAsync(string filePath, CancellationToken ct = default);
+}
+</code></pre>
+<p>A <code>CanLoad</code> metódus a kulcs: a pipeline megkérdezi az összes regisztrált loadert, hogy kezelni tudja-e az adott fájlt. Az első, amelyik igent mond, elvégzi a munkát. Új formátum hozzáadása annyit jelent, hogy implementálod ezt az interface-t — más nem változik.</p>
+
+</section>
+<section class="page-section" data-key="component-chunker">
+  <h2 id="a-chunker">A Chunker</h2>
+<p>Nem adhatsz egy teljes dokumentumot egy nyelvi modellnek. A context window véges, és még ha nagy is, az irreleváns szöveggel való árasztás rontja a válaszok minőségét. A chunker feldarabolja a dokumentumot kezelhető darabokra.</p>
+<p>A RagLab fix méretű, karakter-alapú chunking-ot használ, átfedéssel. Az átfedés az a rész, ami meglepetést okoz: ha kemény határon osztod el a szöveget, félbevághatod a mondatot — vagy egy koncepciót. Az átfedéssel garantálható, hogy minden szemantikai egység legalább egy chunkban teljes egészében megjelenik.</p>
+<p><strong>Miért karakterek és nem tokenek?</strong></p>
+<p>A tokenek azok az egységek, amelyeket a nyelvi modellek belül használnak. A token-alapú chunking pontosabb lenne — garantálhatnád, hogy egyetlen chunk sem lépi túl a modell context limitjét. De minden modellcsaládnak saját tokenizere van. Ha a chunkert egy specifikus tokenizerhez kötöd, törékeny rendszert kapsz, amikor modellt cserélsz. A karakter-alapú chunking tudatos egyszerűsítés: kicsit kevésbé pontos, de teljesen modell-független.</p>
+<p>A helyes megközelítés az, hogy a tokenizert a modell provider konfigurációjának részeként kezeled, nem a chunkeren belül. A RagLab ezt a vertical slice pattern segítségével kódolja — minden model provider regisztrálja a saját chunk méretét és átfedési értékét, a saját context windowjára hangolva.</p>
+
+</section>
+<section class="page-section" data-key="component-embedder">
+  <h2 id="az-embedder">Az Embedder</h2>
+<p>Itt kezdődik a valódi demisztifikáció.</p>
+<p>Egy embedding modell fogja a szöveget, és előállít egy számlistát — egy vektort. A RagLab-ban használt modell (<code>nomic-embed-text</code>) esetén ez a lista 768 szám hosszú. Amit ezek a számok reprezentálnak, az a szöveg <em>jelentése</em>, 768 dimenziós térben kódolva.</p>
+<p>A hasonló jelentésű szövegek közel kerülnek egymáshoz ebben a térben. &quot;A kutya ugatott&quot; és &quot;Az eb hangot adott ki&quot; nagyjából azonos irányba mutató vektorokat fog produkálni. &quot;A tőzsde esett&quot; teljesen más irányba mutat.</p>
+<p>A kulcsgondolat — és ezt egy ideig tartott belsővé tennem — az, hogy <strong>a vektorok nem kerülnek át a nyelvi modellhez</strong>. Kizárólag arra léteznek, hogy kereshetővé tegyék a tudásbázist. A nyelvi modell soha nem lát vektort. Szöveget lát — pontosabban azoknak a chunkoknak a szövegét, amelyeket a keresés visszaadott.</p>
+<p>Az embedder az a pont, ahol a rendszer modell-specifikussá válik. A <code>nomic-embed-text</code> által előállított vektorok teljesen más matematikai térben élnek, mint az OpenAI <code>text-embedding-ada-002</code> által előállítottak. Inkompatibilisek. Ha kicseréled az embedding modellt, a teljes tudásbázisodat nulláról kell újraindexelned. Az eredeti dokumentumok az igazság forrása; a vektorok levezetett artifaktok.</p>
+
+</section>
+<section class="page-section" data-key="component-vectorstore">
+  <h2 id="a-vector-store">A Vector Store</h2>
+<p>A vector store tárolja az összes beágyazott chunkot, és egyetlen kérdésre válaszol: adott egy lekérdezési vektor — melyik tárolt vektorok állnak a legközelebb hozzá?</p>
+<p>A RagLab ezt memóriában implementálja, koszinusz hasonlóság (cosine similarity) segítségével. Az intuíció egyszerű: két vektort az általuk bezárt szög alapján lehet összehasonlítani. Kis szög azt jelenti, hogy azonos irányba mutatnak — hasonló a jelentésük. A cosine similarity ennek a szögnek a koszinuszát méri, -1 és 1 közötti értéket adva vissza.</p>
+<pre><code class="language-csharp">private static float CosineSimilarity(float[] a, float[] b)
+{
+    float dot = 0, normA = 0, normB = 0;
+    for (int i = 0; i &lt; a.Length; i++)
+    {
+        dot   += a[i] * b[i];
+        normA += a[i] * a[i];
+        normB += b[i] * b[i];
+    }
+    return dot / (MathF.Sqrt(normA) * MathF.Sqrt(normB));
+}
+</code></pre>
+<p>A vektorhosszakkal való osztás a kulcsoperáció: eltávolítja a hossz hatását, és csak az irányt hagyja meg. Ugyanaz a szöveg különböző hosszban leírva ugyanazt kell hogy jelentse — és a cosine similarity esetén így is van.</p>
+<p>A store visszaadja a top-K leghasonlóbb chunkot. A RagLab-ban K alapértelmezetten 3. Ez a generáló modell context window méretéből és a prompt template overhead-jéből következik. Túl kevés chunk: fennáll a veszély, hogy releváns információt hagysz ki. Túl sok: a modell figyelme szétoszlik — ezt a jelenséget néha &quot;lost in the middle&quot;-nek hívják.</p>
+<p>A RagLab duális vector store-t használ: egy a dokumentumtudásnak, egy a conversation historynak. Mindkettőből külön, független topK allokációval történik a lekérdezés — ez megakadályozza, hogy a history kiszorítsa a releváns dokumentum chunkokat.</p>
+
+</section>
+<section class="page-section" data-key="component-generator">
+  <h2 id="a-generator">A Generator</h2>
+<p>A generator az egyetlen komponens, amely generatív nyelvi modellt használ. Minden, ami előtte volt, előkészítés. Itt az összegyűjtött kontextus és az eredeti kérdés egy promptba formázódik, és elküldésre kerül a modellnek.</p>
+<pre><code>You are a helpful assistant.
+Answer exclusively based on the provided context.
+If the context does not contain relevant information, say so clearly.
+
+Context:
+[1] {chunk_1}
+[2] {chunk_2}
+[3] {chunk_3}
+
+Question: {query}
+</code></pre>
+<p>Az &quot;answer exclusively based on the provided context&quot; utasítás kritikus. Nélküle a modell összekeveri saját paraméteres tudását a visszakeresett kontextussal — és lehetetlenné válik megállapítani, hogy egy válasz a te dokumentumaidból vagy a modell tanítási adataiból származik. Ez a megszorítás teszi a RAG-ot auditálhatóvá.</p>
+<p>A modell maga állapotmentes. Nincs emlékezete korábbi kérdésekre. A folyamatosság illúzióját mindig az alkalmazás rétege építi fel — azzal, hogy dönt: mi kerüljön bele az egyes hívások promptjába. Ez nem egy korlát, amit ki kell kerülni; ez a helyes mentális modell.</p>
+
+</section>
+<section class="page-section" data-key="architectural-decisions">
+  <h2 id="architekturalis-dontesek">Architektúrális döntések</h2>
+<h3 id="interface-ek-az-implementaciok-felett">Interface-ek az implementációk felett</h3>
+<p>A RagLab minden komponense interface mögé van rejtve: <code>IDocumentLoader</code>, <code>IChunker</code>, <code>IEmbedder</code>, <code>IVectorStore</code>, <code>IGenerator</code>. A pipeline orchestrátora absztrakciókra támaszkodik, nem konkrét típusokra.</p>
+<p>Ez nem SOLID elvek cargo-cult követése. Egy valódi megszorítást tükröz: a könnyen cserélhető komponensek (document loaderek, generátorok) és a drágán cserélhető komponensek (az embedder, az újraindexelés miatt) különbözők. Az egyértelmű interface-ek láthatóvá teszik ezeket a cserepontokat — akkor is, ha maga a csere munkát igényel.</p>
+<h3 id="nincs-altalanos-rag-csak-modell-specifikus-rag">Nincs általános RAG, csak modell-specifikus RAG</h3>
+<p>Ez volt a legfontosabb dolog, amit az építés során belsővé tettem. A chunk méret, az átfedés, a topK — ezek mind az embedding és generáló modell megválasztásának következményei. Együtt járnak. Egy rendszer, amely úgy tesz, mintha független konfigurációs gombok lennének, törékeny lesz.</p>
+<p>A RagLab ezt a vertical slice pattern segítségével kódolja. Minden model provider egy önálló szelet, amely a teljes regisztrációs logikájának tulajdonosa:</p>
+<pre><code class="language-csharp">// Program.cs — az egyetlen hely, ahol konkrét típus példányosodik
+IModelSlice slice = new LlamaSlice();
+// vagy: new ClaudeSlice();
+slice.Register(builder.Services, builder.Configuration);
+</code></pre>
+<p>Minden szelet hozza a saját <code>IEmbedder</code>-ét, <code>IGenerator</code>-át, chunk méretét, átfedési értékét és ajánlott topK-ját — koherens egységként. A provider cseréje egyetlen sor módosítását jelenti.</p>
+<h3 id="record-ok-az-adatnak-sealed-class-ok-az-implementacionak">Record-ok az adatnak, sealed class-ok az implementációnak</h3>
+<p>A domain modellek C# record-ok — immutábilisek, értékszemantikájúak, viselkedés nélkül. Az implementációk sealed class-ok. Ez strukturálisan egyértelművé teszi a különbséget &quot;a pipeline-on átfolyó adatok&quot; és &quot;az adatokat transzformáló logika&quot; között.</p>
+
+</section>
+<section class="page-section" data-key="what-i-learned">
+  <h2 id="amit-tenyleg-megtanultam">Amit tényleg megtanultam</h2>
+<p><strong>Az alap matek elég.</strong> A cosine similarity-t középiskolában tanítják. Az egyetlen ok, amiért egzotikusnak tűnik ML kontextusban, a dimenziók száma. A művelet azonos, akár 3, akár 768 dimenzióban.</p>
+<p><strong>Az egyszerűség nyer.</strong> A karakter-alapú chunking kevésbé pontos, mint a token-alapú. De triviálisan érthető, teljesen modell-független, és a használati esetek túlnyomó többségéhez elegendő. A helyes kérdés soha nem az, hogy &quot;mi a legsofisztikáltabb megközelítés?&quot;, hanem: &quot;mi a legegyszerűbb megközelítés, amely megoldja a valódi problémát?&quot;</p>
+<p><strong>A pattern korlátainak megértése fontosabb, mint a pattern ismerete.</strong> A RAG nem mágia. Irreleváns eredményeket ad, ha a chunking rossz. Csendben sikertelen lesz, ha az embedding modellt cseréled újraindexelés nélkül. Hallucináció lép fel, ha a prompt nem szorítja a modellt a kapott kontextusra. Annak ismerete, <em>miért</em> léteznek ezek a hibamódok, az, ami lehetővé teszi megelőzésüket és diagnosztizálásukat.</p>
+<p><strong>A frameworkök elrejtik az érdekes részeket.</strong> A LangChain és a LlamaIndex kiváló eszközök a szállításhoz. Gyenge eszközök a megértéshez. A nulláról való építés arra kényszerített, hogy minden döntést expliciten hozzak meg — és minden döntés tanított valamit.</p>
+
+</section>
+<section class="page-section" data-key="whats-next">
+  <h2 id="mi-jon-ezutan">Mi jön ezután</h2>
+<p>A RagLab egy élő projekt. A tervezett következő lépések:</p>
+<p>A <strong>2. fázis</strong> lecseréli a memória-alapú vector store-t Qdrant-ra — egy production-ready vektoradatbázisra — és hozzáad egy Claude API generátort a helyi LlamaSharp mellé. A Core interface-ek változatlanok maradnak; csak új Infrastructure implementációk kerülnek hozzáadásra.</p>
+<p>A <strong>3. fázis</strong> hibrid keresést vezet be: szemantikai vektor keresés és BM25 kulcsszó keresés kombinációja, plusz rerankinggal. Itt szoktak a production RAG rendszerek eltérni a tutorial RAG rendszerektől.</p>
+<p>A <strong>vertical slice refactor</strong> strukturálisan kényszeríti ki a model provider és a pipeline paraméterek közötti összekapcsoltságot — nem csupán konvenció alapján. A cél a fordítási idejű garancia, nem a futásidejű meglepetés.</p>
+<p>A kód elérhető a <a href="https://github.com/vvidman/RagLab">GitHubon</a>. Minden komponens szándékosan minimális — a cél mindig az érthetőség, nem az okosság.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>
