@@ -2,7 +2,7 @@
 title: About
 slug: about/index.html
 layout: page
-description: Software architect with 11+ years in .NET backend development and a growing focus on AI-augmented engineering workflows.
+description: Software architect with 16+ years in .NET backend development and a growing focus on AI-augmented engineering workflows.
 ---
 
 :::section me
@@ -20,7 +20,7 @@ description: Software architect with 11+ years in .NET backend development and a
 
 I am a **software architect** with over sixteen years of professional experience in backend development,
 primarily in **C# and .NET**. The last eleven of those years I've spent at a single employer — not by accident,
-but because the problems kept getting more interesting. I was promoted to architect based on what I built,
+but because the problems kept getting more interesting. I was promoted to architect based on what I did,
 not how long I waited.
 
 My domain is systems that have to keep working while you improve them: existing users, existing data,
@@ -29,6 +29,8 @@ interesting than greenfield projects.
 
 Alongside that, I've spent the past two years developing a second area of focus:
 **AI-augmented development workflows** — not as a curiosity, but as a serious design problem.
+How do you structure a process where the AI is a real participant, not just a fancy autocomplete?
+That question has been driving most of what I build outside of work hours.
 :::lang
 
 :::lang hu
@@ -36,7 +38,7 @@ Alongside that, I've spent the past two years developing a second area of focus:
 
 **Szoftver architekt** vagyok, tizenhat évnyi szakmai tapasztalattal, elsősorban **C# és .NET** technológiákban.
 Az utolsó tizenegy évet egyetlen munkahelyen töltöttem — nem véletlenül, hanem mert a problémák egyre érdekesebbé váltak.
-Architektté nem a várakozással kerültem, hanem azzal, amit felépítettem.
+Képességeim emeltek architektté.
 
 A szakterületem: rendszerek, amelyeknek működniük kell, miközben fejlesztjük őket.
 Meglévő felhasználók, meglévő adatok, meglévő kód. A valódi mérnöki munka nagy része
@@ -44,6 +46,8 @@ ezeken a korlátok között zajlik — és ezt érdekesebbnek találom a zöldme
 
 Az elmúlt két évben egy második fókuszterületet is kialakítottam:
 **AI-augmented fejlesztési workflow-k** — nem kíváncsiságból, hanem komoly tervezési kérdésként kezelve.
+Hogyan építesz fel egy folyamatot, ahol az AI valódi résztvevő, nem csak egy felturbózott autocomplete?
+Ez a kérdés hajtja azt, amit munkán kívül építek.
 :::lang
 :::section
 
@@ -56,6 +60,8 @@ Az elmúlt két évben egy második fókuszterületet is kialakítottam:
 - Human-in-the-loop AI workflow design: how to integrate AI into a delivery process without losing engineering discipline
 - Structured output validation and error-driven refinement in AI-assisted pipelines
 - Multi-agent system architecture and the question of when to trust the agent and when to intervene
+- Observability for AI pipelines — structured tracing, span/trace models, queryable metadata
+- Context engineering: keeping the AI's working context small, precise, and deliberately layered
 - Containerized development and deployment workflows
 - CI/CD pipeline design with Jenkins and GitHub Actions
 
@@ -71,6 +77,8 @@ On the AI side: Claude API, OpenAI API, Groq, LlamaSharp, and local LLM setups f
 - Human-in-the-loop AI workflow tervezés: hogyan integrálható az AI egy fejlesztési folyamatba anélkül, hogy elveszítenénk a mérnöki fegyelmet
 - Strukturált output validáció és error-driven refinement AI-asszisztált pipeline-okban
 - Multi-agent rendszer architektúra: mikor bízzunk meg az ágensben, és mikor avatkozzunk be
+- Observability AI pipeline-okhoz — strukturált tracing, span/trace modell, lekérdezhető metaadatok
+- Context engineering: az AI munkakontextusának szándékosan rétegezett, kis méretű és precíz kezelése
 - Konténerizált fejlesztési és deployment workflow-k
 - CI/CD pipeline tervezés Jenkins és GitHub Actions környezetben
 
@@ -91,9 +99,19 @@ I hold the same view about AI-assisted development. The question isn't how to ge
 It's how to keep the human in the right position: setting direction, validating outputs,
 owning outcomes. **The human orchestrates. The AI executes.**
 
-That principle is behind both personal projects I've built in this space —
-[Scaffold Protocol](/posts/post-sp01.html) and [ChaosForge](/posts/post-chaosforge-01.html) —
-and it's the lens I apply to my daily work.
+That principle runs through everything I build in this space.
+
+On the **pipeline side**: [Scaffold Protocol](/posts/post-sp01.html) is a human-in-the-loop AI pipeline
+with explicit orchestration and revision gates. [ChaosForge](/posts/post-chaosforge-01.html) is a
+multi-agent Scrum simulator where agent roles and revision gates are first-class design concerns.
+[RagLab](/posts/post-raglab-01.html) is a handbuilt RAG pipeline in .NET — because understanding
+what retrieval-augmented generation actually does requires building it yourself, not wrapping a library.
+[AiObservability](https://github.com/vvidman/AiObservability) is a cross-project tracing library that instruments all
+three: every LLM call, retrieval step, and agent action becomes a queryable span.
+
+On the **workflow side**: I also publish template repositories that capture the collaboration patterns
+behind these projects — how to structure context for an AI coding assistant, how to close the feedback
+loop between a reasoning model and an implementation tool, and where the human boundary sits in each case.
 
 I have a formal engineering background (MSc) and I rely on it more than I expected:
 structured decomposition, validation boundaries, and the discipline to separate
@@ -113,9 +131,20 @@ többet az AI-val. Hanem az, hogyan tartsuk az embert a megfelelő pozícióban:
 irányítja a folyamatot, validálja az outputot, felel az eredményért.
 **Az ember orchestrál. Az AI végrehajtja.**
 
-Ez az elv áll mindkét személyes projektem mögött —
-[Scaffold Protocol](/posts/post-sp01.html) és [ChaosForge](/posts/post-chaosforge-01.html) —
-és ugyanezt a szemléletet alkalmazom a napi munkámra is.
+Ez az elv húzódik végig mindenen, amit ezen a területen építek.
+
+**Pipeline oldalon**: a [Scaffold Protocol](/posts/post-sp01.html) egy human-in-the-loop AI pipeline
+explicit orchestrációval és revision gate-ekkel. A [ChaosForge](/posts/post-chaosforge-01.html) egy
+multi-agent Scrum szimulátor, ahol az ágensszerepek és a revision gate-ek first-class tervezési
+szempontok. A [RagLab](/posts/post-raglab-01.html) egy saját kezűleg épített RAG pipeline .NET-ben —
+mert a retrieval-augmented generation megértéséhez fel kell építeni, nem csak becsomagolni egy könyvtárat.
+Az [AiObservability](https://github.com/vvidman/AiObservability) egy cross-project tracing könyvtár, amely mindhárom
+projektet lefedi: minden LLM hívás, retrieval lépés és agent akció lekérdezhető spanként tárolódik.
+
+**Workflow oldalon**: publikus template repókat is közzéteszek, amelyek az ezek mögötti
+együttműködési mintákat rögzítik — hogyan strukturáld az AI kódolási asszisztens kontextusát,
+hogyan zárd le a visszacsatolási hurkot egy reasoning modell és egy implementációs eszköz között,
+és hol legyen az emberi határ minden esetben.
 
 Formális mérnöki háttérrel rendelkezem (MSc), és jobban támaszkodok rá, mint vártam:
 a strukturált dekompozíció, a validációs határok meghúzása, és az a fegyelem, hogy szétválasszuk
