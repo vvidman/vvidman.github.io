@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - VCS as Proof Store</title>
+
+  <meta name="description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/sourcerag-01.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/sourcerag-01.html">
+  <meta property="og:title" content="Viktor Vidman - VCS as Proof Store">
+  <meta property="og:description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/sourcerag_part1.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>VCS as Proof Store</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h1 id="vcs-as-proof-store">VCS as Proof Store</h1>
+<p>Every RAG system I've built or studied follows the same pattern. You have a source repository. You extract the content. You store it in a proof database. You embed it. You search it. Two copies of everything, an ongoing sync obligation, and a proof store you have to maintain yourself.</p>
+<p>I kept coming back to the same question: the overhead is real, but is it necessary?</p>
+<p>Git already knows every file, every method, every author, every commit message — with exact timestamps and full revision history. If I'm already on source control, I'm already maintaining a proof store. I just haven't been querying it directly.</p>
+<p>SourceRAG is my attempt to test this hypothesis. This is a concept project — README and architecture decisions are in place, implementation is underway. I'm writing about it as I build.</p>
+
+</section>
+<section class="page-section" data-key="problem">
+  <h2 id="the-duplication-cost">The duplication cost</h2>
+<p>Traditional RAG over a codebase looks roughly like this:</p>
+<ol>
+<li>A source file is committed to version control</li>
+<li>A background process extracts its content and stores it in a relational proof database</li>
+<li>Chunks are embedded and written to a vector store</li>
+<li>At query time, results come back as text chunks — detached from their origin</li>
+</ol>
+<p>The proof database is what makes answers auditable. You can trace a result back to a row, and that row tells you what file it came from and when it was indexed. The problem is that the database is a snapshot — it drifts from the repository the moment someone pushes a commit. You need incremental indexing, re-sync logic, and schema migrations to keep it current.</p>
+<p>And the content itself still lives in the repository. The database is a derivative. You're maintaining a derived copy of something that already exists and is already versioned.</p>
+
+</section>
+<section class="page-section" data-key="principle">
+  <h2 id="the-core-decision-vcs-is-the-proof-store">The core decision: VCS is the proof store</h2>
+<p><strong>ADR-002</strong> captures this as a hard architectural constraint: no source content is stored outside the repository. The vector store holds only embeddings and metadata. At query time, actual file content is reconstructed on-demand from the VCS using a revision reference.</p>
+<p>This has a specific consequence: every answer is traceable not just to a file, but to a specific revision of that file, to the author of that revision, and to the commit message that explains why the change was made. The proof isn't a database row — it's a commit in your repository's history.</p>
+<p>The overhead moves from &quot;maintain a copy&quot; to &quot;query what you already have.&quot; Whether that trade-off holds in practice is exactly what this project is testing.</p>
+
+</section>
+<section class="page-section" data-key="architecture">
+  <h2 id="solution-structure">Solution structure</h2>
+<p>The solution follows Clean Architecture across six projects, with a hard dependency rule: Domain has no dependencies, Application depends only on Domain, Infrastructure implements Domain interfaces, and the two host projects are isolated from each other.</p>
+<pre><code>SourceRAG.sln
+├── src/
+│   ├── SourceRAG.Domain/          # Entities, interfaces, enums
+│   ├── SourceRAG.Application/     # Use cases, MediatR handlers
+│   ├── SourceRAG.Infrastructure/  # VCS, Embedding, Chunking, Qdrant
+│   ├── SourceRAG.Api/             # ASP.NET Core minimal API (REST)
+│   ├── SourceRAG.McpHost/         # MCP server host
+│   └── SourceRAG.Web/             # Blazor Web UI
+└── tests/
+    ├── SourceRAG.Domain.Tests/
+    ├── SourceRAG.Application.Tests/
+    └── SourceRAG.Infrastructure.Tests/
+</code></pre>
+<p>The two hosting projects — <code>SourceRAG.Api</code> and <code>SourceRAG.McpHost</code> — share the same Application layer via MediatR. Neither knows about the other. This means the same use cases are available over REST and over MCP without any duplication of business logic.</p>
+<p>All provider choices — which VCS, which embedding model — are runtime-configurable via <code>appsettings.json</code>. No code change is needed to switch between Git and SVN, or between a local LLamaSharp model and an API-based embedding provider.</p>
+<pre><code class="language-json">{
+  &quot;SourceRAG&quot;: {
+    &quot;VcsProvider&quot;: &quot;Git&quot;,
+    &quot;EmbeddingProvider&quot;: &quot;Local&quot;,
+    &quot;RepositoryPath&quot;: &quot;/path/to/repo&quot;,
+    &quot;Branch&quot;: &quot;main&quot;
+  }
+}
+</code></pre>
+
+</section>
+<section class="page-section" data-key="vcs_providers">
+  <h2 id="vcs-providers-git-and-svn-as-vertical-slices">VCS providers: Git and SVN as vertical slices</h2>
+<p><strong>ADR-001</strong> defines VCS support as paired vertical slices: each provider implements both a repository reader and a blame provider, encapsulated together. Adding a new VCS means adding a new slice — not modifying existing code.</p>
+<p>In practice this means Git uses LibGit2Sharp and SVN uses SharpSvn, but both expose the same domain interface. The revision concept is mapped consistently: Git uses commit SHA, SVN uses revision number. Re-index detection works by diffing the current head against the last indexed revision — <code>HEAD..lastIndexed</code> for Git, <code>GetLog(fromRev, HEAD)</code> for SVN.</p>
+<p><strong>ADR-005</strong> deliberately limits indexing scope to a single branch — <code>main</code> for Git, <code>trunk</code> for SVN. Multi-branch support is a scope decision, not a missing capability. The assumption is that the canonical branch contains what matters for knowledge retrieval.</p>
+<p><strong>ADR-010</strong> addresses credentials. VCS operations run under a read-only service role. Credentials are resolved through environment variables via <code>IVcsCredentialProvider</code> — no credentials in config files, no hardcoded values in code.</p>
+
+</section>
+<section class="page-section" data-key="chunking">
+  <h2 id="chunking-roslyn-first-plain-text-fallback">Chunking: Roslyn first, plain text fallback</h2>
+<p><strong>ADR-003</strong> defines chunking as a Chain of Responsibility. The first handler that can process a file claims it; the rest are skipped.</p>
+<p>For C# files, the primary handler uses Roslyn. It parses the syntax tree and extracts chunks at meaningful semantic boundaries — methods, classes, properties. This means a chunk corresponds to something a developer would reason about, not an arbitrary line window. Symbol name and type are known at chunking time and go directly into the vector store payload.</p>
+<p>For everything else — configuration files, documentation, SQL scripts, any non-C# source — a plain text handler takes over. It applies a sliding window with overlap to avoid cutting context at hard boundaries.</p>
+<p>The chain is ordered and extensible. Adding support for another language means inserting a new handler into the chain before the plain text fallback, with no changes to the rest of the pipeline.</p>
+
+</section>
+<section class="page-section" data-key="embedding">
+  <h2 id="embedding-local-or-api-no-code-change-required">Embedding: local or API, no code change required</h2>
+<p><strong>ADR-004</strong> defines embedding as a config-driven provider choice. <code>EmbeddingProvider: &quot;Local&quot;</code> routes through LlamaSharp with a locally hosted GGUF model — offline, no API key, no data leaving the machine. <code>EmbeddingProvider: &quot;Api&quot;</code> routes through the Anthropic API.</p>
+<p>Both providers implement the same <code>IEmbeddingProvider</code> interface. The Application layer calls the interface. It has no knowledge of which implementation is active.</p>
+<p>For the current project phase, the local path is the default. The rationale is the same as in Scaffold Protocol: hardware-constrained offline-first development, with API-based providers as an option if a production context emerges. The difference here is that SourceRAG is designed as a multi-user system from the start — the API path matters more as scale increases.</p>
+
+</section>
+<section class="page-section" data-key="proof_payload">
+  <h2 id="the-chunk-proof-payload">The chunk proof payload</h2>
+<p><strong>ADR-006</strong> defines what gets stored in Qdrant for each indexed chunk. The point ID is deterministic: <code>sha256(repoPath + filePath + symbolName + revision)</code>. The same chunk indexed twice produces the same ID — which means re-indexing is idempotent by construction.</p>
+<p>The payload is the proof structure:</p>
+<pre><code class="language-json">{
+  &quot;file_path&quot;: &quot;src/Core/ImageProcessor.cs&quot;,
+  &quot;symbol_name&quot;: &quot;ProcessTile&quot;,
+  &quot;symbol_type&quot;: &quot;Method&quot;,
+  &quot;revision&quot;: &quot;a3f9c12e&quot;,
+  &quot;author&quot;: &quot;vvidman&quot;,
+  &quot;commit_message&quot;: &quot;Fix OOM on large WSI files&quot;,
+  &quot;timestamp&quot;: &quot;2024-11-03T14:22:00Z&quot;,
+  &quot;branch&quot;: &quot;main&quot;,
+  &quot;start_line&quot;: 42,
+  &quot;end_line&quot;: 78
+}
+</code></pre>
+<p>No source code is in this payload. At query time, the system takes <code>revision</code> and <code>file_path</code>, calls the VCS, and reconstructs the exact content as it existed at that commit. The proof isn't a stored copy — it's a pointer into version history.</p>
+<p>This is what makes the approach interesting: the payload is small, the vector store stays lean, and the auditability is richer than what a traditional proof database would give you. You get authorship and change intent, not just file content.</p>
+
+</section>
+<section class="page-section" data-key="hosting">
+  <h2 id="dual-hosting-rest-and-mcp-over-a-shared-application-layer">Dual hosting: REST and MCP over a shared Application layer</h2>
+<p><strong>ADR-008</strong> is the most structurally significant decision in the solution: the same Application layer is shared by two independent host projects. <code>SourceRAG.Api</code> exposes a REST interface consumed by the Blazor web client. <code>SourceRAG.McpHost</code> exposes an MCP server consumed by AI agents — Claude Desktop, GitHub Copilot, or any MCP-compatible client.</p>
+<p>Neither host project contains business logic. Both dispatch to the Application layer via MediatR. Adding a third host — a CLI, a gRPC service — would require no changes to Application or Infrastructure.</p>
+<p>The MCP server exposes three tools:</p>
+<pre><code class="language-md">| Tool | Description |
+|---|---|
+| `search_codebase` | Semantic search over the indexed repository |
+| `index_repository` | Trigger full or incremental reindex |
+| `get_index_status` | Return current index state, last revision, chunk count |
+</code></pre>
+<p><strong>ADR-009</strong> defines the Blazor client as a typed <code>HttpClient</code> targeting the REST API. The web client has no direct dependency on Application or Infrastructure — it's a consumer of the API, not a host.</p>
+<p><strong>ADR-011</strong> covers authentication. Both the Blazor web UI and the MCP server authenticate via Azure AD / Entra ID using OAuth 2.0. The decision to use Entra ID was driven by the multi-user design assumption — this isn't a single-developer local tool. Authentication is a first-class concern from the start.</p>
+
+</section>
+<section class="page-section" data-key="observability">
+  <h2 id="observability-across-the-pipeline">Observability across the pipeline</h2>
+<p><strong>ADR-007</strong> adds AiObservability instrumentation to both the indexing and query pipelines. Every significant operation — a chunking pass, an embedding call, a vector store write, a semantic search — produces a span. The spans are structured and carry context: which file was chunked, which revision was being indexed, how many chunks were produced, how long the embedding took.</p>
+<p>This matters in a RAG system because failures aren't always obvious. A file that produces zero chunks is a silent omission. An embedding call that times out degrades retrieval quality without throwing an exception. Observability turns these into visible, queryable events.</p>
+<p>AiObservability is a companion library I maintain separately. SourceRAG integrates it — this is one of the related projects listed in the README.</p>
+
+</section>
+<section class="page-section" data-key="repo_link">
+  <h2 id="source">Source</h2>
+<p>The repository is available on GitHub: <a href="https://github.com/vvidman/SourceRAG">SourceRAG</a></p>
+
+</section>
+<section class="page-section" data-key="status">
+  <h2 id="where-this-stands">Where this stands</h2>
+<p>SourceRAG is at concept and README stage. The architecture decisions are locked, the solution structure is defined, and the core interfaces are sketched. Implementation is beginning.</p>
+<p>The question I'm actually testing is simple: does removing the proof store duplication produce a system that is meaningfully simpler to operate? The expected gains are clear on paper — no sync logic, no schema drift, richer traceability for free. Whether those gains survive contact with real repositories, real commit histories, and real query patterns is what the implementation will answer.</p>
+<p>I'll write about what I find — including what doesn't work. If you've built something similar, or if the VCS-as-proof-store idea surfaces a problem I haven't considered, I'd like to hear it.</p>
+<p><em>Related projects: <a href="https://github.com/vvidman/RagLab">RagLab</a> · <a href="https://github.com/vvidman/AiObservability">AiObservability</a> · <a href="https://github.com/vvidman/ScaffoldProtocol">Scaffold Protocol</a></em></p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h1 id="vcs-mint-proof-tar">VCS mint proof tár</h1>
+<p>Minden RAG rendszer, amit eddig építettem vagy tanulmányoztam, ugyanazt a mintát követi. Van egy source repository. Kinyerjük a tartalmat. Betároljuk egy proof adatbázisba. Embedeljük. Keresünk benne. Minden adat két helyen él, folyamatos szinkronizációs kötelezettséggel, és egy proof tárral, amit magunknak kell karbantartani.</p>
+<p>Mindig visszatértem ugyanahhoz a kérdéshez: az overhead valós, de valóban szükséges?</p>
+<p>A git már tudja az összes fájlt, minden metódust, minden szerzőt, minden commit üzenetet — pontos időbélyeggel és teljes revíziótörténettel. Ha már source control alatt van a kódom, már fenntartok egy proof tárat. Csak nem kérdeztem le közvetlenül.</p>
+<p>A SourceRAG ennek a hipotézisnek a tesztelése. Ez egy koncepcióprojekt — a README és az architektúrális döntések megvannak, az implementáció folyamatban van. Menet közben írok róla.</p>
+
+</section>
+<section class="page-section" data-key="problem">
+  <h2 id="a-duplikacio-ara">A duplikáció ára</h2>
+<p>A kódbázis feletti hagyományos RAG nagyjából így néz ki:</p>
+<ol>
+<li>Egy forrást commitolnak a verziókezelőbe</li>
+<li>Egy háttérfolyamat kinyeri a tartalmát és betárolja egy relációs proof adatbázisba</li>
+<li>A chunkokat embedeljük és a vektortárba írjuk</li>
+<li>Lekérdezéskor szövegcsomagok jönnek vissza — leválasztva az eredetüktől</li>
+</ol>
+<p>A proof adatbázis teszi az eredményeket auditálhatóvá. Egy találatot vissza lehet vezetni egy sorra, és az a sor megmondja, melyik fájlból származik és mikor lett indexelve. A probléma az, hogy az adatbázis egy pillanatkép — azonnal eltér a repositorytól, amint valaki pusholunk egy commitot. Inkrementális indexelés, újraszinkronizálási logika és séma-migrációk szükségesek ahhoz, hogy aktuális maradjon.</p>
+<p>A tartalom maga viszont még mindig a repositoryban él. Az adatbázis egy leszármaztatott. Egy olyan dolog leszármaztatott másolatát tartjuk fenn, amely már létezik és már verziózott.</p>
+
+</section>
+<section class="page-section" data-key="principle">
+  <h2 id="az-alapdontes-a-vcs-a-proof-tar">Az alapdöntés: a VCS a proof tár</h2>
+<p>Az <strong>ADR-002</strong> ezt kemény architektúrális korlátként rögzíti: semmiféle forrástartalmat nem tárolunk a repositoryn kívül. A vektortár csak embeddingeket és metaadatokat tárol. Lekérdezéskor a tényleges fájltartalom igény szerint rekonstruálódik a VCS-ből, egy revízió-referencia alapján.</p>
+<p>Ennek konkrét következménye van: minden válasz nem csupán egy fájlra, hanem annak egy konkrét revíziójára vezethető vissza — a revízió szerzőjére és arra a commit üzenetre, amely elmagyarázza, miért történt a változás. A proof nem egy adatbázissor — hanem egy commit a repository történetében.</p>
+<p>Az overhead &quot;másolat karbantartása&quot;-ról &quot;amit már megvan, azt lekérdezem&quot;-re tolódik. Hogy ez a csere a gyakorlatban is megállja-e a helyét, pontosan ezt teszteli ez a projekt.</p>
+
+</section>
+<section class="page-section" data-key="architecture">
+  <h2 id="solutionstruktura">Solutionstruktúra</h2>
+<p>A solution Clean Architecture-t követ, hat projekten át, kemény függőségi szabállyal: a Domainnek nincs függősége, az Application csak a Domaintől függ, az Infrastructure implementálja a Domain interfészeket, a két host projekt egymástól elszigetelt.</p>
+<pre><code>SourceRAG.sln
+├── src/
+│   ├── SourceRAG.Domain/          # Entitások, interfészek, enumok
+│   ├── SourceRAG.Application/     # Use case-ek, MediatR handlerek
+│   ├── SourceRAG.Infrastructure/  # VCS, Embedding, Chunking, Qdrant
+│   ├── SourceRAG.Api/             # ASP.NET Core minimal API (REST)
+│   ├── SourceRAG.McpHost/         # MCP szerver host
+│   └── SourceRAG.Web/             # Blazor Web UI
+└── tests/
+    ├── SourceRAG.Domain.Tests/
+    ├── SourceRAG.Application.Tests/
+    └── SourceRAG.Infrastructure.Tests/
+</code></pre>
+<p>A két host projekt — <code>SourceRAG.Api</code> és <code>SourceRAG.McpHost</code> — ugyanazt az Application réteget osztja MediatR-on keresztül. Egyik sem tud a másikról. Ez azt jelenti, hogy ugyanazok a use case-ek elérhetők REST-en és MCP-n is, üzleti logika duplikáció nélkül.</p>
+<p>Minden provider-választás — melyik VCS, melyik embedding modell — runtime-on konfigurálható <code>appsettings.json</code>-ban. Git és SVN, vagy lokális LLamaSharp modell és API-alapú embedding provider között váltáshoz nincs szükség kódmódosításra.</p>
+<pre><code class="language-json">{
+  &quot;SourceRAG&quot;: {
+    &quot;VcsProvider&quot;: &quot;Git&quot;,
+    &quot;EmbeddingProvider&quot;: &quot;Local&quot;,
+    &quot;RepositoryPath&quot;: &quot;/path/to/repo&quot;,
+    &quot;Branch&quot;: &quot;main&quot;
+  }
+}
+</code></pre>
+
+</section>
+<section class="page-section" data-key="vcs_providers">
+  <h2 id="vcs-providerek-git-es-svn-mint-vertikalis-szeletek">VCS providerek: Git és SVN mint vertikális szeletek</h2>
+<p>Az <strong>ADR-001</strong> a VCS-támogatást párosított vertikális szeletekként definiálja: minden provider egyszerre implementál egy repository olvasót és egy blame providert, egységbe zárva. Új VCS hozzáadása új szeletet jelent — nem a meglévő kód módosítását.</p>
+<p>A gyakorlatban ez azt jelenti, hogy a Git LibGit2Sharp-ot, az SVN SharpSvn-t használ, de mindkettő ugyanazt a domain interfészt expozálja. A revízió-fogalom következetesen van leképezve: Git commit SHA-t, SVN revision számot használ. Az újraindexelés-detektálás az aktuális head és az utolsó indexelt revízió összehasonlításával működik — Gitnél <code>HEAD..lastIndexed</code>, SVN-nél <code>GetLog(fromRev, HEAD)</code>.</p>
+<p>Az <strong>ADR-005</strong> szándékosan egyetlen ágra korlátozza az indexelési hatókört — Gitnél <code>main</code>, SVN-nél <code>trunk</code>. A több-ágú támogatás hatóköri döntés, nem hiányzó képesség. Az feltételezés az, hogy a kanonikus ág tartalmazza azt, ami a tudáslekérdezés szempontjából fontos.</p>
+<p>Az <strong>ADR-010</strong> a hitelesítési adatokkal foglalkozik. A VCS műveletek read-only service role-ban futnak. A hitelesítési adatok környezeti változókon keresztül kerülnek feloldásra <code>IVcsCredentialProvider</code>-en át — nem kerülnek config fájlba, és nem hardcodeoltak a kódban.</p>
+
+</section>
+<section class="page-section" data-key="chunking">
+  <h2 id="chunkolas-roslyn-elsokent-plain-text-fallback">Chunkolás: Roslyn elsőként, plain text fallback</h2>
+<p>Az <strong>ADR-003</strong> a chunkolást Chain of Responsibility mintaként definiálja. Az első handler, amely feldolgozni tudja a fájlt, &quot;foglalja le&quot; — a többi kihagyásra kerül.</p>
+<p>C# fájloknál az elsődleges handler Roslyt használ. Elemzi a szintaxisfát, és értelmes szemantikai határokhoz — metódusokhoz, osztályokhoz, property-khez — igazodva nyeri ki a chunkokat. Ez azt jelenti, hogy egy chunk olyasminek felel meg, amiben egy fejlesztő gondolkodna, nem egy önkényes sorablakonak. A szimbólum neve és típusa chunkoláskor ismert, és közvetlenül a vektortár payload-jába kerül.</p>
+<p>Minden máshoz — konfigurációs fájlok, dokumentáció, SQL scriptek, nem-C# forrás — a plain text handler veszi át az irányítást. Csúszó ablakot alkalmaz átfedéssel, hogy elkerülje a kontextus kemény határon való elvágását.</p>
+<p>A lánc rendezett és bővíthető. Egy másik nyelv támogatásának hozzáadása egy új handler beillesztését jelenti a láncba a plain text fallback elé, a pipeline többi részének módosítása nélkül.</p>
+
+</section>
+<section class="page-section" data-key="embedding">
+  <h2 id="embedding-lokalis-vagy-api-kodmodositas-nelkul">Embedding: lokális vagy API, kódmódosítás nélkül</h2>
+<p>Az <strong>ADR-004</strong> az embeddinget config-vezérelt provider-választásként definiálja. Az <code>EmbeddingProvider: &quot;Local&quot;</code> LlamaSharpot használ, egy lokálisan futtatott GGUF modellel — offline, API kulcs nélkül, az adatok nem hagyják el a gépet. Az <code>EmbeddingProvider: &quot;Api&quot;</code> az Anthropic API-on keresztül fut.</p>
+<p>Mindkét provider ugyanazt az <code>IEmbeddingProvider</code> interfészt implementálja. Az Application réteg az interfészt hívja. Nincs tudomása arról, melyik implementáció aktív.</p>
+<p>A jelenlegi projektfázisban a lokális útvonal az alapértelmezett. Az indok ugyanaz, mint a Scaffold Protocolnál: hardver-korlátozott, offline-first fejlesztés, API-alapú providerekkel mint opcióval, ha éles kontextus alakul ki. A különbség itt az, hogy a SourceRAG eleve többfelhasználós rendszernek van tervezve — az API útvonal fontosabbá válik, ahogy a skála növekszik.</p>
+
+</section>
+<section class="page-section" data-key="proof_payload">
+  <h2 id="a-chunk-proof-payload">A chunk proof payload</h2>
+<p>Az <strong>ADR-006</strong> azt határozza meg, mi kerül a Qdrantba minden indexelt chunk esetén. A pont azonosítója determinisztikus: <code>sha256(repoPath + filePath + symbolName + revision)</code>. Ugyanaz a chunk kétszer indexelve ugyanazt az azonosítót adja — ami azt jelenti, hogy az újraindexelés konstrukciónál fogva idempotens.</p>
+<p>A payload a proof-struktúra:</p>
+<pre><code class="language-json">{
+  &quot;file_path&quot;: &quot;src/Core/ImageProcessor.cs&quot;,
+  &quot;symbol_name&quot;: &quot;ProcessTile&quot;,
+  &quot;symbol_type&quot;: &quot;Method&quot;,
+  &quot;revision&quot;: &quot;a3f9c12e&quot;,
+  &quot;author&quot;: &quot;vvidman&quot;,
+  &quot;commit_message&quot;: &quot;Fix OOM on large WSI files&quot;,
+  &quot;timestamp&quot;: &quot;2024-11-03T14:22:00Z&quot;,
+  &quot;branch&quot;: &quot;main&quot;,
+  &quot;start_line&quot;: 42,
+  &quot;end_line&quot;: 78
+}
+</code></pre>
+<p>Ebben a payloadban nincs forráskód. Lekérdezéskor a rendszer veszi a <code>revision</code>-t és a <code>file_path</code>-et, meghívja a VCS-t, és rekonstruálja a tartalmat pontosan úgy, ahogy az adott commitban létezett. A proof nem egy tárolt másolat — hanem egy mutató a verzióhistóriába.</p>
+<p>Ez teszi az megközelítést érdekessé: a payload kicsi, a vektortár karcsú marad, az auditálhatóság pedig gazdagabb, mint amit egy hagyományos proof adatbázis adna. Nem csak fájltartalmat kapsz — szerzőséget és változtatási szándékot is.</p>
+
+</section>
+<section class="page-section" data-key="hosting">
+  <h2 id="dual-hosting-rest-es-mcp-egy-kozos-application-reteg-felett">Dual hosting: REST és MCP egy közös Application réteg felett</h2>
+<p>Az <strong>ADR-008</strong> a solution leglényegesebb strukturális döntése: ugyanazt az Application réteget osztja két független host projekt. A <code>SourceRAG.Api</code> REST interfészt expozál, amelyet a Blazor web kliens fogyaszt. A <code>SourceRAG.McpHost</code> MCP szervert expozál, amelyet AI ügynökök fogyasztanak — Claude Desktop, GitHub Copilot, vagy bármely MCP-kompatibilis kliens.</p>
+<p>Egyik host projekt sem tartalmaz üzleti logikát. Mindkettő MediatR-on keresztül diszpécsel az Application rétegnek. Egy harmadik host hozzáadása — CLI, gRPC szolgáltatás — nem igényelne módosítást az Application vagy az Infrastructure oldalán.</p>
+<p>Az MCP szerver három toolt expozál:</p>
+<pre><code class="language-md">| Tool | Leírás |
+|---|---|
+| `search_codebase` | Szemantikus keresés az indexelt repositoryban |
+| `index_repository` | Teljes vagy inkrementális újraindexelés indítása |
+| `get_index_status` | Aktuális indexállapot, utolsó revízió, chunk-szám |
+</code></pre>
+<p>Az <strong>ADR-009</strong> a Blazor klienst typed <code>HttpClient</code>-ként definiálja, amely a REST API-t célozza. A web kliens nem függ közvetlenül az Application vagy az Infrastructure rétegektől — az API fogyasztója, nem hostja.</p>
+<p>Az <strong>ADR-011</strong> a hitelesítést fedi le. A Blazor web UI és az MCP szerver is Azure AD / Entra ID-n keresztül hitelesít OAuth 2.0 használatával. Az Entra ID melletti döntést a többfelhasználós tervezési feltételezés vezérelte — ez nem egy egyfejlesztős lokális eszköz. A hitelesítés első osztályú elvárás a kezdetektől.</p>
+
+</section>
+<section class="page-section" data-key="observability">
+  <h2 id="megfigyelhetoseg-a-pipeline-on-at">Megfigyelhetőség a pipeline-on át</h2>
+<p>Az <strong>ADR-007</strong> AiObservability instrumentálást ad hozzá az indexelési és lekérdezési pipeline-okhoz egyaránt. Minden lényeges művelet — egy chunkolási menet, egy embedding hívás, egy vektortár-írás, egy szemantikus keresés — spant generál. A spanok strukturáltak és kontextust hordoznak: melyik fájl lett chunkolva, melyik revíziót indexelték, hány chunk keletkezett, mennyi ideig tartott az embedding.</p>
+<p>Ez egy RAG rendszerben azért fontos, mert a hibák nem mindig nyilvánvalók. Egy fájl, amely nulla chunkot produkál, csendes kihagyás. Egy embedding hívás, amely timeout-ol, rontja a lekérdezési minőséget anélkül, hogy kivételt dobna. A megfigyelhetőség ezeket látható, lekérdezhető eseményekké alakítja.</p>
+<p>Az AiObservability egy kísérő könyvtár, amelyet külön tartok karban. A SourceRAG integrálja — ez az egyik kapcsolódó projekt, amely a README-ben szerepel.</p>
+
+</section>
+<section class="page-section" data-key="repo_link">
+  <h2 id="forras">Forrás</h2>
+<p>A repository elérhető GitHubon: <a href="https://github.com/vvidman/SourceRAG">SourceRAG</a></p>
+
+</section>
+<section class="page-section" data-key="status">
+  <h2 id="ahol-most-tart">Ahol most tart</h2>
+<p>A SourceRAG koncepció és README szinten van. Az architektúrális döntések rögzítve vannak, a solution struktúra definiált, az alapvető interfészek felvázolva. Az implementáció kezdődik.</p>
+<p>A kérdés, amelyet valójában tesztelek, egyszerű: a proof tár duplikáció eltávolítása egy érdemben egyszerűbben üzemeltetható rendszert produkál-e? A várható nyereségek papíron világosak — nincs szinkronizálási logika, nincs séma-drift, gazdagabb visszakövethetőség ingyen. Hogy ezek a nyereségek túlélik-e a találkozást valódi repositorykkal, valódi commithistóriával és valódi lekérdezési mintákkal — erre az implementáció fog válaszolni.</p>
+<p>Írok majd arról, amit tapasztalok — beleértve azt is, ami nem működik. Ha valami hasonlót építettél, vagy ha a VCS-as-proof-store ötlet olyan problémát vet fel, amelyet nem vettem figyelembe, szívesen hallom.</p>
+<p><em>Kapcsolódó projektek: <a href="https://github.com/vvidman/RagLab">RagLab</a> · <a href="https://github.com/vvidman/AiObservability">AiObservability</a> · <a href="https://github.com/vvidman/ScaffoldProtocol">Scaffold Protocol</a></em></p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>
