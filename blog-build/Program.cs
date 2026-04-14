@@ -6,63 +6,113 @@ namespace VVidman.BlogBuild;
 
 public class Program
 {
-    private static BuildConfig s_Config;
+    private static BuildConfig s_Config = null!;
 
     public static void Main(string[] args)
     {
-        #region First we read the config
-
-        // crafting the configuration builder
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false)
             .Build();
 
         s_Config = config.Get<BuildConfig>()
-                    ?? throw new InvalidOperationException("Failed to bind configuration");
-        #endregion
+            ?? throw new InvalidOperationException("Failed to bind configuration");
 
-        // Process markdowns, starting from the input root folder
-        ScanDirectory(s_Config.Paths.Input);
+        var templateCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var allPages      = new List<PageDocument>();
+
+        // Fázis 1: minden .md parse-olása
+        CollectPages(s_Config.Paths.Input, allPages);
+
+        // Fázis 2: egyedi oldalak renderelése és kiírása
+        foreach (var page in allPages)
+            RenderAndWrite(page, templateCache);
+
+        // Fázis 3: posts/index.html generálása
+        GeneratePostsIndex(allPages, templateCache);
 
         Console.WriteLine("Processing completed");
     }
 
-    /// <summary>
-    /// Iterate through the folders and search for markdowns
-    /// </summary>
-    /// <param name="currentPath">Top level folder</param>
-    private static void ScanDirectory(string currentPath)
+    private static void CollectPages(string currentPath, List<PageDocument> pages)
     {
-        // search for markdowns on the same level
         foreach (var file in Directory.EnumerateFiles(currentPath, "*.md"))
         {
-            ProcessMarkdownFile(file);
+            try
+            {
+                pages.Add(MarkdownDslParser.Parse(file));
+                Console.WriteLine($"Parsed: {file}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[ERROR] Failed to parse '{file}': {ex.Message}");
+            }
         }
 
-        // iterate the sub-level folders
         foreach (var dir in Directory.EnumerateDirectories(currentPath))
+            CollectPages(dir, pages);
+    }
+
+    private static void RenderAndWrite(PageDocument page, Dictionary<string, string> templateCache)
+    {
+        try
         {
-            ScanDirectory(dir);
+            var layoutName = string.IsNullOrWhiteSpace(page.Metadata.Layout)
+                ? s_Config.Defaults.Layout
+                : page.Metadata.Layout;
+
+            if (!templateCache.TryGetValue(layoutName, out var templateHtml))
+            {
+                var templatePath = Path.Combine(s_Config.Paths.Templates, $"{layoutName}.html");
+                templateHtml = File.ReadAllText(templatePath);
+                templateCache[layoutName] = templateHtml;
+            }
+
+            var html = PageRenderer.Render(page, templateHtml, s_Config.Defaults.Languages);
+
+            var pagePath = Path.Combine(s_Config.Paths.Output, page.Metadata.Slug);
+            var pageDir  = Path.GetDirectoryName(pagePath)
+                ?? throw new InvalidOperationException(
+                    $"Cannot determine output directory for slug: '{page.Metadata.Slug}'");
+
+            Directory.CreateDirectory(pageDir);
+            File.WriteAllText(pagePath, html);
+            Console.WriteLine($"Rendered: {page.Metadata.Slug}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"[ERROR] Failed to render '{page.Metadata.Slug}': {ex.Message}");
         }
     }
 
-    private static void ProcessMarkdownFile(string filePath)
+    private static void GeneratePostsIndex(
+        List<PageDocument> allPages,
+        Dictionary<string, string> templateCache)
     {
-        // ---- load template ----
-        var templatePath = Path.Combine(s_Config.Paths.Templates, $"{s_Config.Defaults.Layout}.html");
-        var templateHtml = File.ReadAllText(templatePath);
+        try
+        {
+            // Csak a posts/ slug-ú oldalak kerülnek be az indexbe
+            var posts = allPages
+                .Where(p => p.Metadata.Slug.StartsWith("posts/", StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
-        // ---- parse markdown ----        
-        var page = MarkdownDslParser.Parse(filePath);
+            const string indexLayout = "posts-index";
+            if (!templateCache.TryGetValue(indexLayout, out var templateHtml))
+            {
+                var templatePath = Path.Combine(s_Config.Paths.Templates, $"{indexLayout}.html");
+                templateHtml = File.ReadAllText(templatePath);
+                templateCache[indexLayout] = templateHtml;
+            }
 
-        // ---- render ----
-        var html = PageRenderer.Render(page, templateHtml, s_Config.Defaults.Languages);        
+            var html       = PostIndexGenerator.Generate(posts, templateHtml, s_Config.Defaults.Languages);
+            var outputPath = Path.Combine(s_Config.Paths.Output, "posts", "index.html");
 
-        // ---- write output ----
-        var pagePath = Path.Combine(s_Config.Paths.Output, page.Metadata.Slug);
-        Directory.CreateDirectory(Path.GetDirectoryName(pagePath));
-        File.WriteAllText(pagePath, html);             
-        
-        Console.WriteLine($"Markdown processed: {filePath}");
-    }    
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+            File.WriteAllText(outputPath, html);
+            Console.WriteLine("Generated: posts/index.html");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"[ERROR] Failed to generate posts index: {ex.Message}");
+        }
+    }
 }

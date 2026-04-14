@@ -1,7 +1,5 @@
-/* ───────────────────────────────────────────
-   Slate-inspired design for Viktor Vidman
-   Dark top header · Light content · Clean type
-─────────────────────────────────────────── */
+/* ── Google Fonts ──────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
 
 /* ── Reset ───────────────────────────────── */
 * { box-sizing: border-box; }
@@ -9,21 +7,23 @@ html, body { height: 100%; margin: 0; }
 
 /* ── Tokens ──────────────────────────────── */
 :root {
-  --header-bg:    #445f77;
-  --header-text:  #c8d6e5;
-  --accent:       #4fa3d1;
-  --accent-hover: #72bce0;
-  --content-bg:   #f5f7f9;
-  --text:         #1c2b38;
-  --text-muted:   #5a6f7e;
-  --border:       #d6dfe8;
-  --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-  --font-serif:   ui-serif, Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --header-bg:       #445f77;          /* marad */
+  --header-text:     #c8d6e5;          /* marad */
+  --accent:          #4a749c;          /* infografika kékje (#4fa3d1 helyett) */
+  --accent-hover:    #5a8ab0;
+  --accent-amber:    #e8a24a;          /* infografika amber — új token */
+  --content-bg:      #faf6f0;          /* meleg krém (#f5f7f9 helyett) */
+  --text:            #1e2b3a;          /* infografika sötétje (#1c2b38 helyett) */
+  --text-muted:      #4a5a6a;
+  --border:          #ddd8d0;          /* enyhén meleg tónus */
+  --font-mono:       'DM Mono', ui-monospace, Menlo, monospace;
+  --font-serif:      'Playfair Display', ui-serif, Georgia, serif;
+  --font-sans:       'DM Sans', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ── Body layout ─────────────────────────── */
 body {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.75;
   color: var(--text);
@@ -130,20 +130,22 @@ nav a + a::before {
   flex: 1;
   width: 100%;
   max-width: 760px;
-  margin: 0 4rem;
+  margin: 0 4rem; 
   padding: 2rem;
 }
 
+/* ── Content headings ── */
+.content h1,
 .content h2 {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-family: var(--font-serif);  /* Playfair Display — infografika stílus */
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--text);
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--accent-amber);  /* amber vonal, nem szürke */
   padding-bottom: 0.4rem;
   margin-top: 2.5rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;            /* uppercase helyett természetes */
 }
 
 .content p {
@@ -169,7 +171,7 @@ blockquote {
 }
 
 code,pre {
-    font-family: var(--font-serif);
+    font-family: var(--font-mono);
     color: #333
 }
 
@@ -245,6 +247,7 @@ pre {
 @media (max-width: 600px) {
   .site-header .indented {
     padding: 0.65rem 1rem;
+    border-bottom: 2px solid var(--accent-amber); 
   }
 
   .site-header h1 {
@@ -303,4 +306,199 @@ pre {
     white-space: nowrap;
     text-decoration: none;
     font-size: 0.85rem;
+}
+
+/* ── Post index ──────────────────────────── */
+.post-index-section {
+  margin-bottom: 2.5rem;
+}
+
+.series-group {
+  margin-bottom: 1.75rem;
+}
+
+.series-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.series-stripe {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--series-color, var(--accent));
+  flex-shrink: 0;
+}
+
+.series-name {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.series-post-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.series-post-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border-left: 3px solid var(--series-color, var(--border));
+  margin-bottom: 0.3rem;
+  transition: background 0.15s;
+}
+
+.series-post-list li:hover {
+  background: rgba(30, 43, 58, 0.03);
+}
+
+.part-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  min-width: 1.8rem;
+  flex-shrink: 0;
+}
+
+.series-post-list a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.97rem;
+}
+
+.series-post-list a:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* ── Cert cards (post_licensAndCerts) ───────── */
+
+.cert-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.cert-category {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.cert-cat-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 0.75rem;
+}
+
+.cert-card {
+  background: #ffffff;
+  border-left: 4px solid var(--cert-color, var(--accent));
+  border-radius: 0 8px 8px 0;
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.1rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.cert-platform {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 3px;
+  align-self: flex-start;
+}
+
+.cert-platform--udemy {
+  background: rgba(232, 162, 74, 0.12);
+  color: #9a6510;
+}
+
+.cert-platform--coursera {
+  background: rgba(74, 116, 156, 0.12);
+  color: #2d5a7a;
+}
+
+.cert-title {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.cert-skills {
+  display: block;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.cert-tag {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  color: var(--text-muted);
+  background: rgba(30, 43, 58, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 2px 7px;
+  white-space: nowrap;
+  box-sizing: unset;
+}
+
+.cert-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.cert-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--cert-color, var(--accent));
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.cert-link:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .cert-grid {
+    grid-template-columns: 1fr;
+  }
 }

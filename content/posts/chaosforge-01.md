@@ -1,8 +1,11 @@
 ---
 title: ChaosForge - Let Go of the Reins
+title_hu: ChaosForge – Engedd el a gyeplőt
 slug: posts/post-chaosforge-01.html
 description: From Scaffold Protocol to ChaosForge – why I stopped trying to control every AI step, and what I built instead.
 layout: page
+series: ChaosForge
+part: 1
 ---
 
 :::section intro

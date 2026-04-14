@@ -63,6 +63,11 @@ public static class MarkdownDslParser
         index++; // skip '---'
 
         string title = "", slug = "", layout = "", description = "";
+        DateOnly? date = null;
+        var tags = Array.Empty<string>();
+        string titleHu = "";
+        string? series = null;
+        int? part = null;
 
         while (index < lines.Length && lines[index].Trim() != "---")
         {
@@ -87,6 +92,26 @@ public static class MarkdownDslParser
                 layout = value;
             else if (key == "description")
                 description = value;
+            else if (key == "title_hu")  titleHu = value;
+            else if (key == "series")    series  = value;
+            else if (key == "part")
+            {
+                if (int.TryParse(value, out var p)) part = p;
+                else throw new InvalidOperationException($"Invalid part number: '{value}'");
+            }
+            else if (key == "date")
+            {
+                if (DateOnly.TryParse(value, out var parsed))
+                    date = parsed;
+                else
+                    throw new InvalidOperationException($"Invalid date format on line: {line}");
+            }
+            else if (key == "tags")
+            {
+                tags = value
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToArray();
+            }
             else
                 throw new InvalidOperationException($"Unknown metadata key: {key}");
         }
@@ -95,7 +120,19 @@ public static class MarkdownDslParser
             throw new InvalidOperationException("Missing front-matter end '---'");
 
         index++; // skip closing '---'
-        return new() { Title = title, Layout = layout, Description = description, Slug = slug };
+        
+        return new()
+        {
+            Title       = title,
+            TitleHu     = titleHu,
+            Slug        = slug,
+            Layout      = layout,
+            Description = description,
+            Date        = date,
+            Tags        = tags,
+            Series      = series,
+            Part        = part
+        };
     }
 
     // ============================

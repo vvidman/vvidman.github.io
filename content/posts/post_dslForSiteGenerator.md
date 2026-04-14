@@ -1,8 +1,11 @@
 ---
 title: Designing a minimal DSL for bilingual Markdown content
+title_hu: Minimális DSL tervezése kétnyelvű Markdown tartalomhoz
 slug: posts/post-03.html
-layout: page
 description: One file. Two languages. No duplication. Here's the syntax that makes it work.
+layout: page
+series: SiteGenerator
+part: 2
 ---
 
 :::section title

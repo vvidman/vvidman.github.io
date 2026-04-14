@@ -1,8 +1,11 @@
 ---
 title: VCS as Proof Store
+title_hu: VCS mint proof tár
 slug: posts/sourcerag-01.html
 description: Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.
 layout: page
+series: SourceRAG
+part: 1
 ---
 
 :::section intro

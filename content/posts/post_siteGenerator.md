@@ -1,8 +1,11 @@
 ---
 title: Why I built my own static site generator — not because the others are bad
+title_hu: Miért írtam saját statikus oldalgenerátort? (Nem azért, mert a többi rossz.)
 slug: posts/post-02.html
-layout: page
 description: Why I built my own static site generator — not because the others are bad
+layout: page
+series: SiteGenerator
+part: 1
 ---
 
 :::section title

@@ -1,8 +1,11 @@
 ---
 title: Closing the Loop
+title_hu: Zárd le a hurkot
 slug: posts/post-chaosforge-02.html
 description: A practical workflow for pairing a reasoning model with an agentic coding assistant — and closing the structural gap between planning and implementation.
 layout: page
+series: ChaosForge
+part: 2
 ---
 
 :::section intro
