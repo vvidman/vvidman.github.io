@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - Making a 2M-line legacy codebase queryable by AI</title>
+
+  <meta name="description" content="I designed a system to make a 2M+ line on-premise legacy codebase queryable by any AI tool. It was presented, never implemented. Here is the design — and the question it left open.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/sourcerag-00.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/sourcerag-00.html">
+  <meta property="og:title" content="Viktor Vidman - Making a 2M-line legacy codebase queryable by AI">
+  <meta property="og:description" content="I designed a system to make a 2M+ line on-premise legacy codebase queryable by any AI tool. It was presented, never implemented. Here is the design — and the question it left open.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/sourcerag-00.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>Making a 2M-line legacy codebase queryable by AI</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <p>AI coding assistants are increasingly capable. But their usefulness depends entirely on context — and context requires knowledge. If your codebase lives on-premise, spans over two million lines, and has no public documentation, AI tools know nothing about it. They can suggest code patterns, but they cannot reason about your system.</p>
+<p>This is a design document for a system I never built. I called it CaKB — Codebase-aware Knowledge Base. I designed it, presented it internally, and it was never implemented. But the thinking behind it did not disappear — it became SourceRAG.</p>
+
+</section>
+<section class="page-section" data-key="problem">
+  <h2 id="the-problem">The problem</h2>
+<p>A large on-premise legacy codebase presents a specific challenge: no AI tool can query it without explicit retrieval infrastructure. The codebase is not indexed by any LLM. It is not in any cloud. And it changes with every build.</p>
+<p>The requirement was straightforward to state: make the codebase queryable by any AI tool — not just one. A proprietary integration built for a single assistant creates a dependency that needs rebuilding every time the tooling changes. The solution had to be tool-agnostic by design.</p>
+
+</section>
+<section class="page-section" data-key="design">
+  <h2 id="the-design">The design</h2>
+<p>CaKB is built around three responsibilities: indexing, storage, and retrieval.</p>
+<p>When a build completes, a CI/CD hook — Jenkins is a common choice in enterprise environments — triggers the Indexer Service. The Indexer processes changed source files, generates vector embeddings, and updates two stores: Qdrant for semantic search, and a SQLite Manifest DB that tracks index state — which files are indexed, at which commit, and when.</p>
+<p>The Retrieval API sits in front of these stores. It is an ASP.NET Core service that accepts queries from any AI tool and returns relevant code context. It does not know — and does not care — who is asking. A Copilot Extension is one possible consumer. A custom CLI tool is another. The API contract is the only integration boundary that matters.</p>
+
+</section>
+<section class="page-section" data-key="rationale">
+  <h2 id="component-rationale">Component rationale</h2>
+<p><strong>Qdrant</strong> — purpose-built for vector similarity search, Docker-deployable, with no cloud dependency. It runs entirely on-premise alongside the system it indexes.</p>
+<p><strong>SQLite Manifest DB</strong> — a lightweight, file-based tracking layer. At any point it answers one question: what is indexed, at which version, and is it still current? No separate database server, no operational overhead.</p>
+<p><strong>CI/CD hook</strong> — build-triggered indexing keeps the knowledge base current without a separate scheduling mechanism. When code changes, the index changes. The trigger already exists in the pipeline; it just needs to call the Indexer.</p>
+<p><strong>Tool-agnostic Retrieval API</strong> — decouples every consumer from the storage layer. Any AI tool integrates through a single, stable contract. The API absorbs the complexity so consumers do not have to.</p>
+
+</section>
+<section class="page-section" data-key="cost">
+  <h2 id="what-this-requires">What this requires</h2>
+<p>This is not a weekend project. A production-grade CaKB carries real operational weight.</p>
+<p>Embedding generation has to be reliable at build time — a silently failing indexer that produces a stale knowledge base is worse than no indexer at all. The Retrieval API contract has to remain stable, or every consumer integration breaks simultaneously. The SQLite manifest has to handle concurrent index updates without corruption. And the whole system requires organizational alignment: the Indexer runs as part of the build pipeline, which means it is maintained alongside the build itself.</p>
+<p>None of these are unsolvable. But the cumulative weight is real — and one component carries a disproportionate share of it.</p>
+<p>The proof store — the mechanism that guarantees the index accurately reflects the codebase at any given point — is where most of the complexity lives. You need to know what is indexed, at which version, and whether the index is still valid. Building that correctly is harder than it looks.</p>
+
+</section>
+<section class="page-section" data-key="closing">
+  <h2 id="one-question-left-open">One question left open</h2>
+<p>Building CaKB as designed is possible. The architecture is sound. But the proof store is the most expensive part — and it raises a question worth sitting with.</p>
+<p>You need to know what is indexed, at which version, and whether the index is still valid. If you already have a version control system, it already knows all of this. Every commit is a versioned snapshot. Every file change is tracked. The history is auditable.</p>
+<p>Does the proof store need to be built — or does it already exist?</p>
+<p>That question is where SourceRAG begins. <a href="/posts/sourcerag-01.html">Let's see how it looks in practice →</a></p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <p>Az AI kódoló asszisztensek egyre képesebbek. De hasznosságuk teljes egészében a kontextustól függ — a kontextus pedig tudást igényel. Ha a kódbázisod on-premise van, több mint kétmillió sorból áll, és nincs nyilvános dokumentációja, az AI eszközök semmit sem tudnak róla. Tudnak kódmintákat javasolni, de nem tudnak a rendszeredről gondolkodni.</p>
+<p>Ez egy rendszer tervdokumentuma, amelyet soha nem építettem meg. CaKB-nak neveztem — Codebase-aware Knowledge Base. Megterveztem, belső körben bemutattam, és nem valósult meg. De a mögötte lévő gondolkodás nem tűnt el — SourceRAG-gá vált.</p>
+
+</section>
+<section class="page-section" data-key="problem">
+  <h2 id="a-problema">A probléma</h2>
+<p>Egy nagy on-premise legacy kódbázis sajátos kihívást jelent: egyetlen AI eszköz sem tudja lekérdezni explicit retrieval infrastruktúra nélkül. A kódbázist nem indexelte semmilyen LLM. Nincs felhőben. És minden builddel változik.</p>
+<p>A követelmény egyszerűen megfogalmazható volt: tegyük a kódbázist lekérdezhető bármely AI eszköz számára — ne csak egynek. Egyetlen asszisztensre szabott integráció olyan függőséget teremt, amelyet minden alkalommal újra kell írni, ha az eszközkészlet változik. A megoldásnak tervezési elvből tool-agnosticnak kellett lennie.</p>
+
+</section>
+<section class="page-section" data-key="design">
+  <h2 id="a-terv">A terv</h2>
+<p>A CaKB három felelősség köré épül: indexelés, tárolás és visszakeresés.</p>
+<p>Amikor egy build befejeződik, egy CI/CD hook — a Jenkins elterjedt választás vállalati környezetekben — elindítja az Indexer Service-t. Az Indexer feldolgozza a megváltozott forrásfájlokat, vektoros beágyazásokat generál, és frissíti a két tárolót: a Qdrant-ot szemantikus kereséshez, és egy SQLite Manifest DB-t, amely nyomon követi az index állapotát — mely fájlok vannak indexelve, milyen commiton, és mikor.</p>
+<p>A Retrieval API ezek előtt helyezkedik el. Ez egy ASP.NET Core szolgáltatás, amely fogadja a lekérdezéseket bármely AI eszköztől, és visszaadja a releváns kódkontextust. Nem tudja — és nem is érdekli — ki kérdez. Egy Copilot Extension az egyik lehetséges fogyasztó. Egy egyedi CLI eszköz a másik. Az API kontraktusa az egyetlen integrációs határ, ami számít.</p>
+
+</section>
+<section class="page-section" data-key="rationale">
+  <h2 id="komponens-indoklasok">Komponens indoklások</h2>
+<p><strong>Qdrant</strong> — vektoros hasonlóságkeresésre tervezett, Docker-elhető, felhő-függőség nélkül. Teljesen on-premise futtatható az általa indexelt rendszer mellett.</p>
+<p><strong>SQLite Manifest DB</strong> — könnyűsúlyú, fájlalapú nyomon követési réteg. Bármikor egyetlen kérdésre ad választ: mi van indexelve, milyen verzióban, és még érvényes-e? Nincs szükség külön adatbázis-szerverre, nincs üzemeltetési többlet.</p>
+<p><strong>CI/CD hook</strong> — build-triggerelt indexelés külön ütemezési mechanizmus nélkül tartja naprakészen a tudásbázist. Ha a kód változik, az index is változik. A trigger már megvan a pipeline-ban; csak az Indexert kell meghívnia.</p>
+<p><strong>Tool-agnostic Retrieval API</strong> — leválasztja az összes fogyasztót a tárolási rétegtől. Minden AI eszköz egyetlen, stabil kontraktuson keresztül integrálódik. Az API magába nyeli a komplexitást, hogy a fogyasztóknak ne kelljen.</p>
+
+</section>
+<section class="page-section" data-key="cost">
+  <h2 id="amit-ez-megkovetel">Amit ez megkövetel</h2>
+<p>Ez nem egy hétvégi projekt. Egy termelési szintű CaKB valós üzemeltetési súllyal jár.</p>
+<p>Az embedding generálásnak build időben megbízhatónak kell lennie — egy csendben hibázó, elavult tudásbázist produkáló indexer rosszabb, mint ha nincs indexer egyáltalán. A Retrieval API kontraktusának stabilnak kell maradnia, különben minden fogyasztói integráció egyszerre törik el. Az SQLite manifestnek egyidejű index-frissítéseket kell kezelnie adatsérülés nélkül. Az egész rendszer szervezeti összehangolást igényel: az Indexer a build pipeline részeként fut, ami azt jelenti, hogy a builddel együtt kell karbantartani.</p>
+<p>Ezek egyike sem megoldhatatlan. De a kumulatív súly valóságos — és az egyik komponens aránytalanul nagy részt visel belőle.</p>
+<p>A bizonyítástár — az a mechanizmus, amely garantálja, hogy az index pontosan tükrözi a kódbázist bármely adott pillanatban — az, ahol a komplexitás nagy része él. Tudnod kell, mi van indexelve, milyen verzióban, és hogy az index még érvényes-e. Ezt helyesen megépíteni nehezebb, mint amilyennek látszik.</p>
+
+</section>
+<section class="page-section" data-key="closing">
+  <h2 id="egy-nyitott-kerdes">Egy nyitott kérdés</h2>
+<p>A CaKB megépítése az ismertetett módon lehetséges. Az architektúra megalapozott. De a bizonyítástár a legköltségesebb rész — és felvet egy kérdést, amelyen érdemes elidőzni.</p>
+<p>Tudnod kell, mi van indexelve, milyen verzióban, és hogy az index még érvényes-e. Ha már van verziókezelő rendszered, az már mindezeket tudja. Minden commit egy verzionált pillanatkép. Minden fájlváltozás nyomon van követve. Az előzmények auditálhatók.</p>
+<p>A bizonyítástárat meg kell építeni — vagy már létezik?</p>
+<p>Ez a kérdés az, ahol a SourceRAG elkezdődik. <a href="/posts/sourcerag-01.html">Nézzük meg a gyakorlatban →</a></p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>
