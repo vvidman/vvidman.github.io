@@ -30,10 +30,15 @@ public static class PostIndexGenerator
                 Color: SeriesPalette[i % SeriesPalette.Length],
                 Posts: g.OrderBy(p => p.Metadata.Part ?? int.MaxValue).ToList()
             ))
+            .OrderByDescending(g => g.Posts
+                .Select(p => p.Metadata.Date ?? DateOnly.MinValue)
+                .DefaultIfEmpty(DateOnly.MinValue)
+                .Min())
             .ToList();
 
         var standalones = posts
             .Where(p => string.IsNullOrWhiteSpace(p.Metadata.Series))
+            .OrderByDescending(p => p.Metadata.Date ?? DateOnly.MinValue)
             .ToList();
 
         var renderedByLang = new Dictionary<string, string>();

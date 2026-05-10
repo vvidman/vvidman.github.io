@@ -4,6 +4,7 @@ title_hu: AI végrehajt. Te döntesz.
 slug: posts/post-sp01.html
 layout: page
 description: How Scaffold Protocol keeps the human as orchestrator while using AI as a transformation engine — with a real validation layer and error-driven refinement.
+date: 2026-03-20
 series: ScaffoldProtocol
 part: 1
 ---

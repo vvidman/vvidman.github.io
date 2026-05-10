@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - From .NET Dev to AI Engineer — Why I Started This Series</title>
+
+  <meta name="description" content="I completed a strong theoretical course on Agentic AI. Then I realised I could not build anything with it. This is what I did about that.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/dotnet-ai-stack-00.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/dotnet-ai-stack-00.html">
+  <meta property="og:title" content="Viktor Vidman - From .NET Dev to AI Engineer — Why I Started This Series">
+  <meta property="og:description" content="I completed a strong theoretical course on Agentic AI. Then I realised I could not build anything with it. This is what I did about that.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>From .NET Dev to AI Engineer — Why I Started This Series</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h2 id="the-gap-between-knowing-and-building">The gap between knowing and building</h2>
+<p>I completed a course. A good one — <a href="https://www.udemy.com/course/agentic-ai-architectures-with-patterns-frameworks-and-mcp/">Agentic AI Architectures with Patterns, Frameworks and MCP</a> by Mehmet Ozkaya on Udemy. The theory was solid. Agentic patterns, orchestration vs choreography, RAG pipelines, MCP, HITL — I understood the concepts. I could talk about them.</p>
+<p>What I could not do was build anything.</p>
+<p>That is not a criticism of the course. The theory is the theory, and it is well taught. But understanding a concept and implementing it are different cognitive events. Several other students said the same thing in the reviews. I agreed with them, and I decided to do something about it.</p>
+
+</section>
+<section class="page-section" data-key="what-this-is">
+  <h2 id="what-this-series-is">What this series is</h2>
+<p>Seven modules. Seven blog posts. One GitHub repository with one branch per module, each building on the previous.</p>
+<p>This is not a tutorial. I am not going to walk you through setting up a project from scratch and explain every line. What I will do is show you what I built, document the decisions I made and why, and be honest about what broke, what surprised me, and what I would do differently.</p>
+<p>The code is in <a href="https://github.com/vvidman/dotnet-ai-labs">dotnet-ai-labs</a>. The implementation choices reflect my own thinking — this is not an official companion to the Udemy course, and it does not cover the same ground in the same order. The course was the inspiration. The labs are my interpretation.</p>
+<p>If you are a .NET developer who wants to understand Agentic AI by building it — not just reading about it — this series is for you.</p>
+
+</section>
+<section class="page-section" data-key="the-stack">
+  <h2 id="the-stack">The stack</h2>
+<p>Everything runs locally. No cloud provider, no API key, no cost per token.</p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│                   YOUR CODE                          │
+│         (business logic, agent workflows)            │
+├──────────────────────────────────────────────────────┤
+│             SEMANTIC KERNEL                          │
+│   &quot;What should the agent do?&quot;                        │
+│   Plugins · Memory · Planner · AgentGroupChat        │
+├──────────────────────────────────────────────────────┤
+│         MICROSOFT.EXTENSIONS.AI                      │
+│   &quot;How to talk to any LLM?&quot;                          │
+│   IChatClient — unified interface for all providers  │
+├──────────────────────────────────────────────────────┤
+│            LLM PROVIDER (swappable)                  │
+│   LlamaSharp │ Azure OpenAI │ OpenAI │ Ollama │ ...  │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p>The model is <a href="https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf">Phi-3-mini-4k-instruct</a> — a 3.8B parameter model from Microsoft, quantised to Q4, around 2.3 GB. It runs on CPU with 8 GB of RAM. No GPU required.</p>
+<p>Phi-3 is lightweight, well-documented, and linkable directly from Hugging Face. It is a Microsoft model, which fits the stack. It is not the most capable model for tool calling — and that will become visible in later modules. I will document it when it does.</p>
+<p>The runtime is <strong>.NET 10</strong> throughout.</p>
+
+</section>
+<section class="page-section" data-key="the-modules">
+  <h2 id="the-seven-modules">The seven modules</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Topic</th>
+<th>Key technologies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="dotnet-ai-stack-01.html">The .NET AI Stack</a></td>
+<td>M.E.AI · IChatClient · LlamaSharp · SK Kernel</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tool Calling &amp; Function Calling</td>
+<td>KernelFunction · Auto/Manual tool loop</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Memory Architecture (STM/LTM)</td>
+<td>ChatHistory · Vector DB · Embeddings</td>
+</tr>
+<tr>
+<td>4</td>
+<td>RAG → Agentic RAG</td>
+<td>Passive pipeline → Active retrieval · Qdrant</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Multi-Agent Orchestration</td>
+<td>AgentGroupChat · Orchestration vs Choreography</td>
+</tr>
+<tr>
+<td>6</td>
+<td>MCP (Model Context Protocol)</td>
+<td>MCP Server · MCP Client · REST vs MCP</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Security, HITL &amp; Guardrails</td>
+<td>Least Privilege · HITL · Prompt injection · Audit log</td>
+</tr>
+</tbody>
+</table>
+<p>Links will be added as each post is published.</p>
+
+</section>
+<section class="page-section" data-key="repo-structure">
+  <h2 id="how-the-repository-is-structured">How the repository is structured</h2>
+<p>The repository is <a href="https://github.com/vvidman/dotnet-ai-labs">dotnet-ai-labs</a> on GitHub. Each module has its own branch, built on top of the previous one:</p>
+<pre><code>main
+ └── modul-01
+      └── modul-02
+           └── modul-03
+                └── ...
+                     └── modul-07
+</code></pre>
+<p>Every branch contains a <code>MODULE-SUMMARY.md</code> — written at the end of each module, after the code is working. It covers what I learned, what was hard, the decisions I made and their tradeoffs. That document is the direct source material for each blog post.</p>
+<p>If you want to follow along, start from <code>modul-01</code> and read the <code>MODULE-SUMMARY.md</code> before the blog post. The code and the writing are the same experience, just in different formats.</p>
+
+</section>
+<section class="page-section" data-key="start">
+  <h2 id="start-here">Start here</h2>
+<p>Module 1 is published: <a href="dotnet-ai-stack-01.html">Building the .NET AI Stack from First Principles</a>.</p>
+<p>It covers why three layers are needed, what the documentation gets wrong about LlamaSharp and Semantic Kernel, and how short-term memory actually works. No magic, just code.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h2 id="a-tudas-es-az-epites-kozotti-szakadek">A tudás és az építés közötti szakadék</h2>
+<p>Teljesítettem egy kurzust. Egy jót — Mehmet Ozkaya <a href="https://www.udemy.com/course/agentic-ai-architectures-with-patterns-frameworks-and-mcp/">Agentic AI Architectures with Patterns, Frameworks and MCP</a> kurzusát az Udemy-n. Az elmélet szilárd volt. Agentic patternek, orchestration kontra choreography, RAG pipeline-ok, MCP, HITL — értettem a koncepciókat. Tudtam róluk beszélni.</p>
+<p>Amit nem tudtam, az az, hogy bármit is felépítsek.</p>
+<p>Ez nem a kurzus kritikája. Az elmélet az elmélet, és jól van tanítva. De egy fogalmat megérteni és implementálni két különböző kognitív esemény. Több más hallgató is ugyanezt mondta az értékelésekben. Egyet értettem velük, és úgy döntöttem, teszek valamit ez ellen.</p>
+
+</section>
+<section class="page-section" data-key="what-this-is">
+  <h2 id="mi-ez-a-sorozat">Mi ez a sorozat</h2>
+<p>Hét modul. Hét blogbejegyzés. Egy GitHub repository, modulonként egy branch-csel, mindegyik az előzőre épülve.</p>
+<p>Ez nem egy tutorial. Nem fogom végigvezetni, hogyan kell felállítani egy projektet az alapoktól, és megmagyarázni minden sort. Amit csinálok: megmutatom, mit építettem, dokumentálom a döntéseket és azok indokait, és őszinte leszek azzal kapcsolatban, mi tört el, mi lepett meg, és mit csinálnék másképp.</p>
+<p>A kód a <a href="https://github.com/vvidman/dotnet-ai-labs">dotnet-ai-labs</a> repositoryban van. Az implementációs döntések a saját gondolkodásomat tükrözik — ez nem az Udemy kurzus hivatalos kísérője, és nem ugyanazt az anyagot fedi le ugyanabban a sorrendben. A kurzus volt az inspiráció. A laborok az én értelmezésem.</p>
+<p>Ha .NET fejlesztő vagy, aki az Agentic AI-t azzal akarja megérteni, hogy megépíti — nem csak olvas róla — ez a sorozat neked szól.</p>
+
+</section>
+<section class="page-section" data-key="the-stack">
+  <h2 id="a-stack">A stack</h2>
+<p>Minden lokálisan fut. Nincs felhőszolgáltató, nincs API kulcs, nincs tokenalapú költség.</p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│                  A TE KÓDOD                          │
+│         (business logic, agent workflows)            │
+├──────────────────────────────────────────────────────┤
+│             SEMANTIC KERNEL                          │
+│   &quot;Mit csináljon az agent?&quot;                          │
+│   Plugins · Memory · Planner · AgentGroupChat        │
+├──────────────────────────────────────────────────────┤
+│         MICROSOFT.EXTENSIONS.AI                      │
+│   &quot;Hogyan kommunikáljon bármely LLM-mel?&quot;            │
+│   IChatClient — egységes interfész minden providerre │
+├──────────────────────────────────────────────────────┤
+│            LLM PROVIDER (cserélhető)                 │
+│   LlamaSharp │ Azure OpenAI │ OpenAI │ Ollama │ ...  │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p>A modell a <a href="https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf">Phi-3-mini-4k-instruct</a> — egy 3.8B paraméteres modell a Microsofttól, Q4-re kvantálva, körülbelül 2.3 GB. CPU-n fut, 8 GB RAM-mal. GPU nem szükséges.</p>
+<p>A Phi-3 lightweight, jól dokumentált, és közvetlenül linkelhető a Hugging Face-ről. Microsoft modell, ami illik a stackhez. Nem a legképesebb modell tool calling szempontjából — ez a későbbi modulokban láthatóvá válik. Dokumentálom majd, amikor megtörténik.</p>
+<p>A runtime végig <strong>.NET 10</strong>.</p>
+
+</section>
+<section class="page-section" data-key="the-modules">
+  <h2 id="a-het-modul">A hét modul</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Téma</th>
+<th>Kulcstechnológiák</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="dotnet-ai-stack-01.html">A .NET AI Stack</a></td>
+<td>M.E.AI · IChatClient · LlamaSharp · SK Kernel</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tool Calling &amp; Function Calling</td>
+<td>KernelFunction · Auto/Manual tool loop</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Memory Architecture (STM/LTM)</td>
+<td>ChatHistory · Vector DB · Embeddings</td>
+</tr>
+<tr>
+<td>4</td>
+<td>RAG → Agentic RAG</td>
+<td>Passzív pipeline → Aktív retrieval · Qdrant</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Multi-Agent Orchesztráció</td>
+<td>AgentGroupChat · Orchestration vs Choreography</td>
+</tr>
+<tr>
+<td>6</td>
+<td>MCP (Model Context Protocol)</td>
+<td>MCP Server · MCP Client · REST vs MCP</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Biztonság, HITL &amp; Guardrails</td>
+<td>Least Privilege · HITL · Prompt injection · Audit log</td>
+</tr>
+</tbody>
+</table>
+<p>A linkek a bejegyzések publikálásakor kerülnek hozzáadásra.</p>
+
+</section>
+<section class="page-section" data-key="repo-structure">
+  <h2 id="hogyan-epul-fel-a-repository">Hogyan épül fel a repository</h2>
+<p>A repository a <a href="https://github.com/vvidman/dotnet-ai-labs">dotnet-ai-labs</a> GitHubon. Minden modulnak saját branch-e van, az előzőre épülve:</p>
+<pre><code>main
+ └── modul-01
+      └── modul-02
+           └── modul-03
+                └── ...
+                     └── modul-07
+</code></pre>
+<p>Minden branch tartalmaz egy <code>MODULE-SUMMARY.md</code> fájlt — amelyet minden modul végén írok, miután a kód működik. Lefedi, amit tanultam, ami nehéz volt, a döntéseket és azok tradeoff-jait. Ez a dokumentum az egyes blogbejegyzések közvetlen forrásanyaga.</p>
+<p>Ha követni szeretnéd a folyamatot, kezdj a <code>modul-01</code>-gyel, és olvasd el a <code>MODULE-SUMMARY.md</code>-t a blogbejegyzés előtt. A kód és az írás ugyanaz az élmény, csak különböző formátumban.</p>
+
+</section>
+<section class="page-section" data-key="start">
+  <h2 id="kezdj-itt">Kezdj itt</h2>
+<p>Az 1. modul publikálva: <a href="dotnet-ai-stack-01.html">A .NET AI Stack felépítése az alapoktól</a>.</p>
+<p>Lefedi, hogy miért szükséges három réteg, mit mond tévesen a dokumentáció a LlamaSharp-ról és a Semantic Kernelről, és hogyan működik valójában a short-term memory. Nincs varázslat, csak kód.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>

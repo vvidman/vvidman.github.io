@@ -4,6 +4,7 @@ title_hu: Miért írtam saját statikus oldalgenerátort? (Nem azért, mert a t�
 slug: posts/post-02.html
 description: Why I built my own static site generator — not because the others are bad
 layout: page
+date: 2026-03-01
 series: SiteGenerator
 part: 1
 ---

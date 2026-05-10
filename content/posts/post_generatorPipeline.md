@@ -4,6 +4,7 @@ title_hu: A generátor pipeline — Markdowntól a GitHub Pages-ig
 slug: posts/post-04.html
 description: No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.
 layout: page
+date: 2026-03-03
 series: SiteGenerator
 part: 3
 ---

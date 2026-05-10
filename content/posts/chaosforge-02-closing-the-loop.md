@@ -4,6 +4,7 @@ title_hu: Zárd le a hurkot
 slug: posts/post-chaosforge-02.html
 description: A practical workflow for pairing a reasoning model with an agentic coding assistant — and closing the structural gap between planning and implementation.
 layout: page
+date: 2026-03-26
 series: ChaosForge
 part: 2
 ---

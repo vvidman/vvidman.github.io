@@ -4,6 +4,7 @@ title_hu: RAG építése az alapoktól
 slug: posts/raglab-01.html
 description: What I learned by building a RAG pipeline in .NET without a framework — every component written from scratch, every decision made consciously.
 layout: page
+date: 2026-04-05
 series: RAGLab
 part: 1
 ---

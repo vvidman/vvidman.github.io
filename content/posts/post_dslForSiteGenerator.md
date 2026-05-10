@@ -4,6 +4,7 @@ title_hu: Minimális DSL tervezése kétnyelvű Markdown tartalomhoz
 slug: posts/post-03.html
 description: One file. Two languages. No duplication. Here's the syntax that makes it work.
 layout: page
+date: 2026-03-02
 series: SiteGenerator
 part: 2
 ---

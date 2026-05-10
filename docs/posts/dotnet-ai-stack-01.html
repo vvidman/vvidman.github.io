@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - Building the .NET AI Stack from First Principles</title>
+
+  <meta name="description" content="What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/dotnet-ai-stack-01.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/dotnet-ai-stack-01.html">
+  <meta property="og:title" content="Viktor Vidman - Building the .NET AI Stack from First Principles">
+  <meta property="og:description" content="What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>Building the .NET AI Stack from First Principles</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h2 id="problem-statement">Problem statement</h2>
+<p>Every AI tutorial starts the same way. You add the OpenAI NuGet package, paste in an API key, call <code>CompleteAsync</code>, and you have a working chat app in ten minutes. What you also have, without realising it, is a hard dependency on a single provider baked into every layer of your code.</p>
+<p>I wanted to understand the stack properly before building anything on top of it. Not just which packages to install, but why the layers exist, what each one is responsible for, and what actually breaks when the documentation is wrong. This is Module 1 of my .NET Agentic AI curriculum — setting up the foundation that everything else will run on.</p>
+
+</section>
+<section class="page-section" data-key="the-three-layers">
+  <h2 id="why-three-layers">Why three layers?</h2>
+<p>The stack has three distinct responsibilities, and keeping them separate is the whole point.</p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│                  YOUR CODE                           │
+│         (business logic, agent workflows)            │
+├──────────────────────────────────────────────────────┤
+│             SEMANTIC KERNEL                          │
+│   &quot;What should the agent do?&quot;                        │
+│   Plugins, Memory, Planner, AgentGroupChat           │
+├──────────────────────────────────────────────────────┤
+│         MICROSOFT.EXTENSIONS.AI                      │
+│   &quot;How should it talk to any LLM?&quot;                   │
+│   IChatClient — one interface for every provider     │
+├──────────────────────────────────────────────────────┤
+│            LLM PROVIDER (swappable)                  │
+│   LlamaSharp │ Azure OpenAI │ OpenAI │ Ollama │ ...  │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Microsoft.Extensions.AI</strong> defines <code>IChatClient</code> — a single interface that sits above every LLM provider. Think of it as <code>ILogger</code> for language models. You do not care whether logs go to the console, a file, or Seq. You do not care whether inference runs locally on LlamaSharp or remotely on Azure OpenAI. Swapping providers is one line.</p>
+<p><strong>Semantic Kernel</strong> is the agent framework. It uses M.E.AI internally — they are not competitors, they are layers. SK handles plugins, memory, planning, and multi-agent orchestration. M.E.AI handles the actual LLM communication.</p>
+<p><strong>LlamaSharp</strong> runs a GGUF model locally. No API key, no cloud dependency, no cost per token. For development and for understanding the stack, this is ideal.</p>
+
+</section>
+<section class="page-section" data-key="what-the-docs-miss">
+  <h2 id="what-the-documentation-does-not-tell-you">What the documentation does not tell you</h2>
+<p>The module description I started from referenced a class called <code>LLamaSharpChatClient</code>. It does not exist.</p>
+<p>The actual class in <code>LLamaSharp.SemanticKernel</code> is <code>LLamaSharpChatCompletion</code>, which implements SK's <code>IChatCompletionService</code> — not M.E.AI's <code>IChatClient</code>. To bridge between them, you call <code>.AsChatClient()</code>:</p>
+<pre><code class="language-csharp">var llamaChat = new LLamaSharpChatCompletion(executor);
+IChatClient chatClient = llamaChat.AsChatClient();
+</code></pre>
+<p>Before you can create the <code>executor</code>, you need to build the full LlamaSharp object chain. This was also missing from the original description:</p>
+<pre><code class="language-csharp">var modelParams = new ModelParams(modelPath)
+{
+    ContextSize = contextSize,
+    GpuLayerCount = gpuLayers
+};
+
+using var model   = LLamaWeights.LoadFromFile(modelParams);
+using var context = model.CreateContext(modelParams);
+var executor      = new InteractiveExecutor(context);
+</code></pre>
+<p>The <code>model</code> and <code>context</code> objects are <code>IDisposable</code>. In a DI factory, they are never disposed — something to address in production with a hosted service wrapper.</p>
+<p>The second issue was with Semantic Kernel registration. The module code called <code>.Build()</code> on the result of <code>AddKernel()</code>. That throws:</p>
+<pre><code>System.InvalidOperationException: Build is not permitted on instances
+returned from AddKernel. Resolve the Kernel from the service provider.
+</code></pre>
+<p>The correct pattern is to register everything in a <code>ServiceCollection</code> and resolve <code>Kernel</code> from the built provider:</p>
+<pre><code class="language-csharp">services.AddSingleton&lt;IChatClient&gt;(sp =&gt;
+{
+    var loggerFactory = sp.GetRequiredService&lt;ILoggerFactory&gt;();
+    return new ChatClientBuilder(LLamaSharpChatClientFactory(config))
+        .UseLogging(loggerFactory)
+        .UseFunctionInvocation()
+        .Build();
+});
+
+services.AddKernel();
+
+var provider = services.BuildServiceProvider();
+var kernel   = provider.GetRequiredService&lt;Kernel&gt;();
+</code></pre>
+<p>Registering <code>IChatClient</code> as a factory lambda solves the dependency ordering problem: <code>loggerFactory</code> is available from the container when the factory runs, so there is no chicken-and-egg issue.</p>
+
+</section>
+<section class="page-section" data-key="middleware-pipeline">
+  <h2 id="the-middleware-pipeline">The middleware pipeline</h2>
+<p>One of the most useful things M.E.AI provides is a composable middleware pipeline for <code>IChatClient</code>. It works exactly like ASP.NET Core middleware — layers wrap layers, running from outside in:</p>
+<pre><code class="language-csharp">IChatClient chatClient = new ChatClientBuilder(innerClient)
+    .UseLogging(loggerFactory)   // logs every request and response
+    .UseFunctionInvocation()     // executes tool calls automatically
+    .Build();
+</code></pre>
+<p>This matters for two reasons. First, cross-cutting concerns — logging, telemetry, retry — are declared once and apply to every LLM call automatically. Second, <code>.UseFunctionInvocation()</code> is where automatic tool execution lives. When the model decides to call a tool, the middleware intercepts the response, invokes the function, and sends the result back — without any code in your business logic.</p>
+<p>The warning that comes with this: automatic function invocation means the model can trigger side effects without explicit approval. That is fine in development. In production, it is the reason Module 7 (HITL, guardrails) exists.</p>
+
+</section>
+<section class="page-section" data-key="the-final-code">
+  <h2 id="the-conversation-loop">The conversation loop</h2>
+<p>The mini challenge in Module 1 was building a multi-turn conversation with memory. The key insight: there is no magic. Memory is a <code>List&lt;ChatMessage&gt;</code> that you pass to every call. The model sees the entire history each time. That is all short-term memory is.</p>
+<pre><code class="language-csharp">var chatClient = provider.GetRequiredService&lt;IChatClient&gt;();
+
+var messages = new List&lt;ChatMessage&gt;
+{
+    new(ChatRole.System, &quot;You are a helpful .NET expert assistant.&quot;)
+};
+
+using var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (_, e) =&gt; { e.Cancel = true; cts.Cancel(); };
+
+while (!cts.Token.IsCancellationRequested)
+{
+    Console.Write(&quot;Next message: &quot;);
+    var input = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(input)) continue;
+
+    messages.Add(new ChatMessage(ChatRole.User, input));
+
+    var result = await chatClient.GetResponseAsync(
+        messages, cancellationToken: cts.Token);
+
+    messages.Add(new ChatMessage(ChatRole.Assistant, result.Text));
+    Console.WriteLine($&quot;\nAnswer: {result.Text}\n&quot;);
+}
+</code></pre>
+<p>Notice that <code>IChatClient</code> is resolved directly from the provider — not through the kernel. The kernel is registered and available, but at this stage, it is not doing anything yet. The agent capabilities come in Module 2 when plugins enter the picture.</p>
+<p>The choice to use <code>IChatClient</code> with <code>List&lt;ChatMessage&gt;</code> rather than SK's <code>IChatCompletionService</code> with <code>ChatHistory</code> was deliberate. The middleware pipeline runs on the <code>IChatClient</code>. Keeping everything at the M.E.AI layer in Module 1 means the logging and function invocation middleware is active, without needing to wire up an additional SK bridge.</p>
+
+</section>
+<section class="page-section" data-key="what-i-learned">
+  <h2 id="what-i-actually-learned">What I actually learned</h2>
+<p><strong>The abstraction is worth the extra wiring.</strong> Setting up <code>IChatClient</code> instead of instantiating <code>LlamaSharpChatCompletion</code> directly takes more code. But once it is done, the rest of the application genuinely does not know or care which provider is behind it. That is the point.</p>
+<p><strong>Documentation describes the happy path.</strong> The class names, method signatures, and code samples in module descriptions reflect an ideal. What breaks — <code>LLamaSharpChatClient</code> not existing, <code>AddKernel()</code> not supporting <code>.Build()</code>, <code>IChatCompletionService</code> not being auto-registered — only surfaces when you actually run the code. Implementation is the verification step.</p>
+<p><strong>Short-term memory is just state management.</strong> There is no hidden mechanism. Passing the full message list on every call is the entire implementation. The interesting problems — context window limits, what to keep and what to drop — come in Module 3.</p>
+<p><strong>The middleware pipeline is where production concerns live.</strong> Logging, telemetry, rate limiting, HITL checkpoints — all of these are middleware. The pattern is the same one ASP.NET Core developers already know. The only thing new is the domain.</p>
+
+</section>
+<section class="page-section" data-key="whats-next">
+  <h2 id="what-comes-next">What comes next</h2>
+<p>Module 1 set up the plumbing. The <code>IChatClient</code> is wired, the middleware pipeline is running, the DI container is in place. The <code>.UseFunctionInvocation()</code> middleware is already registered — it just has nothing to invoke yet.</p>
+<p>Module 2 changes that. <code>[KernelFunction]</code> plugins, the difference between auto and manual tool loops, and production error handling for tool calls. That is where an LLM becomes an agent.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h2 id="problema-megfogalmazas">Probléma megfogalmazás</h2>
+<p>Minden AI tutorial ugyanúgy kezdődik. Hozzáadod az OpenAI NuGet csomagot, beilleszted az API kulcsot, meghívod a <code>CompleteAsync</code>-ot, és tíz perc alatt van egy működő chat appod. Amid szintén van — anélkül, hogy észrevennéd — az egy egyetlen providertől való kemény függőség, ami beégett a kódod minden rétegébe.</p>
+<p>Szerettem volna rendesen megérteni a stack-et, mielőtt bármit rá építek. Nem csak azt, hogy melyik csomagot kell telepíteni, hanem azt, hogy miért léteznek a rétegek, mindegyik miért felelős, és mi törik el valójában, amikor a dokumentáció nem mondja az egészet. Ez a .NET Agentic AI curriculumom 1. modulja — az alap felállítása, amelyre minden más épülni fog.</p>
+
+</section>
+<section class="page-section" data-key="the-three-layers">
+  <h2 id="miert-harom-reteg">Miért három réteg?</h2>
+<p>A stacknek három különálló felelőssége van, és ezek elkülönítése az egész lényege.</p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│                  A TE KÓDOD                          │
+│         (business logic, agent workflows)            │
+├──────────────────────────────────────────────────────┤
+│             SEMANTIC KERNEL                          │
+│   &quot;Mit csináljon az agent?&quot;                          │
+│   Plugins, Memory, Planner, AgentGroupChat           │
+├──────────────────────────────────────────────────────┤
+│         MICROSOFT.EXTENSIONS.AI                      │
+│   &quot;Hogyan kommunikáljon bármely LLM-mel?&quot;            │
+│   IChatClient — egy interfész minden providerre      │
+├──────────────────────────────────────────────────────┤
+│            LLM PROVIDER (cserélhető)                 │
+│   LlamaSharp │ Azure OpenAI │ OpenAI │ Ollama │ ...  │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p>A <strong>Microsoft.Extensions.AI</strong> definiálja az <code>IChatClient</code>-et — egy egységes interfészt, amely minden LLM provider fölé kerül. Gondolj rá úgy mint az <code>ILogger</code>-re, csak nyelvi modelleknek. Nem érdekel, hogy a logok konzolra, fájlba vagy Seq-be mennek. Nem érdekel, hogy az inferencia lokálisan fut LlamaSharp-on vagy távolról az Azure OpenAI-on. A provider csere egyetlen sor.</p>
+<p>A <strong>Semantic Kernel</strong> az agent framework. Belsőleg az M.E.AI-t használja — nem versenytársak, hanem rétegek. Az SK kezeli a pluginokat, a memóriát, a tervezést és a multi-agent orkesztrációt. Az M.E.AI kezeli a tényleges LLM kommunikációt.</p>
+<p>A <strong>LlamaSharp</strong> lokálisan futtat egy GGUF modellt. Nincs API kulcs, nincs felhőfüggőség, nincs token-alapú költség. Fejlesztéshez és a stack megértéséhez ez ideális.</p>
+
+</section>
+<section class="page-section" data-key="what-the-docs-miss">
+  <h2 id="amit-a-dokumentacio-nem-mond-el">Amit a dokumentáció nem mond el</h2>
+<p>A kiindulópontul szolgáló modul leírás hivatkozott egy <code>LLamaSharpChatClient</code> nevű osztályra. Ilyen nem létezik.</p>
+<p>A <code>LLamaSharp.SemanticKernel</code>-ben lévő tényleges osztály a <code>LLamaSharpChatCompletion</code>, amely az SK <code>IChatCompletionService</code>-ét implementálja — nem az M.E.AI <code>IChatClient</code>-jét. A kettő közötti bridge a <code>.AsChatClient()</code> hívás:</p>
+<pre><code class="language-csharp">var llamaChat = new LLamaSharpChatCompletion(executor);
+IChatClient chatClient = llamaChat.AsChatClient();
+</code></pre>
+<p>Mielőtt az <code>executor</code>-t létrehoznád, fel kell építeni a teljes LlamaSharp objektumláncot. Ez szintén hiányzott az eredeti leírásból:</p>
+<pre><code class="language-csharp">var modelParams = new ModelParams(modelPath)
+{
+    ContextSize = contextSize,
+    GpuLayerCount = gpuLayers
+};
+
+using var model   = LLamaWeights.LoadFromFile(modelParams);
+using var context = model.CreateContext(modelParams);
+var executor      = new InteractiveExecutor(context);
+</code></pre>
+<p>A <code>model</code> és <code>context</code> objektumok <code>IDisposable</code>-ek. DI factory-ban soha nem kerülnek dispose-ra — ezt production kódban hosted service wrapperrel kell kezelni.</p>
+<p>A második probléma a Semantic Kernel regisztrációjával volt. A modul kódja <code>.Build()</code>-et hívott az <code>AddKernel()</code> visszatérési értékén. Ez kivételt dob:</p>
+<pre><code>System.InvalidOperationException: Build is not permitted on instances
+returned from AddKernel. Resolve the Kernel from the service provider.
+</code></pre>
+<p>A helyes pattern: mindent <code>ServiceCollection</code>-ben regisztrálni, és a <code>Kernel</code>-t a felépített providerből feloldani:</p>
+<pre><code class="language-csharp">services.AddSingleton&lt;IChatClient&gt;(sp =&gt;
+{
+    var loggerFactory = sp.GetRequiredService&lt;ILoggerFactory&gt;();
+    return new ChatClientBuilder(LLamaSharpChatClientFactory(config))
+        .UseLogging(loggerFactory)
+        .UseFunctionInvocation()
+        .Build();
+});
+
+services.AddKernel();
+
+var provider = services.BuildServiceProvider();
+var kernel   = provider.GetRequiredService&lt;Kernel&gt;();
+</code></pre>
+<p>Az <code>IChatClient</code> lambda factory-ként való regisztrálása megoldja a függőségi sorrend problémát: a <code>loggerFactory</code> elérhető a konténerből, amikor a factory fut, tehát nincs chicken-and-egg probléma.</p>
+
+</section>
+<section class="page-section" data-key="middleware-pipeline">
+  <h2 id="a-middleware-pipeline">A middleware pipeline</h2>
+<p>Az egyik leghasznosabb dolog, amit az M.E.AI nyújt, egy kompozálható middleware pipeline az <code>IChatClient</code>-hez. Pontosan úgy működik mint az ASP.NET Core middleware — rétegek wrap-elik egymást, kívülről befelé futnak:</p>
+<pre><code class="language-csharp">IChatClient chatClient = new ChatClientBuilder(innerClient)
+    .UseLogging(loggerFactory)   // logol minden kérést és választ
+    .UseFunctionInvocation()     // automatikusan végrehajtja a tool hívásokat
+    .Build();
+</code></pre>
+<p>Ez két okból fontos. Először, a cross-cutting concern-ök — logging, telemetria, retry — egyszer kerülnek deklarálásra, és automatikusan érvényesek minden LLM hívásra. Másodszor, a <code>.UseFunctionInvocation()</code> itt él az automatikus tool végrehajtás. Amikor a modell úgy dönt, hogy tool-t hív, a middleware lehallgatja a választ, meghívja a függvényt, és visszaküldi az eredményt — anélkül, hogy bármi kód lenne a business logikádban.</p>
+<p>A figyelmeztetés, ami ezzel jár: az automatikus function invocation azt jelenti, hogy a modell jóváhagyás nélkül tud mellékhatásokat kiváltani. Ez fejlesztés közben rendben van. Production-ban ez az oka annak, hogy létezik a 7. modul (HITL, guardrails).</p>
+
+</section>
+<section class="page-section" data-key="the-final-code">
+  <h2 id="a-conversation-loop">A conversation loop</h2>
+<p>A Modul 1 mini kihívása egy többkörös, memóriával rendelkező párbeszéd megépítése volt. A kulcsfontosságú felismerés: nincs varázslat. A memória egy <code>List&lt;ChatMessage&gt;</code>, amelyet minden hívásnak átadsz. A modell minden alkalommal látja a teljes előzményt. Ez minden, ami a short-term memory.</p>
+<pre><code class="language-csharp">var chatClient = provider.GetRequiredService&lt;IChatClient&gt;();
+
+var messages = new List&lt;ChatMessage&gt;
+{
+    new(ChatRole.System, &quot;You are a helpful .NET expert assistant.&quot;)
+};
+
+using var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (_, e) =&gt; { e.Cancel = true; cts.Cancel(); };
+
+while (!cts.Token.IsCancellationRequested)
+{
+    Console.Write(&quot;Next message: &quot;);
+    var input = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(input)) continue;
+
+    messages.Add(new ChatMessage(ChatRole.User, input));
+
+    var result = await chatClient.GetResponseAsync(
+        messages, cancellationToken: cts.Token);
+
+    messages.Add(new ChatMessage(ChatRole.Assistant, result.Text));
+    Console.WriteLine($&quot;\nAnswer: {result.Text}\n&quot;);
+}
+</code></pre>
+<p>Figyeld meg, hogy az <code>IChatClient</code> közvetlenül a providerből kerül feloldásra — nem a kernelen keresztül. A kernel regisztrálva és elérhető, de ebben a szakaszban még nem csinál semmit. Az agent képességek a 2. modulban jönnek, amikor a pluginek belépnek a képbe.</p>
+<p>Az a döntés, hogy az <code>IChatClient</code>-et <code>List&lt;ChatMessage&gt;</code>-dzsel használom az SK <code>IChatCompletionService</code>-e és <code>ChatHistory</code>-ja helyett, szándékos volt. A middleware pipeline az <code>IChatClient</code>-en fut. Azzal, hogy mindent az M.E.AI rétegen tartunk a Modul 1-ben, a logging és a function invocation middleware aktív — anélkül, hogy egy additional SK bridge-et kellene bekötni.</p>
+
+</section>
+<section class="page-section" data-key="what-i-learned">
+  <h2 id="amit-tenyleg-megtanultam">Amit tényleg megtanultam</h2>
+<p><strong>Az absztrakció megéri a plusz bekötést.</strong> Az <code>IChatClient</code> felállítása a <code>LlamaSharpChatCompletion</code> közvetlen példányosítása helyett több kódot igényel. De ha egyszer kész, az alkalmazás többi része valóban nem tudja és nem is érdekli, hogy melyik provider áll mögötte. Ez a lényeg.</p>
+<p><strong>A dokumentáció a happy path-et írja le.</strong> Az osztálynevek, metódus-szignatúrák és kódminták a modul leírásokban egy ideált tükröznek. Ami eltörik — a <code>LLamaSharpChatClient</code> nem létezik, az <code>AddKernel()</code> nem támogatja a <code>.Build()</code>-et, az <code>IChatCompletionService</code> nincs automatikusan regisztrálva — csak akkor kerül felszínre, amikor ténylegesen futtatod a kódot. Az implementáció az ellenőrzési lépés.</p>
+<p><strong>A short-term memory csak állapotkezelés.</strong> Nincs rejtett mechanizmus. A teljes üzenetlista átadása minden hívásban maga az egész implementáció. Az érdekes problémák — context window korlátok, mit tartsunk meg és mit dobjunk el — a 3. modulban jönnek.</p>
+<p><strong>A middleware pipeline az, ahol a production concern-ök élnek.</strong> Logging, telemetria, rate limiting, HITL checkpointok — ezek mind middleware. A pattern ugyanaz, amelyet az ASP.NET Core fejlesztők már ismernek. Az egyetlen új dolog a domain.</p>
+
+</section>
+<section class="page-section" data-key="whats-next">
+  <h2 id="mi-jon-ezutan">Mi jön ezután</h2>
+<p>A Modul 1 felállította a vízvezetékeket. Az <code>IChatClient</code> be van kötve, a middleware pipeline fut, a DI konténer a helyén van. A <code>.UseFunctionInvocation()</code> middleware már regisztrálva van — csak még nincs mit meghívnia.</p>
+<p>A 2. modul ezt változtatja meg. <code>[KernelFunction]</code> pluginek, az auto és manuális tool loop közötti különbség, és production hibakezelés a tool hívásokhoz. Ez az a pont, ahol egy LLM-ből agent lesz.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ title_hu: Legacy kódbázis, amit az AI is ismer
 slug: posts/sourcerag-00.html
 description: I designed a system to make a 2M+ line on-premise legacy codebase queryable by any AI tool. It was presented, never implemented. Here is the design — and the question it left open.
 layout: page
+date: 2026-04-13
 series: SourceRAG
 part: 1
 ---
