@@ -24,6 +24,14 @@ description: My licenses and certifications
 <div class="cert-grid">
 <div class="cert-card" style="--cert-color: #e8a24a">
 <span class="cert-platform cert-platform--udemy">Udemy</span>
+<p class="cert-title">AI Guardrails & Cybersecurity-AI Agents, Red Teaming HandsOn</p>
+<div class="cert-skills">
+<span class="cert-tag">AI Guardrails</span>
+</div>
+<a class="cert-link" href="https://www.udemy.com/certificate/UC-c0fe0045-481e-4aa8-b1b6-3c77fed67ca2/" target="_blank" rel="noopener">View Certificate →</a>
+</div>
+<div class="cert-card" style="--cert-color: #e8a24a">
+<span class="cert-platform cert-platform--udemy">Udemy</span>
 <p class="cert-title">Agentic AI Architectures with Patterns, Frameworks and MCP</p>
 <div class="cert-skills">
 <span class="cert-tag">Agentic AI Development</span>
@@ -179,6 +187,14 @@ description: My licenses and certifications
 <div class="cert-category">
 <p class="cert-cat-label">AI &amp; Generatív</p>
 <div class="cert-grid">
+<div class="cert-card" style="--cert-color: #e8a24a">
+<span class="cert-platform cert-platform--udemy">Udemy</span>
+<p class="cert-title">AI Guardrails & Cybersecurity-AI Agents, Red Teaming HandsOn</p>
+<div class="cert-skills">
+<span class="cert-tag">AI Guardrails</span>
+</div>
+<a class="cert-link" href="https://www.udemy.com/certificate/UC-c0fe0045-481e-4aa8-b1b6-3c77fed67ca2/" target="_blank" rel="noopener">Tanúsítvány megtekintése →</a>
+</div>
 <div class="cert-card" style="--cert-color: #e8a24a">
 <span class="cert-platform cert-platform--udemy">Udemy</span>
 <p class="cert-title">Agentic AI Architectures with Patterns, Frameworks and MCP</p>

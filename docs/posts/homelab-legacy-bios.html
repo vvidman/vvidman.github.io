@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - The Legacy BIOS + GPT Trap</title>
+
+  <meta name="description" content="Why older machines refuse to boot after a successful Linux installation, and how to fix it with Debian's classic installer.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/homelab-legacy-bios.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/homelab-legacy-bios.html">
+  <meta property="og:title" content="Viktor Vidman - The Legacy BIOS + GPT Trap">
+  <meta property="og:description" content="Why older machines refuse to boot after a successful Linux installation, and how to fix it with Debian's classic installer.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>The Legacy BIOS + GPT Trap</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h1 id="the-legacy-bios-gpt-trap">The Legacy BIOS + GPT Trap</h1>
+<p>If you're trying to install Linux on an older machine and keep hitting <strong>&quot;Boot Device Not Found&quot;</strong> after a seemingly successful installation, you're probably caught in the Legacy BIOS + GPT trap. This post documents the problem, how to diagnose it, and how to solve it — so you don't spend hours on what I did.</p>
+<blockquote>
+<p><strong>This is a companion post to:</strong> <a href="/posts/homelab-docker-server.html">Home Lab Docker Server and Deploy Workflow</a></p>
+</blockquote>
+
+</section>
+<section class="page-section" data-key="problem">
+  <h2 id="the-problem-in-plain-english">The Problem in Plain English</h2>
+<p>Modern Linux installers — especially Ubuntu Server with its Subiquity installer — default to creating a <strong>GPT partition table</strong>, even when the system is booting in Legacy BIOS mode.</p>
+<p>GPT + Legacy BIOS boot is technically valid. GRUB supports it through a dedicated 1 MB <code>bios_grub</code> partition where it stores its core image. The MBR gets a small boot stub that hands off execution to that partition. On most modern hardware this works fine.</p>
+<p>The problem is that <strong>some older BIOSes in Legacy mode don't reliably execute this boot chain from a GPT disk.</strong> The BIOS reads the protective MBR, finds a valid <code>0x55AA</code> boot signature, starts to hand off — and then silently fails. You get a blank screen flash and land back at &quot;Boot Device Not Found.&quot;</p>
+<p>The frustrating part: GRUB is correctly installed. The MBR has a valid signature. The <code>bios_grub</code> partition exists with the right flag. Everything looks right. The system just won't boot.</p>
+
+</section>
+<section class="page-section" data-key="who-is-affected">
+  <h2 id="who-is-affected">Who Is Affected</h2>
+<p>This tends to happen on laptops and desktops manufactured between roughly <strong>2010 and 2016</strong> — old enough to have a Legacy BIOS (or UEFI with Legacy/CSM mode), but still capable hardware for a home server. Specifically:</p>
+<ul>
+<li>Machines where <strong>UEFI boot from USB doesn't work</strong> reliably, forcing Legacy mode for installation</li>
+<li>Any machine where the BIOS firmware was never updated past its original factory version</li>
+</ul>
+<p>The typical scenario: you're repurposing an old laptop as a Docker host, and you want to avoid the complexity of UEFI setup on aging hardware.</p>
+
+</section>
+<section class="page-section" data-key="diagnosis">
+  <h2 id="diagnosis-is-this-your-problem">Diagnosis: Is This Your Problem?</h2>
+<p>Work through this before spending time on GRUB repair attempts.</p>
+<p><strong>Step 1 — Can you boot the USB installer?</strong></p>
+<p>If the USB appears and boots but the system won't boot after install, continue below. If the USB doesn't appear in the boot menu at all, this is a USB formatting issue, not a GPT problem. Recreate with Rufus using <strong>MBR partition scheme + BIOS or UEFI-CSM target</strong>.</p>
+<p><strong>Step 2 — Check the partition table.</strong></p>
+<p>Boot the installer again, drop to a shell (<code>Ctrl+Alt+F2</code>), and run:</p>
+<pre><code class="language-bash">sudo parted /dev/sda print
+</code></pre>
+<p>If you see <code>Partition Table: gpt</code> with a 1 MB partition flagged <code>bios_grub</code> — GRUB was set up for Legacy BIOS on a GPT disk. This is the trap.</p>
+<p><strong>Step 3 — Verify the MBR boot signature.</strong></p>
+<pre><code class="language-bash">dd if=/dev/sda bs=1 count=2 skip=510 2&gt;/dev/null | hexdump
+</code></pre>
+<p>Expected output: <code>0000000 aa55</code> — a valid boot sector is present.</p>
+<blockquote>
+<p><strong>Note:</strong> GRUB 2's <code>boot.img</code> does not contain the ASCII string &quot;GRUB&quot; in the MBR sector. A grep-based check returns nothing even on a correctly installed system — don't use it as a diagnostic.</p>
+</blockquote>
+<p><strong>Step 4 — Confirm the BIOS sees the disk.</strong></p>
+<p>Enter your BIOS setup and check the storage or device configuration section. If your disk is listed there, the hardware is fine. The issue is entirely in the boot chain handoff between the BIOS and GRUB over a GPT disk.</p>
+
+</section>
+<section class="page-section" data-key="why-grub-repair-wont-fix">
+  <h2 id="why-grub-repair-wont-fix-it">Why GRUB Repair Won't Fix It</h2>
+<p>If you've already tried <code>chroot + grub-install /dev/sda</code>, possibly multiple times, and it runs without errors but the system still won't boot — here's why.</p>
+<p>GRUB is not the problem. <code>grub-install --target=i386-pc --recheck /dev/sda</code> correctly writes <code>boot.img</code> to the MBR and <code>core.img</code> to the <code>bios_grub</code> partition. &quot;Installation finished. No error reported.&quot; is accurate — the installation succeeded. The BIOS simply doesn't reliably hand off execution from the protective MBR of a GPT disk into that boot chain.</p>
+<p>Running GRUB repair again won't change this. The problem lives in the BIOS firmware, not in the bootloader.</p>
+
+</section>
+<section class="page-section" data-key="solution">
+  <h2 id="the-solution-mbr-partition-table-via-debian">The Solution: MBR Partition Table via Debian</h2>
+<p>Ubuntu Server's Subiquity installer (from at least version 22.04 onwards) <strong>only creates GPT partition tables</strong>, even in custom storage layout mode. There is no option to choose MBR/DOS, and wiping the disk doesn't change this — the installer will recreate GPT.</p>
+<p><strong>Debian's classic installer (debian-installer) supports MBR/DOS partition tables explicitly.</strong> When booting in Legacy BIOS mode and selecting guided partitioning, it creates an MBR partition table by default. GRUB installs to the MBR gap between the partition table and the first partition, and older BIOSes boot from it without issues.</p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>Download the Debian netinstall ISO from <a href="https://debian.org">debian.org</a> (~400 MB)</li>
+<li>Create a bootable USB with Rufus: <strong>MBR partition scheme + BIOS or UEFI-CSM target</strong></li>
+<li>In BIOS: set boot mode to <strong>Legacy</strong>, make sure USB boot is enabled</li>
+<li>Boot from USB — select it from the one-time boot menu if needed</li>
+<li>In the Debian installer: choose <code>Install</code> (not Graphical installer)</li>
+<li>At partitioning: <code>Guided - use entire disk</code> → <code>All files in one partition</code></li>
+<li>At software selection: deselect all desktop environments, keep SSH server and standard utilities</li>
+<li>Install GRUB to <code>/dev/sda</code> when prompted</li>
+</ol>
+<p>The system will boot on first try.</p>
+
+</section>
+<section class="page-section" data-key="uefi-note">
+  <h2 id="what-about-uefi-mode">What About UEFI Mode?</h2>
+<p>UEFI is the correct long-term approach and avoids this problem entirely. If your machine supports booting a UEFI-formatted USB, use it — both Ubuntu and Debian handle UEFI installs cleanly, and the result is a GPT disk with a proper EFI System Partition.</p>
+<p>The catch is that on some older machines, UEFI USB boot doesn't work reliably even when UEFI mode is enabled. If your UEFI-formatted USB doesn't appear in the boot device list, you're forced into Legacy mode — and then the GPT trap applies.</p>
+<p>Before assuming UEFI won't work, try a BIOS firmware update if one is available. Newer firmware versions often improve UEFI USB boot compatibility.</p>
+
+</section>
+<section class="page-section" data-key="reference">
+  <h2 id="quick-reference">Quick Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USB not in boot menu</td>
+<td>USB not formatted for Legacy</td>
+<td>Rufus: MBR + BIOS target</td>
+</tr>
+<tr>
+<td>&quot;Boot Device Not Found&quot; after Ubuntu install</td>
+<td>GPT + Legacy BIOS incompatibility</td>
+<td>Switch to Debian</td>
+</tr>
+<tr>
+<td><code>grub-install</code> succeeds but system won't boot</td>
+<td>Same root cause — GRUB is fine, BIOS isn't</td>
+<td>Switch to Debian</td>
+</tr>
+<tr>
+<td>UEFI USB not recognized</td>
+<td>Old firmware / BIOS quirk</td>
+<td>Update firmware, or use Legacy + Debian</td>
+</tr>
+<tr>
+<td><code>Partition Table: gpt</code> + <code>bios_grub</code> flag</td>
+<td>Ubuntu Subiquity GPT-only behavior</td>
+<td>Switch to Debian</td>
+</tr>
+</tbody>
+</table>
+<p><strong>My configuration for reference:</strong></p>
+<ul>
+<li>Machine: HP EliteBook 840 G2 (2015, repurposed as home lab server)</li>
+<li>Failed distro: Ubuntu Server 26.04 (Subiquity installer, GPT-only)</li>
+<li>Working distro: Debian 13 (classic installer, MBR partition table)</li>
+<li>BIOS quirk: UEFI-formatted USB not recognized in boot menu; Legacy mode required</li>
+<li>Final result: Fully functional headless Docker host — Debian 13, Docker Engine, Portainer CE, Nginx Proxy Manager</li>
+</ul>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h1 id="a-legacy-bios-gpt-csapda">A Legacy BIOS + GPT csapda</h1>
+<p>Ha Linuxot próbálsz telepíteni egy régebbi gépre, és az egyébként sikeres telepítés után újra és újra <strong>&quot;Boot Device Not Found&quot;</strong> üzenettel találkozol, valószínűleg a Legacy BIOS + GPT csapdába estél. Ez a post dokumentálja a problémát, a diagnosztikát és a megoldást — hogy ne kelljen órákig keresnod azt, amit én már megtaláltam.</p>
+<blockquote>
+<p><strong>Ez egy companion post ehhez:</strong> <a href="/posts/homelab-docker-server.html">Otthoni Docker szerver és deploy workflow</a></p>
+</blockquote>
+
+</section>
+<section class="page-section" data-key="problem">
+  <h2 id="a-problema-egyszeruen">A probléma egyszerűen</h2>
+<p>A modern Linux telepítők — különösen az Ubuntu Server Subiquity telepítője — alapértelmezetten <strong>GPT partíciós táblát</strong> hoznak létre, még akkor is, ha a rendszer Legacy BIOS módban bootol.</p>
+<p>A GPT + Legacy BIOS kombináció technikailag érvényes. A GRUB egy dedikált 1 MB-os <code>bios_grub</code> partíción keresztül támogatja ezt, ahol a core image-t tárolja. Az MBR egy kis boot stubot kap, amely átadja a vezérlést ennek a partíciónak. A legtöbb modern hardveren ez működik.</p>
+<p>A probléma az, hogy <strong>egyes régebbi BIOS-ok Legacy módban nem hajtják végre megbízhatóan ezt a boot láncot GPT lemezről.</strong> A BIOS beolvassa a protective MBR-t, talál egy érvényes <code>0x55AA</code> boot szignatúrát, elkezdi az átadást — majd csendben meghibásodik. Egy pillanatra fekete képernyő, aztán vissza a &quot;Boot Device Not Found&quot; üzenethez.</p>
+<p>A frusztráló rész: a GRUB helyesen van telepítve. Az MBR érvényes szignatúrával rendelkezik. A <code>bios_grub</code> partíció létezik a megfelelő flaggel. Minden rendbennek látszik. A rendszer egyszerűen nem bootol.</p>
+
+</section>
+<section class="page-section" data-key="who-is-affected">
+  <h2 id="kit-erint">Kit érint</h2>
+<p>Ez általában <strong>2010 és 2016 között</strong> gyártott laptopokon és asztali gépeken fordul elő — elég régiek ahhoz, hogy Legacy BIOS-uk legyen (vagy UEFI Legacy/CSM móddal), de még mindig alkalmas hardver egy otthoni szerverhez. Konkrétan:</p>
+<ul>
+<li>Gépek, ahol <strong>az UEFI USB bootolás nem működik</strong> megbízhatóan, és Legacy módot kell használni a telepítéshez</li>
+<li>Bármely gép, amelynek BIOS firmware-e soha nem lett frissítve a gyári verzión túl</li>
+</ul>
+<p>A tipikus helyzet: egy régi laptopot szeretnél Docker hosztként hasznosítani, és el akarod kerülni a UEFI beállítás komplexitását elavult hardveren.</p>
+
+</section>
+<section class="page-section" data-key="diagnosis">
+  <h2 id="diagnosztika-ez-a-te-problemad">Diagnosztika: ez a te problémád?</h2>
+<p>Menj végig ezeken, mielőtt GRUB-javítással próbálkozol.</p>
+<p><strong>1. lépés — Bootol az USB telepítő?</strong></p>
+<p>Ha az USB megjelenik és bootol, de a telepítés utáni rendszer nem indul, folytasd az alábbiakkal. Ha az USB egyáltalán nem jelenik meg a boot menüben, ez USB formázási probléma, nem GPT-probléma. Hozd létre újra Rufusszal: <strong>MBR partíciós séma + BIOS vagy UEFI-CSM target</strong>.</p>
+<p><strong>2. lépés — Ellenőrizd a partíciós táblát.</strong></p>
+<p>Indítsd el újra a telepítőt, lépj shellbe (<code>Ctrl+Alt+F2</code>), és futtasd:</p>
+<pre><code class="language-bash">sudo parted /dev/sda print
+</code></pre>
+<p>Ha <code>Partition Table: gpt</code> jelenik meg egy <code>bios_grub</code> flaggel jelölt 1 MB-os partícióval — a GRUB Legacy BIOS-ra lett beállítva GPT lemezen. Ez a csapda.</p>
+<p><strong>3. lépés — Ellenőrizd az MBR boot szignatúrát.</strong></p>
+<pre><code class="language-bash">dd if=/dev/sda bs=1 count=2 skip=510 2&gt;/dev/null | hexdump
+</code></pre>
+<p>Várt kimenet: <code>0000000 aa55</code> — érvényes boot szektor.</p>
+<blockquote>
+<p><strong>Megjegyzés:</strong> A GRUB 2 <code>boot.img</code>-je nem tartalmazza a &quot;GRUB&quot; ASCII szöveget az MBR szektorban. Egy grep-alapú ellenőrzés akkor is üres eredményt ad, ha a telepítés helyes — ne használd diagnosztikai eszközként.</p>
+</blockquote>
+<p><strong>4. lépés — Ellenőrizd, hogy a BIOS látja-e a lemezt.</strong></p>
+<p>Lépj be a BIOS beállításaiba, és nézd meg a tárolóeszközök vagy eszközök konfigurációs szekciót. Ha a lemez ott szerepel, a hardver rendben van. A probléma kizárólag a BIOS és a GRUB közötti boot lánc átadásában van GPT lemez esetén.</p>
+
+</section>
+<section class="page-section" data-key="why-grub-repair-wont-fix">
+  <h2 id="miert-nem-oldja-meg-a-grub-javitas">Miért nem oldja meg a GRUB javítás?</h2>
+<p>Ha már megpróbáltad a <code>chroot + grub-install /dev/sda</code> parancsot, esetleg többször is, és hiba nélkül lefutott, de a rendszer még mindig nem bootol — íme a magyarázat.</p>
+<p>A GRUB nem a probléma. A <code>grub-install --target=i386-pc --recheck /dev/sda</code> helyesen írja a <code>boot.img</code>-t az MBR-be és a <code>core.img</code>-t a <code>bios_grub</code> partícióra. Az &quot;Installation finished. No error reported.&quot; üzenet pontos — a telepítés sikerült. A BIOS egyszerűen nem hajtja végre megbízhatóan a boot lánc átadását egy GPT lemez protective MBR-jéből.</p>
+<p>A GRUB javítás újrafuttatása ezt nem változtatja meg. A probléma a BIOS firmware-ben van, nem a bootloaderben.</p>
+
+</section>
+<section class="page-section" data-key="solution">
+  <h2 id="a-megoldas-mbr-particios-tabla-debiannal">A megoldás: MBR partíciós tábla Debiannal</h2>
+<p>Az Ubuntu Server Subiquity telepítője (legalább a 22.04-es verziótól) <strong>kizárólag GPT partíciós táblát hoz létre</strong>, még egyéni tárolóelrendezés módban is. Nincs lehetőség MBR/DOS választására, és a lemez törlése sem változtat ezen — a telepítő újra GPT-t hoz létre.</p>
+<p><strong>A Debian klasszikus telepítője (debian-installer) explicit módon támogatja az MBR/DOS partíciós táblákat.</strong> Legacy BIOS módban indítva, az irányított particionálást választva, alapértelmezetten MBR partíciós táblát hoz létre. A GRUB az MBR résbe települ a partíciós tábla és az első partíció között, és a régebbi BIOS-ok probléma nélkül bootolnak belőle.</p>
+<h3 id="lepesek">Lépések</h3>
+<ol>
+<li>Töltsd le a Debian netinstall ISO-t a <a href="https://debian.org">debian.org</a> oldalról (~400 MB)</li>
+<li>Hozz létre bootolható USB-t Rufusszal: <strong>MBR partíciós séma + BIOS vagy UEFI-CSM target</strong></li>
+<li>BIOS-ban: állítsd be a boot módot <strong>Legacy</strong>-re, és győződj meg arról, hogy az USB boot engedélyezett</li>
+<li>Bootolj USB-ről — ha szükséges, válaszd ki az egyszer használatos boot menüből</li>
+<li>A Debian telepítőben: válaszd az <code>Install</code> opciót (nem Graphical installer)</li>
+<li>Particionálásnál: <code>Guided - use entire disk</code> → <code>All files in one partition</code></li>
+<li>Szoftverválasztásnál: töröld az összes asztali környezetet, tartsd meg az SSH server és standard utilities opciókat</li>
+<li>Telepítsd a GRUB-ot a <code>/dev/sda</code> eszközre, amikor a rendszer kéri</li>
+</ol>
+<p>A rendszer első próbálkozásra bootolni fog.</p>
+
+</section>
+<section class="page-section" data-key="uefi-note">
+  <h2 id="mi-a-helyzet-uefi-moddal">Mi a helyzet UEFI móddal?</h2>
+<p>A UEFI a helyes hosszú távú megközelítés, és teljesen elkerüli ezt a problémát. Ha a gép támogatja UEFI-formázású USB bootolását, használd azt — mind az Ubuntu, mind a Debian tisztán kezeli a UEFI telepítéseket, és az eredmény egy GPT lemez megfelelő EFI System Partícióval.</p>
+<p>A buktató: egyes régebbi gépeken a UEFI USB boot nem működik megbízhatóan, még akkor sem, ha a BIOS-ban engedélyezett. Ha a UEFI-formázású USB nem jelenik meg a boot eszközök listájában, kénytelen vagy Legacy módot használni — és akkor életbe lép a GPT csapda.</p>
+<p>Mielőtt azt feltételezed, hogy a UEFI nem fog működni, próbálj meg BIOS firmware frissítést keresni, ha elérhető. Az újabb firmware verziók gyakran javítják a UEFI USB boot kompatibilitást.</p>
+
+</section>
+<section class="page-section" data-key="reference">
+  <h2 id="gyors-referencia">Gyors referencia</h2>
+<table>
+<thead>
+<tr>
+<th>Tünet</th>
+<th>Valószínű ok</th>
+<th>Megoldás</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USB nem szerepel a boot menüben</td>
+<td>Az USB nincs Legacy-re formázva</td>
+<td>Rufus: MBR + BIOS target</td>
+</tr>
+<tr>
+<td>&quot;Boot Device Not Found&quot; Ubuntu telepítés után</td>
+<td>GPT + Legacy BIOS inkompatibilitás</td>
+<td>Váltás Debianra</td>
+</tr>
+<tr>
+<td><code>grub-install</code> sikeres, de a rendszer nem bootol</td>
+<td>Ugyanaz az ok — a GRUB rendben, a BIOS nem</td>
+<td>Váltás Debianra</td>
+</tr>
+<tr>
+<td>UEFI USB nem ismeri fel</td>
+<td>Régi firmware / BIOS hiba</td>
+<td>Firmware frissítés, vagy Legacy + Debian</td>
+</tr>
+<tr>
+<td><code>Partition Table: gpt</code> + <code>bios_grub</code> flag</td>
+<td>Ubuntu Subiquity GPT-only viselkedés</td>
+<td>Váltás Debianra</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Saját konfiguráció referenciának:</strong></p>
+<ul>
+<li>Gép: HP EliteBook 840 G2 (2015, otthoni lab szerverként hasznosítva)</li>
+<li>Sikertelen disztribúció: Ubuntu Server 26.04 (Subiquity telepítő, GPT-only)</li>
+<li>Működő disztribúció: Debian 13 (klasszikus telepítő, MBR partíciós tábla)</li>
+<li>BIOS sajátosság: UEFI-formázású USB nem ismerhető fel a boot menüben; Legacy módra volt szükség</li>
+<li>Végeredmény: Teljesen funkcionális headless Docker hoszt — Debian 13, Docker Engine, Portainer CE, Nginx Proxy Manager</li>
+</ul>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>

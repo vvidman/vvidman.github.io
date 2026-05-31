@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - Home Lab Docker Server and Deploy Workflow</title>
+
+  <meta name="description" content="How to turn an old machine or WSL2 into a personal Docker host, and set up a deploy workflow that works identically on both.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/homelab-docker-server.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/homelab-docker-server.html">
+  <meta property="og:title" content="Viktor Vidman - Home Lab Docker Server and Deploy Workflow">
+  <meta property="og:description" content="How to turn an old machine or WSL2 into a personal Docker host, and set up a deploy workflow that works identically on both.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>Home Lab Docker Server and Deploy Workflow</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h1 id="home-lab-docker-server-and-deploy-workflow">Home Lab Docker Server and Deploy Workflow</h1>
+<p>So you want a personal Docker host. Somewhere to run side projects, self-hosted services, or AI experiments without paying for cloud infrastructure. You have two realistic options: an old PC or laptop running Linux, or WSL2 on your Windows machine. This post covers both — and more importantly, how to deploy to either of them using the exact same workflow.</p>
+<blockquote>
+<p><strong>Companion post:</strong> If you run into boot problems during Linux installation on older hardware, see <a href="/posts/homelab-legacy-bios.html">The Legacy BIOS + GPT Trap</a>.</p>
+</blockquote>
+
+</section>
+<section class="page-section" data-key="choosing-host">
+  <h2 id="choosing-your-host">Choosing Your Host</h2>
+<h3 id="option-a-dedicated-linux-machine">Option A: Dedicated Linux Machine</h3>
+<p>Any machine from the last 10–15 years with at least <strong>4 GB RAM and an SSD</strong> is workable. The more RAM, the more services you can run simultaneously.</p>
+<p>Good candidates: an old laptop, a retired office desktop, or a mini PC (Intel NUC, Beelink, etc.).</p>
+<p>The advantage is a dedicated, always-on host that doesn't compete with your development machine for resources. The disadvantage is setup time — particularly on machines old enough to have Legacy BIOS quirks.</p>
+<p><strong>Recommended OS:</strong> Debian 13 — stable, minimal, excellent Docker support, and the installer handles older hardware well.</p>
+<h3 id="option-b-wsl2-on-windows">Option B: WSL2 on Windows</h3>
+<p>If you don't have a spare machine, WSL2 is a legitimate alternative. Docker Engine runs natively inside WSL2, SSH access works, and the deploy workflow described in this post is identical — same commands, same tools, same result.</p>
+<p>The trade-offs: your Docker host competes with Windows for RAM, and it goes down whenever your development machine goes down. For personal projects and learning, this is usually acceptable.</p>
+
+</section>
+<section class="page-section" data-key="setup-linux">
+  <h2 id="setting-up-the-linux-host-debian-13">Setting Up the Linux Host (Debian 13)</h2>
+<p><strong>Install the OS:</strong> Download the Debian 13 netinstall ISO from <a href="https://debian.org">debian.org</a>, create a bootable USB with <a href="https://rufus.ie">Rufus</a>, and install with the text installer. At partitioning choose guided — entire disk, all files in one partition. At software selection: SSH server + Standard system utilities only — no desktop environment.</p>
+<p><strong>First boot — install sudo:</strong></p>
+<pre><code class="language-bash">su -
+apt install sudo -y
+usermod -aG sudo &lt;your-username&gt;
+exit
+</code></pre>
+<p>Log out and back in. <code>sudo</code> now works.</p>
+<p><strong>Set a static IP.</strong> Find your interface name with <code>ip a</code>, then edit <code>/etc/network/interfaces</code>:</p>
+<pre><code>auto enp0s25
+iface enp0s25 inet static
+    address 192.168.x.x
+    netmask 255.255.255.0
+    gateway 192.168.x.1
+    dns-nameservers 8.8.8.8 1.1.1.1
+</code></pre>
+<p>Apply with <code>sudo systemctl restart networking</code>. Replace <code>enp0s25</code> with your actual interface name. Your gateway IP is visible on Windows via <code>ipconfig</code>.</p>
+<p><strong>Firewall:</strong></p>
+<pre><code class="language-bash">sudo apt install ufw -y
+sudo ufw allow OpenSSH
+sudo ufw allow 9443/tcp   # Portainer
+sudo ufw allow 80/tcp     # Nginx Proxy Manager
+sudo ufw allow 81/tcp     # NPM admin
+sudo ufw allow 443/tcp    # HTTPS
+sudo ufw enable
+</code></pre>
+<p><strong>Timezone:</strong> <code>sudo timedatectl set-timezone Europe/Budapest</code></p>
+
+</section>
+<section class="page-section" data-key="setup-wsl2">
+  <h2 id="setting-up-wsl2">Setting Up WSL2</h2>
+<p><strong>Enable WSL2</strong> from an Administrator PowerShell prompt:</p>
+<pre><code class="language-powershell">wsl --install
+</code></pre>
+<p>Restart when prompted. Ubuntu installs by default — that's fine.</p>
+<p><strong>Static IP (optional):</strong> WSL2 gets a dynamic IP by default. For a stable address, add this to <code>%USERPROFILE%\.wslconfig</code>:</p>
+<pre><code class="language-ini">[wsl2]
+networkingMode=mirrored
+</code></pre>
+<p>This makes WSL2 share your Windows IP.</p>
+<p><strong>Enable SSH access inside WSL2:</strong></p>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install openssh-server -y
+sudo service ssh start
+</code></pre>
+<p>To start SSH automatically, add <code>sudo service ssh start</code> to your <code>~/.bashrc</code>.</p>
+
+</section>
+<section class="page-section" data-key="docker-install">
+  <h2 id="installing-docker">Installing Docker</h2>
+<p>The official Docker installation method works identically on Debian and Ubuntu/WSL2.</p>
+<pre><code class="language-bash">sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg \
+  -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo \
+  &quot;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+  https://download.docker.com/linux/debian \
+  $(. /etc/os-release &amp;&amp; echo &quot;$VERSION_CODENAME&quot;) stable&quot; | \
+  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
+  docker-buildx-plugin docker-compose-plugin
+</code></pre>
+<p>For Ubuntu/WSL2, replace <code>debian</code> with <code>ubuntu</code> in the repository URL and gpg path.</p>
+<p><strong>Post-install — run Docker without sudo:</strong></p>
+<pre><code class="language-bash">sudo usermod -aG docker $USER
+</code></pre>
+<p>Log out and back in, then verify: <code>docker run hello-world</code></p>
+<p>On a dedicated Linux machine, enable Docker to start automatically:</p>
+<pre><code class="language-bash">sudo systemctl enable docker
+sudo systemctl enable containerd
+</code></pre>
+
+</section>
+<section class="page-section" data-key="portainer-npm">
+  <h2 id="portainer-and-nginx-proxy-manager">Portainer and Nginx Proxy Manager</h2>
+<h3 id="portainer-ce">Portainer CE</h3>
+<pre><code class="language-bash">docker volume create portainer_data
+
+docker run -d \
+  -p 8000:8000 \
+  -p 9443:9443 \
+  --name portainer \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:latest
+</code></pre>
+<p>Access at <code>https://&lt;host-ip&gt;:9443</code>. Accept the self-signed certificate warning — it's expected. Create an admin user and select <strong>Get Started → local</strong>.</p>
+<h3 id="nginx-proxy-manager">Nginx Proxy Manager</h3>
+<p>Create <code>~/stacks/npm/docker-compose.yml</code>:</p>
+<pre><code class="language-yaml">services:
+  app:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+</code></pre>
+<p>Then: <code>docker compose up -d</code></p>
+<p>Access the admin UI at <code>http://&lt;host-ip&gt;:81</code>. Default credentials: <code>admin@example.com</code> / <code>changeme</code> — change them on first login.</p>
+
+</section>
+<section class="page-section" data-key="deploy-workflow">
+  <h2 id="the-deploy-workflow">The Deploy Workflow</h2>
+<p>This is the core of the post. The workflow below works whether your host is a dedicated Linux machine or WSL2 — the commands are identical.</p>
+<pre><code>Developer machine                     Host (Linux or WSL2)
+────────────────────────────          ──────────────────────────────
+1. docker build
+2. docker save | gzip        → scp →
+                                       3. docker load
+                                       4. Portainer stack deploy
+                                       5. Nginx Proxy Manager (optional)
+</code></pre>
+<p><strong>Step 1 — Build the image:</strong></p>
+<pre><code class="language-bash">docker build -t &lt;project&gt;:1.0.0 -t &lt;project&gt;:latest .
+</code></pre>
+<p><strong>Step 2 — Export:</strong></p>
+<pre><code class="language-bash">docker save &lt;project&gt;:latest | gzip &gt; &lt;project&gt;.tar.gz
+</code></pre>
+<p><strong>Step 3 — Upload (one-time directory setup):</strong></p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt; &quot;mkdir -p ~/images&quot;
+scp &lt;project&gt;.tar.gz user@&lt;host-ip&gt;:~/images/
+</code></pre>
+<p><strong>Step 4 — Load on the host:</strong></p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt; &quot;docker load &lt; ~/images/&lt;project&gt;.tar.gz&quot;
+</code></pre>
+<p><strong>Step 5 — Deploy via Portainer:</strong> On first deploy, go to Portainer → Stacks → Add stack, paste your <code>docker-compose.yml</code>, set environment variables, and click Deploy. For updates: select the stack and click Update the stack. Portainer picks up the newly loaded <code>latest</code> image automatically.</p>
+<p><strong>Optional — expose via Nginx Proxy Manager:</strong> Add a Proxy Host with the service name as forward hostname and the container's internal port. Add the host IP to your <code>hosts</code> file on the development machine to reach it by local domain name.</p>
+
+</section>
+<section class="page-section" data-key="deploy-script">
+  <h2 id="deploy-script">Deploy Script</h2>
+<p>Put this <code>deploy.sh</code> in the root of each project repository:</p>
+<pre><code class="language-bash">#!/bin/bash
+set -e
+
+PROJECT=&quot;&lt;project-name&gt;&quot;
+VERSION=&quot;${1:-latest}&quot;
+SERVER=&quot;user@&lt;host-ip&gt;&quot;
+REMOTE_DIR=&quot;~/images&quot;
+
+echo &quot;Building $PROJECT:$VERSION...&quot;
+docker build -t &quot;$PROJECT:$VERSION&quot; -t &quot;$PROJECT:latest&quot; .
+
+echo &quot;Exporting image...&quot;
+docker save &quot;$PROJECT:latest&quot; | gzip &gt; &quot;$PROJECT.tar.gz&quot;
+
+echo &quot;Uploading to $SERVER...&quot;
+scp &quot;$PROJECT.tar.gz&quot; &quot;$SERVER:$REMOTE_DIR/&quot;
+
+echo &quot;Loading on server...&quot;
+ssh &quot;$SERVER&quot; &quot;docker load &lt; $REMOTE_DIR/$PROJECT.tar.gz&quot;
+
+echo &quot;Cleaning up local tar...&quot;
+rm &quot;$PROJECT.tar.gz&quot;
+
+echo &quot;Done. Update the stack in Portainer: https://&lt;host-ip&gt;:9443&quot;
+</code></pre>
+<p>Usage:</p>
+<pre><code class="language-bash">chmod +x deploy.sh
+./deploy.sh           # deploys latest
+./deploy.sh 1.2.0     # deploys with version tag
+</code></pre>
+
+</section>
+<section class="page-section" data-key="secrets-volumes">
+  <h2 id="secrets-and-volumes">Secrets and Volumes</h2>
+<h3 id="secrets">Secrets</h3>
+<p>For any project using API keys or credentials, create secret files on the host before the first deploy:</p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt;
+mkdir -p ~/secrets/&lt;project-name&gt;
+echo &quot;your-actual-api-key&quot; &gt; ~/secrets/&lt;project-name&gt;/api_key.txt
+chmod 600 ~/secrets/&lt;project-name&gt;/*.txt
+</code></pre>
+<p>Reference them in <code>docker-compose.yml</code> by file path. Never commit the secrets directory — keep a <code>secrets.example/</code> folder in the repo with placeholder filenames only.</p>
+<h3 id="volumes">Volumes</h3>
+<p><strong>Named volumes</strong> (databases, persistent data) — Docker manages these, visible in Portainer:</p>
+<pre><code class="language-yaml">volumes:
+  db_data:
+    name: myproject_db_data
+</code></pre>
+<p><strong>Bind mounts</strong> (models, uploads, logs) — create the directory on the host first:</p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt; &quot;mkdir -p /opt/&lt;project-name&gt;/models&quot;
+</code></pre>
+<p>Then reference in compose:</p>
+<pre><code class="language-yaml">volumes:
+  - type: bind
+    source: /opt/&lt;project-name&gt;/models
+    target: /models
+    read_only: true
+</code></pre>
+
+</section>
+<section class="page-section" data-key="checklists">
+  <h2 id="checklists">Checklists</h2>
+<h3 id="first-deploy">First Deploy</h3>
+<ul>
+<li><code>~/images/</code> directory exists on host</li>
+<li>Required directories under <code>/opt/&lt;project&gt;/</code> created</li>
+<li>Secrets files created under <code>~/secrets/&lt;project&gt;/</code></li>
+<li>Image built and uploaded</li>
+<li>Image loaded: <code>docker load</code></li>
+<li>Portainer stack created and deployed</li>
+<li>Service reachable on its internal port</li>
+<li>NPM proxy host configured (if needed)</li>
+<li>Smoke test done</li>
+</ul>
+<h3 id="update">Update</h3>
+<ul>
+<li>Image built and uploaded</li>
+<li>Image loaded: <code>docker load</code></li>
+<li>Portainer → stack → <strong>Update the stack</strong></li>
+<li>Smoke test done</li>
+</ul>
+<h3 id="useful-commands-on-the-host">Useful Commands on the Host</h3>
+<pre><code class="language-bash">docker ps                          # running containers
+docker ps -a                       # all containers
+docker images                      # image list
+docker logs &lt;container-name&gt; -f    # follow container logs
+docker image prune                 # remove unused images
+docker system df                   # disk usage summary
+</code></pre>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h1 id="otthoni-docker-szerver-es-deploy-workflow">Otthoni Docker szerver és deploy workflow</h1>
+<p>Egy személyes Docker hoszt — hely ahol mellékprojekteket, self-hosted szolgáltatásokat vagy AI kísérleteket futtathatsz anélkül, hogy felhőinfrastruktúráért fizetnél. Két reális opció van: egy régi gép Linuxszal, vagy WSL2 Windows alatt. Ez a post mindkettőt lefedi — és ami fontosabb, egy egységes deploy workflow-t mutat be, ami mindkét esetben ugyanúgy működik.</p>
+<blockquote>
+<p><strong>Kapcsolódó post:</strong> Ha régi hardverre telepítés közben bootolási problémákba ütközöl, lásd: <a href="/posts/homelab-legacy-bios.html">A Legacy BIOS + GPT csapda</a>.</p>
+</blockquote>
+
+</section>
+<section class="page-section" data-key="choosing-host">
+  <h2 id="a-hoszt-kivalasztasa">A hoszt kiválasztása</h2>
+<h3 id="a-opcio-dedikalt-linux-gep">A opció: Dedikált Linux gép</h3>
+<p>Bármely 10–15 évnél nem régebbi gép, amelyen van legalább <strong>4 GB RAM és SSD</strong>, megfelel. Minél több RAM, annál több szolgáltatást lehet egyszerre futtatni.</p>
+<p>Jó jelöltek: egy fiókban porosodó régi laptop, nyugdíjazott irodai asztali gép, vagy mini PC (Intel NUC, Beelink, stb.).</p>
+<p>Az előnye: dedikált, mindig bekapcsolt hoszt, amely nem verseng a fejlesztői géppel az erőforrásokért. A hátránya a telepítési idő — különösen régi, Legacy BIOS-os gépeken.</p>
+<p><strong>Ajánlott OS:</strong> Debian 13 — stabil, minimális, kiváló Docker-támogatás, és a telepítő jól kezeli a régebbi hardvert.</p>
+<h3 id="b-opcio-wsl2-windows-alatt">B opció: WSL2 Windows alatt</h3>
+<p>Ha nincs tartalék gép, a WSL2 valódi alternatíva. A Docker Engine natívan fut WSL2 alatt, az SSH-hozzáférés működik, és a post-ban leírt deploy workflow azonos — ugyanazok a parancsok, ugyanazok az eszközök, ugyanaz az eredmény.</p>
+<p>A kompromisszumok: a Docker hoszt verseng a Windowsszal a RAM-ért, és leáll, ha a fejlesztői gép leáll. Személyes projektekhez és tanuláshoz ez általában elfogadható.</p>
+
+</section>
+<section class="page-section" data-key="setup-linux">
+  <h2 id="a-linux-hoszt-beallitasa-debian-13">A Linux hoszt beállítása (Debian 13)</h2>
+<p><strong>OS telepítése:</strong> Töltsd le a Debian 13 netinstall ISO-t a <a href="https://debian.org">debian.org</a> oldalról, készíts bootolható USB-t <a href="https://rufus.ie">Rufus</a> segítségével, és telepíts a szöveges telepítővel. Particionálásnál válaszd a guided — teljes lemez, minden fájl egy partíción opciót. Szoftverválasztásnál: csak SSH server + Standard system utilities — semmilyen asztali környezet.</p>
+<p><strong>Első indítás — sudo telepítése:</strong></p>
+<pre><code class="language-bash">su -
+apt install sudo -y
+usermod -aG sudo &lt;felhasználónév&gt;
+exit
+</code></pre>
+<p>Jelentkezz ki és vissza. A <code>sudo</code> mostantól működik.</p>
+<p><strong>Statikus IP beállítása.</strong> Az interfész nevét az <code>ip a</code> paranccsal kérdezd le, majd szerkeszd az <code>/etc/network/interfaces</code> fájlt:</p>
+<pre><code>auto enp0s25
+iface enp0s25 inet static
+    address 192.168.x.x
+    netmask 255.255.255.0
+    gateway 192.168.x.1
+    dns-nameservers 8.8.8.8 1.1.1.1
+</code></pre>
+<p>Alkalmazd: <code>sudo systemctl restart networking</code>. Az <code>enp0s25</code> helyére a saját interfészneved kerül. A gateway IP Windows alatt az <code>ipconfig</code> kimenetéből olvasható le.</p>
+<p><strong>Tűzfal:</strong></p>
+<pre><code class="language-bash">sudo apt install ufw -y
+sudo ufw allow OpenSSH
+sudo ufw allow 9443/tcp   # Portainer
+sudo ufw allow 80/tcp     # Nginx Proxy Manager
+sudo ufw allow 81/tcp     # NPM admin
+sudo ufw allow 443/tcp    # HTTPS
+sudo ufw enable
+</code></pre>
+<p><strong>Időzóna:</strong> <code>sudo timedatectl set-timezone Europe/Budapest</code></p>
+
+</section>
+<section class="page-section" data-key="setup-wsl2">
+  <h2 id="wsl2-beallitasa">WSL2 beállítása</h2>
+<p><strong>WSL2 engedélyezése</strong> rendszergazdai PowerShell ablakból:</p>
+<pre><code class="language-powershell">wsl --install
+</code></pre>
+<p>Indítsd újra a gépet. Alapértelmezetten Ubuntu települ — ez megfelelő.</p>
+<p><strong>Statikus IP (opcionális):</strong> A WSL2 alapból dinamikus IP-t kap. Stabil cím érdekében add hozzá a <code>%USERPROFILE%\.wslconfig</code> fájlhoz:</p>
+<pre><code class="language-ini">[wsl2]
+networkingMode=mirrored
+</code></pre>
+<p>Így a WSL2 a Windows IP-jét osztja meg.</p>
+<p><strong>SSH-hozzáférés engedélyezése WSL2-n belül:</strong></p>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install openssh-server -y
+sudo service ssh start
+</code></pre>
+<p>Az automatikus indításhoz add a <code>sudo service ssh start</code> sort a <code>~/.bashrc</code> fájlhoz.</p>
+
+</section>
+<section class="page-section" data-key="docker-install">
+  <h2 id="docker-telepitese">Docker telepítése</h2>
+<p>A hivatalos Docker telepítési módszer Debianon és Ubuntu/WSL2-n azonos.</p>
+<pre><code class="language-bash">sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg \
+  -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo \
+  &quot;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+  https://download.docker.com/linux/debian \
+  $(. /etc/os-release &amp;&amp; echo &quot;$VERSION_CODENAME&quot;) stable&quot; | \
+  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
+  docker-buildx-plugin docker-compose-plugin
+</code></pre>
+<p>Ubuntu/WSL2 esetén a repository URL-ben és a gpg útvonalon a <code>debian</code> helyére <code>ubuntu</code> kerül.</p>
+<p><strong>Telepítés utáni lépés — Docker futtatása sudo nélkül:</strong></p>
+<pre><code class="language-bash">sudo usermod -aG docker $USER
+</code></pre>
+<p>Jelentkezz ki és vissza, majd ellenőrizd: <code>docker run hello-world</code></p>
+<p>Dedikált Linux gépen engedélyezd az automatikus indítást:</p>
+<pre><code class="language-bash">sudo systemctl enable docker
+sudo systemctl enable containerd
+</code></pre>
+
+</section>
+<section class="page-section" data-key="portainer-npm">
+  <h2 id="portainer-es-nginx-proxy-manager">Portainer és Nginx Proxy Manager</h2>
+<h3 id="portainer-ce">Portainer CE</h3>
+<pre><code class="language-bash">docker volume create portainer_data
+
+docker run -d \
+  -p 8000:8000 \
+  -p 9443:9443 \
+  --name portainer \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:latest
+</code></pre>
+<p>Elérhető: <code>https://&lt;host-ip&gt;:9443</code>. Az önaláírt tanúsítványra vonatkozó figyelmeztetést el kell fogadni — ez várható. Hozz létre admin felhasználót, és válaszd a <strong>Get Started → local</strong> opciót.</p>
+<h3 id="nginx-proxy-manager">Nginx Proxy Manager</h3>
+<p>Hozd létre a <code>~/stacks/npm/docker-compose.yml</code> fájlt:</p>
+<pre><code class="language-yaml">services:
+  app:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+</code></pre>
+<p>Majd: <code>docker compose up -d</code></p>
+<p>Az admin felület: <code>http://&lt;host-ip&gt;:81</code>. Alapértelmezett belépési adatok: <code>admin@example.com</code> / <code>changeme</code> — azonnal változtasd meg az első bejelentkezéskor.</p>
+
+</section>
+<section class="page-section" data-key="deploy-workflow">
+  <h2 id="a-deploy-workflow">A deploy workflow</h2>
+<p>Ez a post lényege. Az alábbi workflow működik, akár dedikált Linux gép, akár WSL2 a hoszt — a parancsok azonosak.</p>
+<pre><code>Fejlesztői gép                        Hoszt (Linux vagy WSL2)
+────────────────────────────          ──────────────────────────────
+1. docker build
+2. docker save | gzip        → scp →
+                                       3. docker load
+                                       4. Portainer stack deploy
+                                       5. Nginx Proxy Manager (opcionális)
+</code></pre>
+<p><strong>1. lépés — Image build:</strong></p>
+<pre><code class="language-bash">docker build -t &lt;projekt&gt;:1.0.0 -t &lt;projekt&gt;:latest .
+</code></pre>
+<p><strong>2. lépés — Export:</strong></p>
+<pre><code class="language-bash">docker save &lt;projekt&gt;:latest | gzip &gt; &lt;projekt&gt;.tar.gz
+</code></pre>
+<p><strong>3. lépés — Feltöltés (könyvtár egyszeri létrehozása):</strong></p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt; &quot;mkdir -p ~/images&quot;
+scp &lt;projekt&gt;.tar.gz user@&lt;host-ip&gt;:~/images/
+</code></pre>
+<p><strong>4. lépés — Betöltés a hoszton:</strong></p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt; &quot;docker load &lt; ~/images/&lt;projekt&gt;.tar.gz&quot;
+</code></pre>
+<p><strong>5. lépés — Deploy Portainerrel:</strong> Első deploy esetén: Portainer → Stacks → Add stack, illeszd be a <code>docker-compose.yml</code> tartalmát, állítsd be a környezeti változókat, és kattints a Deploy gombra. Frissítésnél: válaszd ki a stacket, és kattints az Update the stack gombra. A Portainer automatikusan felveszi az újonnan betöltött <code>latest</code> image-t.</p>
+<p><strong>Opcionálisan — Nginx Proxy Manageren keresztül:</strong> Adj hozzá egy Proxy Hostot a service névvel mint forward hostname és a konténer belső portjával. Add hozzá a hoszt IP-jét a fejlesztői gép <code>hosts</code> fájljához, hogy lokális domain névvel érhesd el.</p>
+
+</section>
+<section class="page-section" data-key="deploy-script">
+  <h2 id="deploy-szkript">Deploy szkript</h2>
+<p>Helyezd el ezt a <code>deploy.sh</code> fájlt minden projekt repository gyökérkönyvtárában:</p>
+<pre><code class="language-bash">#!/bin/bash
+set -e
+
+PROJECT=&quot;&lt;projekt-neve&gt;&quot;
+VERSION=&quot;${1:-latest}&quot;
+SERVER=&quot;user@&lt;host-ip&gt;&quot;
+REMOTE_DIR=&quot;~/images&quot;
+
+echo &quot;Building $PROJECT:$VERSION...&quot;
+docker build -t &quot;$PROJECT:$VERSION&quot; -t &quot;$PROJECT:latest&quot; .
+
+echo &quot;Exporting image...&quot;
+docker save &quot;$PROJECT:latest&quot; | gzip &gt; &quot;$PROJECT.tar.gz&quot;
+
+echo &quot;Uploading to $SERVER...&quot;
+scp &quot;$PROJECT.tar.gz&quot; &quot;$SERVER:$REMOTE_DIR/&quot;
+
+echo &quot;Loading on server...&quot;
+ssh &quot;$SERVER&quot; &quot;docker load &lt; $REMOTE_DIR/$PROJECT.tar.gz&quot;
+
+echo &quot;Cleaning up local tar...&quot;
+rm &quot;$PROJECT.tar.gz&quot;
+
+echo &quot;Done. Update the stack in Portainer: https://&lt;host-ip&gt;:9443&quot;
+</code></pre>
+<p>Használat:</p>
+<pre><code class="language-bash">chmod +x deploy.sh
+./deploy.sh           # latest deploy
+./deploy.sh 1.2.0     # verziócímkével
+</code></pre>
+
+</section>
+<section class="page-section" data-key="secrets-volumes">
+  <h2 id="titkok-es-volume-ok">Titkok és volume-ok</h2>
+<h3 id="titkok">Titkok</h3>
+<p>Minden API kulcsot vagy bejelentkezési adatot igénylő projektnél az első deploy előtt hozd létre a titkos fájlokat a hoszton:</p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt;
+mkdir -p ~/secrets/&lt;projekt-neve&gt;
+echo &quot;valódi-api-kulcs&quot; &gt; ~/secrets/&lt;projekt-neve&gt;/api_key.txt
+chmod 600 ~/secrets/&lt;projekt-neve&gt;/*.txt
+</code></pre>
+<p>A <code>docker-compose.yml</code>-ben fájlútvonallal hivatkozz rájuk. A secrets könyvtárat soha ne commitold — a repo-ban csak egy <code>secrets.example/</code> mappa legyen, placeholder fájlnevekkel.</p>
+<h3 id="volume-ok">Volume-ok</h3>
+<p><strong>Named volume-ok</strong> (adatbázisok, perzisztens adatok) — a Docker kezeli ezeket, a Portainerben láthatóak:</p>
+<pre><code class="language-yaml">volumes:
+  db_data:
+    name: myproject_db_data
+</code></pre>
+<p><strong>Bind mountok</strong> (modellek, feltöltések, logok) — előbb hozd létre a könyvtárat a hoszton:</p>
+<pre><code class="language-bash">ssh user@&lt;host-ip&gt; &quot;mkdir -p /opt/&lt;projekt-neve&gt;/models&quot;
+</code></pre>
+<p>Majd hivatkozz rá a compose fájlban:</p>
+<pre><code class="language-yaml">volumes:
+  - type: bind
+    source: /opt/&lt;projekt-neve&gt;/models
+    target: /models
+    read_only: true
+</code></pre>
+
+</section>
+<section class="page-section" data-key="checklists">
+  <h2 id="ellenorzolistak">Ellenőrzőlisták</h2>
+<h3 id="elso-deploy">Első deploy</h3>
+<ul>
+<li>A <code>~/images/</code> könyvtár létezik a hoszton</li>
+<li>A szükséges könyvtárak létrehozva <code>/opt/&lt;projekt&gt;/</code> alatt</li>
+<li>Titkos fájlok létrehozva <code>~/secrets/&lt;projekt&gt;/</code> alatt</li>
+<li>Image build és feltöltve</li>
+<li>Image betöltve: <code>docker load</code></li>
+<li>Portainer stack létrehozva és deployolva</li>
+<li>A szolgáltatás elérhető a belső portján</li>
+<li>NPM proxy host beállítva (ha szükséges)</li>
+<li>Smoke teszt elvégezve</li>
+</ul>
+<h3 id="frissites">Frissítés</h3>
+<ul>
+<li>Image build és feltöltve</li>
+<li>Image betöltve: <code>docker load</code></li>
+<li>Portainer → stack → <strong>Update the stack</strong></li>
+<li>Smoke teszt elvégezve</li>
+</ul>
+<h3 id="hasznos-parancsok-a-hoszton">Hasznos parancsok a hoszton</h3>
+<pre><code class="language-bash">docker ps                          # futó konténerek
+docker ps -a                       # összes konténer
+docker images                      # image lista
+docker logs &lt;konténer-neve&gt; -f     # konténer logok követése
+docker image prune                 # nem használt image-ek törlése
+docker system df                   # lemezhasználat összefoglaló
+</code></pre>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>
