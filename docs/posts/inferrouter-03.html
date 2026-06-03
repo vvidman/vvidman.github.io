@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - InferRouter Part 3: Secret Management</title>
+
+  <meta name="description" content="Where API keys live in InferRouter — why not environment variables, why not config files, and what per-request key reading gives you in practice.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/inferrouter-03.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/inferrouter-03.html">
+  <meta property="og:title" content="Viktor Vidman - InferRouter Part 3: Secret Management">
+  <meta property="og:description" content="Where API keys live in InferRouter — why not environment variables, why not config files, and what per-request key reading gives you in practice.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/inferrouter-03-infograph.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>InferRouter Part 3: Secret Management</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h2 id="part-3-secret-management">Part 3: Secret Management</h2>
+<p><a href="/posts/inferrouter-02.html">Part 2</a> covered inference strategies: how ProviderOrchestrator selects providers and routes requests. The execution loop knows which providers to try. What it still needs at request time is the API key for each cloud provider.</p>
+<p>This is a question that is easy to get wrong.</p>
+
+</section>
+<section class="page-section" data-key="comparison">
+  <h2 id="three-places-a-key-could-live">Three Places a Key Could Live</h2>
+<p><strong>Environment variables</strong> — straightforward to set, but the key becomes part of the process environment for the full container lifetime. It is visible in <code>docker inspect</code> output, appears in crash dumps and debug traces, and requires a container restart to rotate.</p>
+<p><strong>Config files</strong> — the risk here is accidental commit. A key placed in <code>appsettings.json</code> ends up adjacent to source code, one careless <code>git add</code> away from being public. Even with <code>.gitignore</code> in place, the key lives as a plain string in process memory for the entire application lifetime.</p>
+<p><strong>Docker Secrets</strong> — keys are mounted as files at <code>/run/secrets/</code> by Docker Compose using file-based secrets. No Swarm mode required. The key never appears in environment variables, Docker metadata, or any config file. The <code>secrets/</code> directory on the host is git-ignored; <code>secrets.example/</code> documents the expected file layout without containing real values.</p>
+<p>The choice is Docker Secrets.</p>
+
+</section>
+<section class="page-section" data-key="secretreader">
+  <h2 id="per-request-key-reading">Per-Request Key Reading</h2>
+<p>Docker Secrets solve the storage problem. The implementation decision that matters equally: what happens when the key is actually needed.</p>
+<p><code>SecretReader</code> is an injectable singleton. On every <code>CompleteAsync</code> call — the method inside <code>OpenAiCompatibleProvider</code> that sends the HTTP request — it reads from <code>/run/secrets/</code> directly. The key is never stored in a field. It exists only on the stack frame of the request and is discarded when the call completes.</p>
+<p>This was a deliberate refactor from an earlier static class design. Two problems forced the change. First, API keys living as plain strings in process memory for the full application lifetime is a worse security posture than a per-request read. Second, a static class creates a sequencing problem with the DI container's logger — the logger is unavailable before the host is built, but the static class needed it at the same time.</p>
+<p>The injectable singleton solves both. And it introduces a useful side effect: Docker Secret rotation is picked up automatically on the next request. Overwrite the file on the host, and the updated key is read without restarting the container.</p>
+<p>If a provider's secret file is missing or empty, <code>ReadApiKey</code> logs a warning and returns null. The provider remains in the chain but every attempt immediately produces an <code>AuthError</code>, which the execution loop skips — consistent with how a live <code>401</code> from the provider is handled. The fallback trace in the operation log makes the reason visible.</p>
+
+</section>
+<section class="page-section" data-key="teaser">
+  <h2 id="next-observability">Next: Observability</h2>
+<p>Provider selection is handled. Keys are managed. The remaining question is visibility: once the proxy is running, how do you know what is actually happening inside it?</p>
+<p><a href="/posts/inferrouter-04.html">Part 4</a> covers the operation log — a provider-agnostic JSONL file that records every inference event — and three HTTP endpoints that expose live state without touching the log.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h2 id="resz-titkos-kulcsok-kezelese">3. rész: Titkos kulcsok kezelése</h2>
+<p>A <a href="/posts/inferrouter-02.html">2. rész</a> az inferencia stratégiákkal foglalkozott: hogyan választja ki a ProviderOrchestrator a providereket és irányítja a kéréseket. A végrehajtási ciklus tudja, melyik providereket próbálja meg. Amit kérés időpontban még szükséges: minden cloud provider API kulcsa.</p>
+<p>Ez egy könnyen elrontható kérdés.</p>
+
+</section>
+<section class="page-section" data-key="comparison">
+  <h2 id="harom-hely-ahol-egy-kulcs-elhetne">Három hely, ahol egy kulcs élhetne</h2>
+<p><strong>Environment variable</strong> — egyszerű beállítani, de a kulcs a teljes container élettartama alatt a process environment részévé válik. Látható a <code>docker inspect</code> kimenetében, megjelenik crash dump-okban és debug trace-ekben, és a rotáláshoz container újraindítás szükséges.</p>
+<p><strong>Config fájl</strong> — a kockázat itt a véletlen commit. Egy <code>appsettings.json</code>-ba helyezett kulcs a forráskód mellé kerül, egy gondatlan <code>git add</code>-tól arra, hogy nyilvánossá váljon. Még <code>.gitignore</code> esetén is, a kulcs plain stringként él a process memóriában a teljes alkalmazás élettartama alatt.</p>
+<p><strong>Docker Secrets</strong> — a kulcsok fájlokként vannak felcsatolva a <code>/run/secrets/</code> elérési úton a Docker Compose által, file-based secrets segítségével. Nincs szükség Swarm módra. A kulcs soha nem jelenik meg environment variable-kban, Docker metaadatokban, vagy bármilyen config fájlban. A gazdagépen lévő <code>secrets/</code> könyvtár git-ignored; a <code>secrets.example/</code> a várt fájlszerkezetet dokumentálja valódi értékek nélkül.</p>
+<p>A döntés a Docker Secrets.</p>
+
+</section>
+<section class="page-section" data-key="secretreader">
+  <h2 id="keresenkenti-kulcs-olvasas">Kérésenkénti kulcs olvasás</h2>
+<p>A Docker Secrets megoldja a tárolási problémát. Ugyanannyira fontos implementációs döntés: mi történik, amikor a kulcsra ténylegesen szükség van.</p>
+<p>A <code>SecretReader</code> injectable singleton. Minden <code>CompleteAsync</code> hívásnál — az a metódus az <code>OpenAiCompatibleProvider</code>-ben, amely elküldi a HTTP kérést — közvetlenül a <code>/run/secrets/</code>-ből olvas. A kulcs soha nem kerül mezőbe. Kizárólag a kérés stack frame-jén él, és a hívás befejeztével eldobásra kerül.</p>
+<p>Ez szándékos refaktor volt egy korábbi statikus osztály megközelítésből. Két probléma kényszerítette ki a változtatást. Először: az API kulcsok plain stringként a process memóriában a teljes alkalmazás élettartama alatt rosszabb biztonsági helyzet, mint egy kérésenkénti olvasás. Másodszor: egy statikus osztály sorrendiségi problémát okoz a DI container loggerével — a logger nem elérhető a host felépítése előtt, de a statikus osztálynak ugyanakkor volt rá szüksége.</p>
+<p>Az injectable singleton mindkettőt megoldja. És bevezet egy hasznos mellékhatást: a Docker Secret rotáció automatikusan felvevődik a következő kérésnél. Írjuk felül a fájlt a gazdagépen, és a frissített kulcs container újraindítás nélkül olvasódik be.</p>
+<p>Ha egy provider secret fájlja hiányzik vagy üres, a <code>ReadApiKey</code> figyelmeztetést naplóz és null értéket ad vissza. A provider a láncban marad, de minden kísérlet azonnal <code>AuthError</code>-t produkál, amelyet a végrehajtási ciklus kihagy — összhangban azzal, ahogy egy élő <code>401</code> kerül kezelésre. A műveleti napló fallback trace-e láthatóvá teszi az okot.</p>
+
+</section>
+<section class="page-section" data-key="teaser">
+  <h2 id="kovetkezo-megfigyelhetoseg">Következő: Megfigyelhetőség</h2>
+<p>A provider kiválasztás kezelve. A kulcsok kezelve. A fennmaradó kérdés a láthatóság: ha a proxy fut, hogyan tudod, mi történik valójában benne?</p>
+<p>A <a href="/posts/inferrouter-04.html">4. rész</a> a műveleti naplóval foglalkozik — egy provider-agnosztikus JSONL fájllal, amely minden inferencia eseményt rögzít — és három HTTP végponttal, amelyek az élő állapotot teszik láthatóvá a naplófájlok érintése nélkül.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>

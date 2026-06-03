@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - InferRouter Part 4: Observability</title>
+
+  <meta name="description" content="How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/inferrouter-04.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/inferrouter-04.html">
+  <meta property="og:title" content="Viktor Vidman - InferRouter Part 4: Observability">
+  <meta property="og:description" content="How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/inferrouter-04-infograph.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>InferRouter Part 4: Observability</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h2 id="part-4-observability">Part 4: Observability</h2>
+<p><a href="/posts/inferrouter-03.html">Part 3</a> covered secret management. The core concerns — inference strategy, execution loop, key handling — are now closed. This part covers the remaining question: once the proxy is running, how do you know what is actually happening inside it?</p>
+<p>InferRouter answers this in two layers. The first is the operation log: a structured JSONL file that captures every inference event in a provider-agnostic format. The second is three HTTP endpoints that expose live internal state without requiring log file access.</p>
+
+</section>
+<section class="page-section" data-key="log">
+  <h2 id="the-operation-log">The Operation Log</h2>
+<p>Every inference call produces one or more JSONL entries. Log entries are written to a per-day file — <code>operations-{yyyy-MM-dd}.jsonl</code> — and a new file is started automatically at UTC midnight.</p>
+<p>The schema is built on one design decision: the log records <strong>events</strong>, not providers. The provider is an attribute on the event, not a structural element of the schema.</p>
+<p>This matters when providers change. If the schema were provider-centric — separate fields or log shapes per provider — adding or removing a provider would require a schema migration. Any downstream consumer would need updating. With provider as an attribute, the schema stays stable regardless of how the provider chain evolves.</p>
+<p>A successful request produces one entry:</p>
+<pre><code class="language-json">{&quot;ts&quot;:&quot;2026-05-25T10:00:00Z&quot;,&quot;request_id&quot;:&quot;uuid&quot;,&quot;event&quot;:&quot;infer_completed&quot;,&quot;provider&quot;:&quot;provider-a&quot;,&quot;model&quot;:&quot;model-name&quot;,&quot;prompt_tokens&quot;:120,&quot;completion_tokens&quot;:340,&quot;latency_ms&quot;:310,&quot;fallback&quot;:false,&quot;status&quot;:&quot;ok&quot;}
+</code></pre>
+<p>When the strategy falls through to a second provider, two entries are written — one for the transition, one for the completion:</p>
+<pre><code class="language-json">{&quot;ts&quot;:&quot;2026-05-25T10:00:05Z&quot;,&quot;request_id&quot;:&quot;uuid&quot;,&quot;event&quot;:&quot;infer_fallback&quot;,&quot;from_provider&quot;:&quot;provider-a&quot;,&quot;to_provider&quot;:&quot;provider-b&quot;,&quot;reason&quot;:&quot;rate_limit&quot;}
+{&quot;ts&quot;:&quot;2026-05-25T10:00:06Z&quot;,&quot;request_id&quot;:&quot;uuid&quot;,&quot;event&quot;:&quot;infer_completed&quot;,&quot;provider&quot;:&quot;provider-b&quot;,&quot;model&quot;:&quot;model-name&quot;,&quot;prompt_tokens&quot;:120,&quot;completion_tokens&quot;:340,&quot;latency_ms&quot;:890,&quot;fallback&quot;:true,&quot;status&quot;:&quot;ok&quot;}
+</code></pre>
+<p>The <code>request_id</code> field ties all entries for a single request together. Reconstructing the full routing trace — including multiple provider transitions — is straightforward from the flat log without any joins.</p>
+<p>Six event types are defined: <code>infer_started</code>, <code>infer_ordering</code> (records the provider order the active strategy resolved), <code>infer_completed</code>, <code>infer_fallback</code>, <code>infer_failed</code>, <code>rate_limit_hit</code>.</p>
+
+</section>
+<section class="page-section" data-key="endpoints">
+  <h2 id="live-state-endpoints">Live State Endpoints</h2>
+<p>Three HTTP endpoints expose the internal state of the running proxy in real time.</p>
+<p><strong><code>GET /health/providers</code></strong> contacts every configured provider with a minimal one-token request and returns its current status. The endpoint always returns <code>200 OK</code> — provider status is expressed in the response body, not the HTTP status code. Status values mirror the internal error taxonomy: <code>ok</code>, <code>rate_limit</code>, <code>auth_error</code>, <code>server_error</code>, <code>model_unavailable</code>, <code>unknown_error</code>.</p>
+<p><strong><code>GET /stats/live</code></strong> returns the current rate limit state for every configured provider: daily limit, daily count, RPM limit, RPM window count, and whether the provider is currently marked exhausted. This reads directly from the in-memory <code>RateLimitTracker</code> — no log file access involved.</p>
+<p><strong><code>GET /stats/history</code></strong> returns the raw JSONL content of a day's operation log. Without a query parameter it returns today's log (UTC). A <code>?date=yyyy-MM-dd</code> parameter retrieves a specific day. Returns <code>404</code> if the log file does not exist for the requested date.</p>
+<p>The three endpoints answer three distinct questions: is a given provider reachable right now, how much quota remains for the day, and what happened over a specific day's worth of requests. Together with the operation log, they provide full visibility into the proxy's behaviour without requiring access to the host filesystem.</p>
+
+</section>
+<section class="page-section" data-key="status">
+  <h2 id="where-it-stands">Where It Stands</h2>
+<p>InferRouter is implemented and publicly available on GitHub. The complete stack — <code>ProviderOrchestrator</code> with three pluggable inference strategies, <code>RateLimitTracker</code>, <code>ErrorNormalizer</code>, <code>OperationLogger</code>, <code>ProviderHealthChecker</code>, <code>StatsService</code>, <code>SecretReader</code> — is complete, unit and integration tested. The Docker Compose stack runs with file-based secrets and a local model volume.</p>
+<p>The project ships with a README and ADRs 001–007. It is production-ready: stable, tested, and deployable as a drop-in OpenAI-compatible inference backend.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h2 id="resz-megfigyelhetoseg">4. rész: Megfigyelhetőség</h2>
+<p>A <a href="/posts/inferrouter-03.html">3. rész</a> a titkos kulcsok kezelését tárgyalta. Az alapvető szempontok — inferencia stratégia, végrehajtási ciklus, kulcs kezelés — most már le vannak zárva. Ez a rész a fennmaradó kérdéssel foglalkozik: ha a proxy fut, hogyan tudod, mi történik valójában benne?</p>
+<p>Az InferRouter erre két rétegen válaszol. Az első a műveleti napló: egy strukturált JSONL fájl, amely minden inferencia eseményt provider-agnosztikus formátumban rögzít. A második három HTTP végpont, amelyek az élő belső állapotot teszik láthatóvá naplófájl-hozzáférés nélkül.</p>
+
+</section>
+<section class="page-section" data-key="log">
+  <h2 id="a-muveleti-naplo">A műveleti napló</h2>
+<p>Minden inferencia hívás egy vagy több JSONL bejegyzést produkál. A naplóbejegyzések napi fájlba kerülnek — <code>operations-{yyyy-MM-dd}.jsonl</code> — és UTC éjfélkor automatikusan új fájl indul.</p>
+<p>A séma egy tervezési döntésre épül: a napló <strong>eseményeket</strong> rögzít, nem providereket. A provider az esemény egy attribútuma, nem a séma strukturális eleme.</p>
+<p>Ez akkor számít, amikor a providerek változnak. Ha a séma provider-centrikus lenne — külön mezők vagy naplóformák providerenként — egy provider hozzáadása vagy eltávolítása sémamigrációt igényelne. Minden downstream fogyasztót frissíteni kellene. Ha a provider attribútum, a séma stabil marad, függetlenül attól, hogyan fejlődik a provider lánc.</p>
+<p>Egy sikeres kérés egy bejegyzést produkál:</p>
+<pre><code class="language-json">{&quot;ts&quot;:&quot;2026-05-25T10:00:00Z&quot;,&quot;request_id&quot;:&quot;uuid&quot;,&quot;event&quot;:&quot;infer_completed&quot;,&quot;provider&quot;:&quot;provider-a&quot;,&quot;model&quot;:&quot;model-name&quot;,&quot;prompt_tokens&quot;:120,&quot;completion_tokens&quot;:340,&quot;latency_ms&quot;:310,&quot;fallback&quot;:false,&quot;status&quot;:&quot;ok&quot;}
+</code></pre>
+<p>Amikor a stratégia egy második providerre esik át, két bejegyzés íródik — egy az átmenetért, egy a befejezésért:</p>
+<pre><code class="language-json">{&quot;ts&quot;:&quot;2026-05-25T10:00:05Z&quot;,&quot;request_id&quot;:&quot;uuid&quot;,&quot;event&quot;:&quot;infer_fallback&quot;,&quot;from_provider&quot;:&quot;provider-a&quot;,&quot;to_provider&quot;:&quot;provider-b&quot;,&quot;reason&quot;:&quot;rate_limit&quot;}
+{&quot;ts&quot;:&quot;2026-05-25T10:00:06Z&quot;,&quot;request_id&quot;:&quot;uuid&quot;,&quot;event&quot;:&quot;infer_completed&quot;,&quot;provider&quot;:&quot;provider-b&quot;,&quot;model&quot;:&quot;model-name&quot;,&quot;prompt_tokens&quot;:120,&quot;completion_tokens&quot;:340,&quot;latency_ms&quot;:890,&quot;fallback&quot;:true,&quot;status&quot;:&quot;ok&quot;}
+</code></pre>
+<p>A <code>request_id</code> mező összeköti egyetlen kérés összes bejegyzését. A teljes routing trace rekonstruálása — beleértve a több provider átmenetet — egyértelmű a sík naplóból, join-ok nélkül.</p>
+<p>Hat eseménytípus van definiálva: <code>infer_started</code>, <code>infer_ordering</code> (rögzíti az aktív stratégia által feloldott provider sorrendet), <code>infer_completed</code>, <code>infer_fallback</code>, <code>infer_failed</code>, <code>rate_limit_hit</code>.</p>
+
+</section>
+<section class="page-section" data-key="endpoints">
+  <h2 id="elo-allapot-vegpontok">Élő állapot végpontok</h2>
+<p>Három HTTP végpont teszi valós időben láthatóvá a futó proxy belső állapotát.</p>
+<p>A <strong><code>GET /health/providers</code></strong> minden konfigurált providert megkeres egy minimális egy-token kéréssel, és visszaadja az aktuális státuszát. A végpont mindig <code>200 OK</code>-t ad vissza — a provider státuszt a válasz törzse tartalmazza, nem a HTTP státuszkód. A státusz értékek a belső hiba taxonómiát tükrözik: <code>ok</code>, <code>rate_limit</code>, <code>auth_error</code>, <code>server_error</code>, <code>model_unavailable</code>, <code>unknown_error</code>.</p>
+<p>A <strong><code>GET /stats/live</code></strong> minden konfigurált provider aktuális rate limit állapotát adja vissza: napi limit, napi darabszám, RPM limit, RPM ablak darabszám, és hogy az adott provider jelenleg kimerültként van-e jelölve. Ez közvetlenül az in-memory <code>RateLimitTracker</code>-ből olvas — nem igényel naplófájl-hozzáférést.</p>
+<p>A <strong><code>GET /stats/history</code></strong> egy nap műveleti naplójának nyers JSONL tartalmát adja vissza. Query paraméter nélkül a mai napló (UTC) kerül visszaadásra. <code>?date=yyyy-MM-dd</code> paraméterrel egy meghatározott nap kérhető le. <code>404</code>-et ad vissza, ha a naplófájl nem létezik a kért dátumra.</p>
+<p>A három végpont három különböző kérdésre válaszol: elérhető-e egy adott provider most, mennyi kvóta maradt a napból, és mi történt egy adott nap kérései során. A műveleti naplóval együtt teljes láthatóságot biztosítanak a proxy viselkedésébe anélkül, hogy hozzáférés szükséges lenne a gazdagép fájlrendszeréhez.</p>
+
+</section>
+<section class="page-section" data-key="status">
+  <h2 id="aktualis-allapot">Aktuális állapot</h2>
+<p>Az InferRouter implementálva van és nyilvánosan elérhető GitHubon. A teljes stack — <code>ProviderOrchestrator</code> három csatlakoztatható inferencia stratégiával, <code>RateLimitTracker</code>, <code>ErrorNormalizer</code>, <code>OperationLogger</code>, <code>ProviderHealthChecker</code>, <code>StatsService</code>, <code>SecretReader</code> — kész, unit és integrációs tesztekkel lefedett. A Docker Compose stack file-based titkokkal és helyi modell kötettel fut.</p>
+<p>A projekt README-vel és ADR 001–007 dokumentumokkal érkezik. Production-ready: stabil, tesztelt, és telepíthető drop-in OpenAI-kompatibilis inferencia backendként.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>

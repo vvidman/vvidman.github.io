@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Viktor Vidman - InferRouter Part 2: Inference Strategies</title>
+
+  <meta name="description" content="How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.">
+  <meta name="author" content="Viktor Vidman">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#445f77">
+
+  <link rel="canonical" href="https://vvidman.github.io/posts/inferrouter-02.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vvidman.github.io/posts/inferrouter-02.html">
+  <meta property="og:title" content="Viktor Vidman - InferRouter Part 2: Inference Strategies">
+  <meta property="og:description" content="How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:image" content="https://vvidman.github.io/assets/images/inferrouter-02-infograph.png">
+
+  <!-- Schema.org: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Viktor Vidman",
+    "url": "https://vvidman.github.io",
+    "jobTitle": "Backend Engineer",
+    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
+    "sameAs": [
+      "https://github.com/vvidman"
+    ]
+  }
+  </script>  
+
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script src="/assets/javascript/site.js" defer></script>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="page-header">
+      <div class="header-links">
+        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
+        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
+      </div>  
+      <h1>InferRouter Part 2: Inference Strategies</h1>
+    </div>
+    <div class="indented">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/posts/">Blog</a>
+      </nav>      
+      <div class="lang-switch">
+        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
+        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="lang-content" id="content-en">
+      <section class="page-section" data-key="intro">
+  <h2 id="part-2-inference-strategies">Part 2: Inference Strategies</h2>
+<p><a href="/posts/inferrouter-01.html">Part 1</a> described the concept: one proxy, one endpoint, strategy-based routing across any number of OpenAI-compatible providers. This part goes into how that routing actually works.</p>
+<p>InferRouter does not have a hardcoded fallback chain. It has an inference strategy. The strategy is responsible for one thing: given the current state of the configured providers, return an ordered list of candidates to try. Everything else — executing attempts, handling errors, logging, rate limit tracking — belongs to the execution loop.</p>
+<p>The local LlamaSharp model is not part of any strategy. It is the guaranteed fallback that the execution loop appends after the strategy's list is exhausted.</p>
+
+</section>
+<section class="page-section" data-key="architecture">
+  <h2 id="the-abstraction">The Abstraction</h2>
+<p>The routing policy is expressed through a single interface:</p>
+<pre><code class="language-csharp">public interface IRoutingStrategy
+{
+    // Returns ordered cloud providers to attempt for this request.
+    // LocalGguf providers are never included — held in reserve by ProviderOrchestrator.
+    IReadOnlyList&lt;ILlmProvider&gt; GetOrderedProviders();
+}
+</code></pre>
+<p><code>ProviderOrchestrator</code> calls <code>GetOrderedProviders()</code> once at the start of each request. It appends the LlamaSharp provider to the end, then works through the full list until one succeeds or all fail.</p>
+<p>Separating the strategy from the execution loop has a concrete consequence: adding a new routing behaviour means implementing <code>IRoutingStrategy</code>. The orchestrator, the error handling, the logging — none of it changes.</p>
+<p>The strategy is selected at startup via a single config field:</p>
+<pre><code class="language-json">{
+  &quot;RoutingStrategy&quot;: &quot;WeightedRoundRobin&quot;,
+  &quot;Providers&quot;: [ ... ]
+}
+</code></pre>
+<p>If the field is absent or unrecognised, <code>ChainOfResponsibility</code> is the silent default. Existing deployments do not break on upgrade.</p>
+
+</section>
+<section class="page-section" data-key="strategies">
+  <h2 id="three-strategies">Three Strategies</h2>
+<p><strong>ChainOfResponsibility</strong> — providers are tried in the order they appear in config. Every request goes to the first provider. If it is rate-limited or failing, the next one takes over. The routing order is exactly what the operator wrote.</p>
+<p>Use this when providers have a clear priority: one is preferred for latency, cost, or reliability, and others are fallbacks. The most predictable and debuggable option.</p>
+<p><strong>WeightedRoundRobin</strong> — requests are distributed across providers in proportion to their <code>DailyRequestLimit</code>. A provider with a higher daily quota receives proportionally more traffic. Weights are derived automatically — no separate config field is needed.</p>
+<p>Providers with <code>DailyRequestLimit: 0</code> are excluded from weighted selection. A zero value means no local quota is configured, so there is no basis for deriving a weight.</p>
+<p>Use this when multiple providers are at comparable quality and spreading load across their combined quotas matters more than a fixed priority order.</p>
+<p><strong>LeastUsed</strong> — at each routing decision, selects the provider with the lowest utilisation ratio (<code>DailyCount / DailyLimit</code>). This normalises across providers with different quota sizes: a provider at 500 of 1000 requests used (50%) is considered more constrained than one at 200 of 2000 (10%), even though it has handled fewer absolute requests.</p>
+<p>Tiebreaks are random. When multiple providers have the same ratio — including at the start of a day when all counters are zero — random selection spreads load without imposing a hidden ordering.</p>
+<p>Use this when avoiding early exhaustion of any single provider's daily quota is the priority. Keeps the full provider pool available later in the day.</p>
+
+</section>
+<section class="page-section" data-key="execution">
+  <h2 id="the-execution-loop">The Execution Loop</h2>
+<p>Once the strategy returns its ordered list, <code>ProviderOrchestrator</code> appends the local LlamaSharp provider and iterates:</p>
+<ul>
+<li>If a provider's quota is locally known to be exhausted, it is skipped immediately and a <code>rate_limit_hit</code> event is logged.</li>
+<li>On a successful response, the request counter is updated and <code>infer_completed</code> is logged.</li>
+<li>On a rate limit error (<code>429</code> or mapped equivalent), the provider is marked exhausted and <code>infer_fallback</code> is logged.</li>
+<li>On a server error, one retry is attempted inline before falling through.</li>
+<li>On an auth error, the provider is skipped permanently for this request — a misconfigured key is not a transient condition.</li>
+<li>If all providers in the list fail, <code>infer_failed</code> is logged and an error is returned to the caller.</li>
+</ul>
+<p>The strategy never sees errors or results. It only answers one question at the start of the request. The execution loop handles everything that happens after.</p>
+
+</section>
+<section class="page-section" data-key="local_fallback">
+  <h2 id="the-local-fallback">The Local Fallback</h2>
+<p>LlamaSharp runs a GGUF model in-process. It is registered as the same <code>ILlmProvider</code> interface as every cloud provider, but it is never included in strategy selection. <code>ProviderOrchestrator</code> appends it unconditionally as the last entry in the attempt list.</p>
+<p>This means LlamaSharp is reached only when the inference strategy has no remaining eligible cloud provider — all are rate-limited, failing, or unreachable. It is not a routing preference. It is a guarantee: as long as the model file exists on disk and the process is running, some response will be returned.</p>
+<p>The model is loaded lazily on first use to avoid paying the memory cost during periods when cloud providers are healthy.</p>
+
+</section>
+<section class="page-section" data-key="teaser">
+  <h2 id="next-secret-management">Next: Secret Management</h2>
+<p>The inference strategy is in place. What it still does not know is the API keys for each provider. That question has a non-obvious answer.</p>
+<p><a href="/posts/inferrouter-03.html">Part 3</a> covers the Docker Secrets decision — why not environment variables, why not config files, and why the key is read fresh on every single request.</p>
+
+</section>
+
+    </div>
+    <div class="lang-content" id="content-hu">
+      <section class="page-section" data-key="intro">
+  <h2 id="resz-inferencia-strategiak">2. rész: Inferencia stratégiák</h2>
+<p>Az <a href="/posts/inferrouter-01.html">1. rész</a> leírta a koncepciót: egy proxy, egy végpont, stratégia alapú routing bármennyi OpenAI-kompatibilis provideren át. Ez a rész arról szól, hogyan működik ez a routing valójában.</p>
+<p>Az InferRouternek nincs beégetett fallback lánca. Inferencia stratégiája van. A stratégia egyetlen dologért felelős: az aktuális provider állapot alapján visszaad egy sorrendezett jelölt listát, amelyet meg kell próbálni. Minden más — kísérletek végrehajtása, hibakezelés, naplózás, rate limit követés — a végrehajtási ciklushoz tartozik.</p>
+<p>A helyi LlamaSharp modell nem része egyetlen stratégiának sem. Ez a garantált fallback, amelyet a végrehajtási ciklus hozzáfűz a stratégia listájának kimerítése után.</p>
+
+</section>
+<section class="page-section" data-key="architecture">
+  <h2 id="az-absztrakcio">Az absztrakció</h2>
+<p>A routing policy egyetlen interfészen keresztül fejezhető ki:</p>
+<pre><code class="language-csharp">public interface IRoutingStrategy
+{
+    // Visszaadja a megpróbálandó sorrendezett cloud provider listát ehhez a kéréshez.
+    // LocalGguf providerek soha nem szerepelnek — a ProviderOrchestrator tartalékban tartja.
+    IReadOnlyList&lt;ILlmProvider&gt; GetOrderedProviders();
+}
+</code></pre>
+<p>A <code>ProviderOrchestrator</code> minden kérés elején egyszer hívja meg a <code>GetOrderedProviders()</code>-t. Hozzáfűzi a LlamaSharp providert a végéhez, majd végigdolgozza a teljes listát, amíg valamelyik sikerül, vagy mindegyik meghibásodik.</p>
+<p>A stratégia és a végrehajtási ciklus szétválasztásának konkrét következménye van: egy új routing viselkedés hozzáadása az <code>IRoutingStrategy</code> implementálását jelenti. Az orchestrator, a hibakezelés, a naplózás — semmi nem változik.</p>
+<p>A stratégiát indításkor egyetlen config mezőn keresztül választják ki:</p>
+<pre><code class="language-json">{
+  &quot;RoutingStrategy&quot;: &quot;WeightedRoundRobin&quot;,
+  &quot;Providers&quot;: [ ... ]
+}
+</code></pre>
+<p>Ha a mező hiányzik vagy ismeretlen, a <code>ChainOfResponsibility</code> az alapértelmezett. A meglévő telepítések frissítéskor nem törnek el.</p>
+
+</section>
+<section class="page-section" data-key="strategies">
+  <h2 id="harom-strategia">Három stratégia</h2>
+<p><strong>ChainOfResponsibility</strong> — a providerek a configban megjelenő sorrendben kerülnek megpróbálásra. Minden kérés az első providerre kerül. Ha rate-limitelt vagy hibás, a következő veszi át. A routing sorrend pontosan az, amit az operátor leírt.</p>
+<p>Akkor alkalmazandó, ha a providereknek egyértelmű prioritásuk van: az egyik preferált késleltetés, költség vagy megbízhatóság szempontjából, a többiek fallbackek. A legjobban előrejelezhető és debuggolható lehetőség.</p>
+<p><strong>WeightedRoundRobin</strong> — a kérések a <code>DailyRequestLimit</code> arányában kerülnek elosztásra a providerek között. A nagyobb napi kvótával rendelkező provider arányosan több forgalmat kap. A súlyok automatikusan kerülnek levezetésre — nincs szükség külön config mezőre.</p>
+<p>A <code>DailyRequestLimit: 0</code> értékű providerek ki vannak zárva a súlyozott kiválasztásból. A nulla érték azt jelenti, hogy nincs helyi kvóta konfigurálva, ezért nincs alapja a súly levezetésének.</p>
+<p>Akkor alkalmazandó, ha több összehasonlítható minőségű provider áll rendelkezésre, és a kombinált kvótájuk között való terhelosztás fontosabb a fix prioritási sorrendnél.</p>
+<p><strong>LeastUsed</strong> — minden routing döntésnél a legalacsonyabb kihasználtsági arányú (<code>DailyCount / DailyLimit</code>) providert választja. Ez normalizál a különböző kvótaméretű providerek között: egy 1000-ből 500 kérést elhasznált provider (50%) korlátosabbnak tekintendő, mint egy 2000-ből 200-at elhasznált (10%), bár kevesebb abszolút kérést kezelt.</p>
+<p>A holtverseny véletlenszerűen dől el. Ha több providernek ugyanolyan az aránya — beleértve a nap elejét, amikor minden számláló nullán van — a véletlenszerű kiválasztás elosztja a terhelést egy rejtett sorrend bevezetése nélkül.</p>
+<p>Akkor alkalmazandó, ha az elsődleges szempont, hogy egyetlen provider napi kvótája se merüljön ki korán. A teljes provider poolt a nap végéig elérhetővé tartja.</p>
+
+</section>
+<section class="page-section" data-key="execution">
+  <h2 id="a-vegrehajtasi-ciklus">A végrehajtási ciklus</h2>
+<p>Amint a stratégia visszaadja a sorrendezett listát, a <code>ProviderOrchestrator</code> hozzáfűzi a helyi LlamaSharp providert, és iterál:</p>
+<ul>
+<li>Ha egy provider kvótája helyileg ismerten kimerült, azonnal kihagyásra kerül, és <code>rate_limit_hit</code> esemény kerül naplózásra.</li>
+<li>Sikeres válasz esetén a kérésszámláló frissül, és <code>infer_completed</code> kerül naplózásra.</li>
+<li>Rate limit hiba esetén (<code>429</code> vagy megfeleltetett egyenértékű), a provider kimerültként jelölődik és <code>infer_fallback</code> kerül naplózásra.</li>
+<li>Szerver hiba esetén egy retry kerül megkísérlésre inline, mielőtt továbblép.</li>
+<li>Auth hiba esetén a provider véglegesen kihagyásra kerül ennél a kérésnél — egy helytelenül konfigurált kulcs nem tranziens állapot.</li>
+<li>Ha a lista összes providere meghibásodik, <code>infer_failed</code> kerül naplózásra és hiba kerül visszaadásra a hívónak.</li>
+</ul>
+<p>A stratégia soha nem lát hibákat vagy eredményeket. Csak egy kérdésre válaszol a kérés elején. A végrehajtási ciklus kezeli mindazt, ami ezután történik.</p>
+
+</section>
+<section class="page-section" data-key="local_fallback">
+  <h2 id="a-helyi-fallback">A helyi fallback</h2>
+<p>A LlamaSharp in-process futtat egy GGUF modellt. Ugyanazon <code>ILlmProvider</code> interfészen van regisztrálva, mint minden cloud provider, de soha nem szerepel a stratégia kiválasztásban. A <code>ProviderOrchestrator</code> feltétel nélkül hozzáfűzi utolsó bejegyzésként a próbálkozási listához.</p>
+<p>Ez azt jelenti, hogy a LlamaSharp csak akkor kerül elérésre, ha az inferencia stratégiának nincs maradék elérhető cloud providere — mindegyik rate-limitelt, hibás, vagy elérhetetlen. Ez nem routing preferencia. Ez egy garancia: amíg a modell fájl létezik a lemezen és a folyamat fut, valamiféle válasz visszaadásra kerül.</p>
+<p>A modell lazán töltődik be az első használatkor, hogy elkerülje a memória költség kifizetését olyan időszakokban, amikor a cloud providerek egészségesek.</p>
+
+</section>
+<section class="page-section" data-key="teaser">
+  <h2 id="kovetkezo-titkos-kulcsok-kezelese">Következő: Titkos kulcsok kezelése</h2>
+<p>Az inferencia stratégia a helyén van. Amit még nem tud: minden provider API kulcsai. Ennek a kérdésnek nem magától értetődő a válasza.</p>
+<p>A <a href="/posts/inferrouter-03.html">3. rész</a> a Docker Secrets döntést tárgyalja — miért nem environment variable, miért nem config fájl, és miért olvasódik a kulcs frissen minden egyes kérésnél.</p>
+
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="indented">
+      <p>© 2026 Viktor Vidman</p>
+    </div>
+  </footer>
+
+</body>
+</html>
