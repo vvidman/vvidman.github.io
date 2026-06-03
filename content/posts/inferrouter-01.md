@@ -18,6 +18,9 @@ Running multiple AI projects in parallel means every one of them needs LLM infer
 The duplication wasn't incidental. It was structural: provider management was treated as application logic rather than infrastructure. The fix is to move it one layer up.
 
 **InferRouter** is a self-hosted proxy that exposes a single OpenAI-compatible HTTP endpoint. Behind it, a configurable inference strategy routes each request across one or more cloud providers. When all of them are unavailable or exhausted, a local quantized model — running in-process via LlamaSharp — handles the call. The caller sees none of this.
+
+Available on Github: [InferRouter](https://github.com/vvidman/InferRouter)
+
 :::lang
 
 :::lang hu
@@ -28,6 +31,8 @@ Párhuzamosan több AI projekten dolgozni azt jelenti, hogy mindegyiknek LLM inf
 A duplikáció nem véletlen volt. Strukturális volt: a provider menedzsmentet alkalmazáslogikának tekintették, nem infrastruktúrának. A megoldás az, hogy egy réteggel feljebb toljuk.
 
 Az **InferRouter** egy self-hosted proxy, amely egyetlen OpenAI-kompatibilis HTTP végpontot exponál. Mögötte egy konfigurálható inferencia stratégia irányítja az egyes kéréseket egy vagy több cloud provider között. Ha mindegyik elérhetetlen vagy kimerült, egy helyi kvantált modell — amely in-process fut LlamaSharp segítségével — kezeli a hívást. A hívó fél ebből semmit nem érzékel.
+
+Elérhető a Githubon: [InferRouter](https://github.com/vvidman/InferRouter)
 :::lang
 
 :::section
