@@ -389,6 +389,7 @@ pre {
   flex-direction: column;
   gap: 2rem;
   margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .cert-category {
@@ -501,4 +502,25 @@ pre {
   .cert-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Compact cert note (post_licensAndCerts, foundational tooling) ── */
+.cert-compact-note {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  max-width: 62ch;
+  margin-top: 0.6rem;
+  padding-top: 0.85rem;
+}
+
+.cert-compact-note a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.cert-compact-note a:hover {
+  color: var(--text);
+  text-decoration: underline;
 }
