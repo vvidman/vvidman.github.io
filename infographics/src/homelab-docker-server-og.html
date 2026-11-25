@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>homelab-docker-server og</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-og">
+  <div class="ig-eyebrow">Home Lab</div>
+  <h1 class="ig-title">Docker server and deploy workflow</h1>
+
+  <div class="ig-body" style="gap:16px">
+    <div class="ig-flow is-compact">
+      <div class="ig-node"><div class="ig-node-title is-mono">docker build</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node"><div class="ig-node-title is-mono">docker save</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node"><div class="ig-node-title is-mono">scp</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node"><div class="ig-node-title is-mono">docker load</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key"><div class="ig-node-title">Portainer</div></div>
+    </div>
+    <div class="ig-callout">The same workflow on a Linux machine and on WSL2.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

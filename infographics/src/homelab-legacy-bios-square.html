@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>homelab-legacy-bios square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Home Lab · Companion post</div>
+  <h1 class="ig-title">The Legacy BIOS + GPT trap</h1>
+  <p class="ig-sub">Why older machines refuse to boot after a successful Linux installation.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-node-title">GPT partition table</div>
+        <div class="ig-node-text">Modern installers default to GPT, even in Legacy BIOS mode.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">GRUB installs correctly</div>
+        <div class="ig-node-text">boot.img in the MBR, core.img in the bios_grub partition.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-node-title">BIOS hand-off fails</div>
+        <div class="ig-node-text">Some older BIOSes don't reliably run this boot chain from a GPT disk.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">Boot Device Not Found</div>
+        <div class="ig-node-text">After a seemingly successful installation.</div>
+      </div>
+    </div>
+
+    <div class="ig-compare">
+      <div class="ig-compare-col">
+        <div class="ig-compare-head">Ubuntu Server (Subiquity)</div>
+        <div class="ig-compare-item">Only creates GPT partition tables</div>
+        <div class="ig-compare-item">No option to choose MBR/DOS</div>
+        <div class="ig-compare-item">grub-install succeeds, the system still won't boot</div>
+      </div>
+      <div class="ig-compare-col is-key">
+        <div class="ig-compare-head">Debian classic installer</div>
+        <div class="ig-compare-item">Explicitly supports MBR/DOS partition tables</div>
+        <div class="ig-compare-item">GRUB installs to the MBR gap</div>
+        <div class="ig-compare-item">The system will boot on first try</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">GRUB is not the problem. The problem lives in the BIOS firmware, not in the bootloader.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

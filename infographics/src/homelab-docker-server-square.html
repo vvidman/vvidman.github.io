@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>homelab-docker-server square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Home Lab</div>
+  <h1 class="ig-title">Docker server and<br>deploy workflow</h1>
+  <p class="ig-sub">An old machine or WSL2 as a personal Docker host, with a deploy workflow that works identically on both.</p>
+
+  <div class="ig-body" style="gap:22px">
+    <div class="ig-compare">
+      <div class="ig-compare-col">
+        <div class="ig-compare-head">Dedicated Linux machine</div>
+        <div class="ig-compare-item">At least 4 GB RAM and an SSD</div>
+        <div class="ig-compare-item">Recommended OS: Debian 13</div>
+        <div class="ig-compare-item">Always-on, doesn't compete with your development machine</div>
+      </div>
+      <div class="ig-compare-col is-key">
+        <div class="ig-compare-head">WSL2 on Windows</div>
+        <div class="ig-compare-item">Docker Engine runs natively inside WSL2</div>
+        <div class="ig-compare-item">Competes with Windows for RAM</div>
+        <div class="ig-compare-item">Goes down whenever your development machine goes down</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="ig-label">Developer machine</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title is-mono">docker build</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title is-mono">docker save | gzip</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title is-mono">scp</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="ig-label">Host (Linux or WSL2)</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title is-mono">docker load</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Portainer stack deploy</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Nginx Proxy Manager</div><div class="ig-node-text">Optional</div></div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Dedicated Linux machine or WSL2 — the commands are identical.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>
