@@ -20,6 +20,7 @@ public sealed class SiteIndex
             .Where(p => p.Metadata.Slug.StartsWith("posts/", StringComparison.OrdinalIgnoreCase))
             .OrderBy(p => p.Metadata.Date is null)
             .ThenByDescending(p => p.Metadata.Date)
+            .ThenByDescending(p => p.Metadata.Part)
             .ThenBy(p => p.Metadata.Title, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -44,6 +45,17 @@ public sealed class SiteIndex
 
     public IReadOnlyList<PageDocument> Latest(int count) =>
         Posts.Where(p => p.Metadata.Date is not null).Take(count).ToList();
+
+    /// <summary>Newest dated posts, at most one per series (its newest part); standalone posts always count.</summary>
+    public IReadOnlyList<PageDocument> LatestPerSeries(int count)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        return Posts
+            .Where(p => p.Metadata.Date is not null)
+            .Where(p => string.IsNullOrWhiteSpace(p.Metadata.Series) || seen.Add(p.Metadata.Series.Trim()))
+            .Take(count)
+            .ToList();
+    }
 
     public SeriesContext? ContextFor(PageDocument post)
     {

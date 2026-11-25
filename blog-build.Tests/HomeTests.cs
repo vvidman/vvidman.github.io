@@ -47,7 +47,17 @@ public class HomeTests : IClassFixture<SiteFixture>
         var listed = Regex.Matches(Home, "class=\"post-row\" href=\"([^\"]+)\"").Select(m => m.Groups[1].Value).ToList();
         var listedDates = listed.Select(h => dates[h]).ToList();
         Assert.Equal(listedDates.OrderByDescending(d => d), listedDates);
-        Assert.True(listedDates.Min() >= dates.Where(kv => !listed.Contains(kv.Key)).Max(kv => kv.Value));
+    }
+
+    [Fact]
+    public void Each_series_appears_once_with_its_newest_part()
+    {
+        var rows = Regex.Matches(Home, "class=\"post-row\" href=\"([^\"]+)\"").Select(m => m.Groups[1].Value).ToList();
+        Assert.Equal(rows.Count, rows.Distinct().Count());
+        Assert.Single(rows, r => r.Contains("inferrouter"));
+        Assert.Contains("/posts/inferrouter-04.html", rows);
+        Assert.Contains("InferRouter · 4/4", Home);
+        Assert.DoesNotContain("InferRouter · 1/4", Home);
     }
 
     [Theory]
@@ -57,6 +67,12 @@ public class HomeTests : IClassFixture<SiteFixture>
     [InlineData("ChaosForge", "CF")]
     [InlineData("Homelab", "HO")]
     public void Monogram(string name, string expected) => Assert.Equal(expected, HomeGenerator.Monogram(name));
+
+    [Fact]
+    public void Profile_latest_is_newest_post()
+    {
+        Assert.Contains("<span class=\"s\">\"InferRouter Part 4: Observability\"</span>", Home);
+    }
 
     [Fact]
     public void Nav_has_no_current_page_on_home() => Assert.DoesNotContain("aria-current", Home);

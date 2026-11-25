@@ -19,7 +19,7 @@ public static partial class HomeGenerator
 
     public static string Generate(SiteIndex index, TemplateEngine engine)
     {
-        var latest = index.Latest(LatestCount);
+        var latest = index.LatestPerSeries(LatestCount);
 
         var rows = new StringBuilder();
         foreach (var post in latest)

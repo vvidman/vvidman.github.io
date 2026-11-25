@@ -88,4 +88,36 @@ public class SiteIndexTests
         Assert.Equal(new[] { "InferRouter", "Scaffold" }, index.Series.Select(s => s.Name));
         Assert.Equal(new[] { 1, 2, 3, 4 }, index.Series[0].Parts.Select(p => p.Metadata.Part!.Value));
     }
+
+    [Fact]
+    public void Same_date_orders_by_part_descending_then_title()
+    {
+        var pages = new List<PageDocument>
+        {
+            Page("posts/a1.html", "A1", "2026-06-03", "A", 1),
+            Page("posts/a3.html", "A3", "2026-06-03", "A", 3),
+            Page("posts/a2.html", "A2", "2026-06-03", "A", 2),
+            Page("posts/zz.html", "ZZ", "2026-06-03"),
+            Page("posts/aa.html", "AA", "2026-06-03"),
+        };
+        var index = new SiteIndex(pages);
+        Assert.Equal(new[] { "A3", "A2", "A1", "AA", "ZZ" }, index.Latest(5).Select(p => p.Metadata.Title));
+    }
+
+    [Fact]
+    public void LatestPerSeries_keeps_only_newest_part_of_each_series()
+    {
+        var pages = new List<PageDocument>
+        {
+            Page("posts/ir-1.html", "IR 1", "2026-06-03", "InferRouter", 1),
+            Page("posts/ir-4.html", "IR 4", "2026-06-03", "inferrouter", 4),
+            Page("posts/ir-2.html", "IR 2", "2026-06-03", "InferRouter", 2),
+            Page("posts/solo.html", "Solo", "2026-05-01"),
+            Page("posts/sp.html", "SP", "2026-04-01", "Scaffold", 1),
+            Page("posts/undated.html", "Undated"),
+        };
+        var index = new SiteIndex(pages);
+        Assert.Equal(new[] { "IR 4", "Solo", "SP" }, index.LatestPerSeries(10).Select(p => p.Metadata.Title));
+        Assert.Equal(new[] { "IR 4", "Solo" }, index.LatestPerSeries(2).Select(p => p.Metadata.Title));
+    }
 }

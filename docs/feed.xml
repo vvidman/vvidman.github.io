@@ -6,11 +6,11 @@
     <description>Software architecture, AI-augmented delivery and local-first LLM infrastructure.</description>
     <language>en</language>
     <item>
-      <title>InferRouter Part 2: Inference Strategies</title>
-      <link>https://vvidman.github.io/posts/inferrouter-02.html</link>
-      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-02.html</guid>
+      <title>InferRouter Part 4: Observability</title>
+      <link>https://vvidman.github.io/posts/inferrouter-04.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-04.html</guid>
       <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
-      <description>How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.</description>
+      <description>How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.</description>
     </item>
     <item>
       <title>InferRouter Part 3: Secret Management</title>
@@ -20,11 +20,11 @@
       <description>Where API keys live in InferRouter — why not environment variables, why not config files, and what per-request key reading gives you in practice.</description>
     </item>
     <item>
-      <title>InferRouter Part 4: Observability</title>
-      <link>https://vvidman.github.io/posts/inferrouter-04.html</link>
-      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-04.html</guid>
+      <title>InferRouter Part 2: Inference Strategies</title>
+      <link>https://vvidman.github.io/posts/inferrouter-02.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-02.html</guid>
       <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
-      <description>How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.</description>
+      <description>How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.</description>
     </item>
     <item>
       <title>InferRouter: One Endpoint, Any Provider</title>
