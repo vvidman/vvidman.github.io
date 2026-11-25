@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>inferrouter-01 square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">InferRouter · Part 1</div>
+  <h1 class="ig-title">One endpoint, any provider</h1>
+  <p class="ig-sub">A single self-hosted proxy with strategy-based inference routing.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+        <div class="ig-node-title">Callers</div>
+        <div class="ig-node-text">Speak the OpenAI chat completions API they already use.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-4M8.3 13l7.4 4"/></svg></div>
+        <div class="ig-node-title">InferRouter</div>
+        <div class="ig-node-text">One OpenAI-compatible endpoint. A configurable strategy routes each request.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 8.5a4.5 4.5 0 0 1 .5 9.5z"/></svg></div>
+        <div class="ig-node-title">Cloud providers</div>
+        <div class="ig-node-text">One or more. Any OpenAI-compatible HTTP endpoint qualifies.</div>
+      </div>
+    </div>
+
+    <div class="ig-node">
+      <div class="ig-node-title">Local model · LlamaSharp</div>
+      <div class="ig-node-text">Runs in-process. Handles the call when all providers are unavailable or exhausted.</div>
+    </div>
+
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title">API keys scattered</div>
+        <div class="ig-card-body">No single place to rotate a key or audit access.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Routing logic reimplemented</div>
+        <div class="ig-card-body">Writing it once per project means maintaining it N times.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Provider changes cascade</div>
+        <div class="ig-card-body">Swapping a provider meant touching every project that used it.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Provider management is infrastructure.<br>Infrastructure belongs in one place.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

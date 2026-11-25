@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>inferrouter-04 og</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-og">
+  <div class="ig-eyebrow">InferRouter · Part 4</div>
+  <h1 class="ig-title">Observability</h1>
+
+  <div class="ig-body">
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">GET /health/providers</div>
+        <div class="ig-card-body">Is a given provider reachable right now?</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">GET /stats/live</div>
+        <div class="ig-card-body">How much quota remains for the day?</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">GET /stats/history</div>
+        <div class="ig-card-body">What happened over a specific day's worth of requests?</div>
+      </div>
+    </div>
+    <div class="ig-callout">Every inference event goes into a provider-agnostic JSONL operation log.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

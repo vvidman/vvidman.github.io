@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>inferrouter-03 og</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-og">
+  <div class="ig-eyebrow">InferRouter · Part 3</div>
+  <h1 class="ig-title">Secret management</h1>
+
+  <div class="ig-body">
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title">Environment variables</div>
+        <div class="ig-card-body">Visible in docker inspect.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Config files</div>
+        <div class="ig-card-body">One careless git add away from being public.</div>
+      </div>
+      <div class="ig-card is-key">
+        <div class="ig-card-title">Docker Secrets</div>
+        <div class="ig-card-body">Mounted as files at /run/secrets/.</div>
+      </div>
+    </div>
+    <div class="ig-callout">The key is read fresh on every request.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

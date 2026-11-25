@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>inferrouter-02 og</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-og">
+  <div class="ig-eyebrow">InferRouter · Part 2</div>
+  <h1 class="ig-title">Inference strategies</h1>
+
+  <div class="ig-body">
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">ChainOfResponsibility</div>
+        <div class="ig-card-body">Providers are tried in config order.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">WeightedRoundRobin</div>
+        <div class="ig-card-body">Traffic follows each provider's DailyRequestLimit.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">LeastUsed</div>
+        <div class="ig-card-body">Picks the lowest DailyCount / DailyLimit ratio.</div>
+      </div>
+    </div>
+    <div class="ig-callout">LlamaSharp is never part of a strategy — it is the guaranteed fallback.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

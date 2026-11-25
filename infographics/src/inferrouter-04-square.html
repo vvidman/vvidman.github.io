@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>inferrouter-04 square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">InferRouter · Part 4</div>
+  <h1 class="ig-title">Observability</h1>
+  <p class="ig-sub">How do you know what is actually happening inside the running proxy?</p>
+
+  <div class="ig-body">
+    <div class="ig-node is-key">
+      <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div>
+      <div class="ig-node-title">Operation log</div>
+      <div class="ig-node-text">A structured JSONL file, one per day.</div>
+      <div class="ig-tags">infer_started · infer_ordering · infer_completed · infer_fallback · infer_failed · rate_limit_hit</div>
+    </div>
+
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">GET /health/providers</div>
+        <div class="ig-card-body">Is a given provider reachable right now?</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">GET /stats/live</div>
+        <div class="ig-card-body">How much quota remains for the day?</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">GET /stats/history</div>
+        <div class="ig-card-body">What happened over a specific day's worth of requests?</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">The log records events, not providers.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

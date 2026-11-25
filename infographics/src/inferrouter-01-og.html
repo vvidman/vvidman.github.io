@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>inferrouter-01 og</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-og">
+  <div class="ig-eyebrow">InferRouter · Part 1</div>
+  <h1 class="ig-title">One endpoint, any provider</h1>
+
+  <div class="ig-body">
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-node-title">Callers</div>
+        <div class="ig-node-text">Speak the OpenAI chat completions API.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-node-title">InferRouter</div>
+        <div class="ig-node-text">A configurable strategy routes each request.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">Cloud providers</div>
+        <div class="ig-node-text">One or more.</div>
+      </div>
+    </div>
+    <div class="ig-callout">When every provider is unavailable or exhausted, a local model handles the call.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

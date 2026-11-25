@@ -102,3 +102,13 @@ body { overflow: hidden; }
 /* ---- footer ---- */
 .ig-footer { position: absolute; left: 72px; right: 72px; bottom: 56px; font-family: "JetBrains Mono", monospace; font-weight: 400; font-size: 18px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 18px; }
 .ig-og .ig-footer { left: 56px; right: 56px; bottom: 36px; padding-top: 14px; }
+
+/* ---- layout fixes ---- */
+.ig-body { padding-top: 28px; }
+.ig-og .ig-body { padding-top: 16px; }
+.ig-body > .ig-node { flex: none; }
+
+/* ---- modifiers ---- */
+.ig-card-title.is-mono, .ig-node-title.is-mono { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 21px; letter-spacing: -0.01em; }
+.ig-og .ig-card-title.is-mono, .ig-og .ig-node-title.is-mono { font-size: 17px; }
+.ig-tags { font-family: "JetBrains Mono", monospace; font-size: 17px; line-height: 1.6; color: var(--muted); margin-top: 8px; }
