@@ -228,6 +228,7 @@ a { color: var(--accent); }
 }
 .hero-text { min-width: 0; }
 .prompt { font-family: var(--font-mono); font-size: 0.95rem; color: var(--muted); margin: 0 0 16px; }
+.focus-line { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); margin: -8px 0 16px; overflow-wrap: anywhere; }
 .hero h1 {
   font-family: var(--font-display);
   font-weight: 600;

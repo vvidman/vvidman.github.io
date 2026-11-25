@@ -89,7 +89,7 @@ public static class PageRenderer
         ["name"] = SiteName,
         ["url"] = Urls.Origin,
         ["jobTitle"] = "Software Architect",
-        ["knowsAbout"] = new[] { "C#", ".NET", "Backend Architecture", "AI-Augmented Development", "Human-in-the-Loop Workflows", "Multi-Agent Systems", "Software Design" },
+        ["knowsAbout"] = new[] { "C#", ".NET", "Software Architecture", "AI-Augmented Engineering", "LLM Infrastructure", "Retrieval-Augmented Generation", "Human-in-the-Loop Workflows" },
         ["sameAs"] = new[] { "https://github.com/vvidman", "https://www.linkedin.com/in/viktor-vidman-55a2a197" },
     });
 

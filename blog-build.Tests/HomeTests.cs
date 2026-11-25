@@ -76,4 +76,50 @@ public class HomeTests : IClassFixture<SiteFixture>
 
     [Fact]
     public void Nav_has_no_current_page_on_home() => Assert.DoesNotContain("aria-current", Home);
+
+    private const string ThesisEn = "How to put AI into a real engineering process without losing control: workflows, guardrails, and the infrastructure underneath.";
+    private const string ThesisHu = "Hogyan kerül az AI egy valós fejlesztési folyamatba úgy, hogy közben nem veszítjük el az irányítást: workflow-k, korlátok és az alattuk lévő infrastruktúra.";
+    private const string Focus = "AI-augmented engineering · LLM infrastructure in .NET";
+
+    [Fact]
+    public void Lead_is_the_thesis_in_both_languages()
+    {
+        Assert.Contains($"<p class=\"lead\"><span data-l=\"en\">{ThesisEn}</span><span data-l=\"hu\">{ThesisHu}</span></p>", Home);
+        Assert.DoesNotContain("16 years in .NET. I write about", Home);
+        Assert.DoesNotContain("16 éve .NET-ben. AI-támogatott fejlesztésről", Home);
+    }
+
+    [Fact]
+    public void Focus_line_sits_under_whoami()
+    {
+        var whoami = Home.IndexOf("$ whoami", StringComparison.Ordinal);
+        var line = Home.IndexOf($"<p class=\"focus-line\">Software Architect · {Focus}</p>", StringComparison.Ordinal);
+        Assert.True(whoami > 0 && line > whoami);
+        Assert.True(line < Home.IndexOf("<h1>", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Profile_panel_has_focus_after_role()
+    {
+        var role = Home.IndexOf("\"role\"", StringComparison.Ordinal);
+        var focus = Home.IndexOf("\"focus\"", StringComparison.Ordinal);
+        var years = Home.IndexOf("\"years\"", StringComparison.Ordinal);
+        Assert.True(role > 0 && role < focus && focus < years);
+        Assert.Contains("<span class=\"s\">\"AI-augmented engineering\"</span>, <span class=\"s\">\"LLM infrastructure in .NET\"</span>", Home);
+    }
+
+    [Fact]
+    public void Title_and_description_carry_the_positioning()
+    {
+        const string title = "Viktor Vidman – Software Architect · AI-augmented engineering · LLM infrastructure in .NET";
+        Assert.Contains($"<title>{title}</title>", Home);
+        Assert.Contains($"<meta property=\"og:title\" content=\"{title}\">", Home);
+        Assert.Contains("content=\"Viktor Vidman, software architect. How to put AI into a real engineering process without losing control: workflows, guardrails, and the LLM infrastructure underneath, in .NET.\"", Home);
+    }
+
+    [Fact]
+    public void Json_ld_knows_about_the_new_topics()
+    {
+        Assert.Contains("\"knowsAbout\":[\"C#\",\".NET\",\"Software Architecture\",\"AI-Augmented Engineering\",\"LLM Infrastructure\",\"Retrieval-Augmented Generation\",\"Human-in-the-Loop Workflows\"]", Home);
+    }
 }

@@ -9,11 +9,11 @@ public static partial class HomeGenerator
 {
     public const string Slug = "index.html";
 
-    private const string Title = "Viktor Vidman – Software Architect · .NET · AI-Augmented Development";
+    private const string Title = "Viktor Vidman – Software Architect · AI-augmented engineering · LLM infrastructure in .NET";
 
     private const string Description =
-        "Viktor Vidman — software architect with 16+ years in .NET backend development. " +
-        "Writing about architecture, AI-augmented workflows, human-in-the-loop design, and building systems that last.";
+        "Viktor Vidman, software architect. How to put AI into a real engineering process without losing control: " +
+        "workflows, guardrails, and the LLM infrastructure underneath, in .NET.";
 
     private const int LatestCount = 5;
 
