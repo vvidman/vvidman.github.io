@@ -1,3 +1,4 @@
+using global::Markdown.ColorCode;
 using Markdig;
 
 namespace VVidman.BlogBuild.Renderers;
@@ -7,6 +8,7 @@ public static class MarkdownRenderer
     private static readonly MarkdownPipeline Pipeline =
         new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
+            .UseColorCode(HtmlFormatterType.Css, BlogCodeStyles.Create())
             .Build();
 
     public static string Render(string markdown)
@@ -14,6 +16,6 @@ public static class MarkdownRenderer
         if (string.IsNullOrWhiteSpace(markdown))
             return string.Empty;
 
-        return Markdown.ToHtml(markdown, Pipeline);
+        return Markdig.Markdown.ToHtml(markdown, Pipeline);
     }
 }
