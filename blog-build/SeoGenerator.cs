@@ -50,7 +50,7 @@ public static class SeoGenerator
             .Select(p =>
             {
                 var url = Urls.Absolute(p.Metadata.Slug);
-                var date = p.Metadata.Date!.Value.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+                var date = p.Metadata.Date!.Value.ToDateTime(p.Metadata.Time ?? TimeOnly.MinValue, DateTimeKind.Utc);
                 return new XElement("item",
                     new XElement("title", p.Metadata.Title),
                     new XElement("link", url),

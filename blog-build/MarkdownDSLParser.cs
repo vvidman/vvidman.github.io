@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using VVidman.BlogBuild.Models;
 
@@ -64,6 +65,7 @@ public static class MarkdownDslParser
 
         string title = "", slug = "", layout = "", description = "";
         DateOnly? date = null;
+        TimeOnly? time = null;
         var tags = Array.Empty<string>();
         string titleHu = "";
         string? series = null;
@@ -113,6 +115,12 @@ public static class MarkdownDslParser
             {
                 if (DateOnly.TryParse(value, out var parsed))
                     date = parsed;
+                else if (DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture,
+                             DateTimeStyles.None, out var stamp))
+                {
+                    date = DateOnly.FromDateTime(stamp);
+                    time = TimeOnly.FromDateTime(stamp);
+                }
                 else
                     throw new InvalidOperationException($"Invalid date format on line: {line}");
             }
@@ -139,6 +147,7 @@ public static class MarkdownDslParser
             Layout      = layout,
             Description = description,
             Date        = date,
+            Time        = time,
             Tags        = tags,
             Series      = series,
             Part        = part,

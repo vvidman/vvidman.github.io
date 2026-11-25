@@ -23,4 +23,12 @@ public class ParserMetadataTests
         var ex = Assert.Throws<InvalidOperationException>(() => MarkdownDslParser.Parse(Fixture("unknown-key.md")));
         Assert.Contains("Unknown metadata key", ex.Message);
     }
+
+    [Fact]
+    public void Date_with_time_sets_date_and_time()
+    {
+        var doc = MarkdownDslParser.Parse(Fixture("date-time.md"));
+        Assert.Equal(new DateOnly(2026, 11, 25), doc.Metadata.Date);
+        Assert.Equal(new TimeOnly(20, 0), doc.Metadata.Time);
+    }
 }

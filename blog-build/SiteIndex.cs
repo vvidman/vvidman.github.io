@@ -20,6 +20,7 @@ public sealed class SiteIndex
             .Where(p => p.Metadata.Slug.StartsWith("posts/", StringComparison.OrdinalIgnoreCase))
             .OrderBy(p => p.Metadata.Date is null)
             .ThenByDescending(p => p.Metadata.Date)
+            .ThenByDescending(p => p.Metadata.Time)
             .ThenByDescending(p => p.Metadata.Part)
             .ThenBy(p => p.Metadata.Title, StringComparer.OrdinalIgnoreCase)
             .ToList();

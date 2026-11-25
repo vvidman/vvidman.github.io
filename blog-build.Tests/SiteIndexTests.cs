@@ -5,7 +5,7 @@ namespace BlogBuild.Tests;
 
 public class SiteIndexTests
 {
-    private static PageDocument Page(string slug, string title, string? date = null, string? series = null, int? part = null) =>
+    private static PageDocument Page(string slug, string title, string? date = null, string? series = null, int? part = null, string? time = null) =>
         new()
         {
             Metadata = new PageMetadata
@@ -13,6 +13,7 @@ public class SiteIndexTests
                 Slug = slug,
                 Title = title,
                 Date = date is null ? null : DateOnly.Parse(date),
+                Time = time is null ? null : TimeOnly.Parse(time),
                 Series = series,
                 Part = part
             }
@@ -127,5 +128,18 @@ public class SiteIndexTests
         var index = new SiteIndex(pages);
         Assert.Equal(new[] { "IR 4", "Solo", "SP" }, index.LatestPerSeries(10).Select(p => p.Metadata.Title));
         Assert.Equal(new[] { "IR 4", "Solo" }, index.LatestPerSeries(2).Select(p => p.Metadata.Title));
+    }
+
+    [Fact]
+    public void Same_day_posts_are_ordered_by_publish_time()
+    {
+        var index = new SiteIndex(new[]
+        {
+            Page("posts/g-3.html", "Series 3", "2026-11-25", "Governing", 3),
+            Page("posts/solo.html", "Solo", "2026-11-25", time: "20:00"),
+            Page("posts/g-2.html", "Series 2", "2026-11-25", "Governing", 2),
+        });
+        Assert.Equal(new[] { "Solo", "Series 3", "Series 2" }, index.Posts.Select(p => p.Metadata.Title));
+        Assert.Equal("Solo", index.LatestPerSeries(5)[0].Metadata.Title);
     }
 }

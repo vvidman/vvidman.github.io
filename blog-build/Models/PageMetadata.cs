@@ -7,6 +7,8 @@ public sealed class PageMetadata
     public string Description { get; init; } = string.Empty;
     public string Layout { get; init; } = "page";
     public DateOnly? Date { get; init; }
+    /// <summary>Optional UTC publish time (front matter <c>date: yyyy-MM-dd HH:mm</c>); orders posts published on the same day.</summary>
+    public TimeOnly? Time { get; init; }
     public IReadOnlyList<string> Tags { get; init; } = Array.Empty<string>();
     public string? Series { get; init; }   // pl. "ChaosForge"
     public int?    Part   { get; init; }   // pl. 1
