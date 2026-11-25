@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>dotnet-ai-stack-01 square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">.NET Agentic AI · Part 1</div>
+  <h1 class="ig-title">Building the .NET AI stack from first principles</h1>
+  <p class="ig-sub">Wiring together LlamaSharp, Microsoft.Extensions.AI and Semantic Kernel — and why the documentation does not tell the whole story.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-layers">
+      <div class="ig-layer"><span class="ig-layer-title">Your code</span><span class="ig-layer-text">business logic, agent workflows</span></div>
+      <div class="ig-layer is-key"><span class="ig-layer-title">Semantic Kernel</span><span class="ig-layer-text">What should the agent do?</span></div>
+      <div class="ig-layer is-key"><span class="ig-layer-title">Microsoft.Extensions.AI</span><span class="ig-layer-text">How should it talk to any LLM?</span></div>
+      <div class="ig-layer"><span class="ig-layer-title">LLM provider (swappable)</span><span class="ig-layer-text">LlamaSharp · Azure OpenAI · OpenAI · Ollama</span></div>
+    </div>
+
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">LLamaSharpChatClient</div>
+        <div class="ig-card-body">Does not exist. The class is LLamaSharpChatCompletion, bridged with .AsChatClient().</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">AddKernel().Build()</div>
+        <div class="ig-card-body">Throws InvalidOperationException. Resolve Kernel from the service provider.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Short-term memory</div>
+        <div class="ig-card-body">A List&lt;ChatMessage&gt; passed to every call. That is all.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Implementation is the verification step.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>
