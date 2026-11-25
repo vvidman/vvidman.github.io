@@ -7,9 +7,10 @@ $ErrorActionPreference = "Stop"
 
 if($Build) {
     Write-Host "🔨 Building blog..."
-    dotnet run --project .\blog-build\blog-build.csproj
+    dotnet run --project (Join-Path $PSScriptRoot 'blog-build/BlogBuild.csproj')
+    $buildExit = $LASTEXITCODE
 
-    if ($LASTEXITCODE -ne 0) {
+    if ($buildExit -ne 0) {
         Write-Error "Build failed."
         exit 1
     }
