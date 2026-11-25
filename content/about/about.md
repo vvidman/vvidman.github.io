@@ -14,6 +14,16 @@ description: Software architect with 16+ years in .NET backend development and a
 :::lang
 :::section
 
+:::section thesis
+:::lang en
+**How to put AI into a real engineering process without losing control: workflows, guardrails, and the infrastructure underneath.**
+:::lang
+
+:::lang hu
+**Hogyan kerül az AI egy valós fejlesztési folyamatba úgy, hogy közben nem veszítjük el az irányítást: workflow-k, korlátok és az alattuk lévő infrastruktúra.**
+:::lang
+:::section
+
 :::section whoiam
 :::lang en
 ## Who I am
@@ -31,6 +41,8 @@ Alongside that, I've spent the past two years developing a second area of focus:
 **AI-augmented development workflows** — not as a curiosity, but as a serious design problem.
 How do you structure a process where the AI is a real participant, not just a fancy autocomplete?
 That question has been driving most of what I build outside of work hours.
+
+At work I am also part of a small architect group that governs how AI coding assistants are used across a development organisation: which models are approved and how they are tiered for different kinds of work.
 :::lang
 
 :::lang hu
@@ -48,6 +60,8 @@ Az elmúlt két évben egy második fókuszterületet is kialakítottam:
 **AI-augmented fejlesztési workflow-k** — nem kíváncsiságból, hanem komoly tervezési kérdésként kezelve.
 Hogyan építesz fel egy folyamatot, ahol az AI valódi résztvevő, nem csak egy felturbózott autocomplete?
 Ez a kérdés hajtja azt, amit munkán kívül építek.
+
+A munkahelyemen egy kis architekt csoport tagjaként abban is részt veszek, hogyan használja egy fejlesztői szervezet az AI kódoló asszisztenseket: mely modellek engedélyezettek, és hogyan soroljuk be őket különböző munkatípusokhoz.
 :::lang
 :::section
 
@@ -101,17 +115,18 @@ owning outcomes. **The human orchestrates. The AI executes.**
 
 That principle runs through everything I build in this space.
 
-On the **pipeline side**: [Scaffold Protocol](/posts/scaffold-protocol-the-ai-executes-you-decide.html) is a human-in-the-loop AI pipeline
+**AI-augmented workflow**: [Scaffold Protocol](/posts/scaffold-protocol-the-ai-executes-you-decide.html) is a human-in-the-loop AI pipeline
 with explicit orchestration and revision gates. [ChaosForge](/posts/chaosforge-let-go-of-the-reins.html) is a
 multi-agent Scrum simulator where agent roles and revision gates are first-class design concerns.
-[RagLab](/posts/raglab-01.html) is a handbuilt RAG pipeline in .NET — because understanding
-what retrieval-augmented generation actually does requires building it yourself, not wrapping a library.
-[AiObservability](https://github.com/vvidman/AiObservability) is a cross-project tracing library that instruments all
-three: every LLM call, retrieval step, and agent action becomes a queryable span.
-
-On the **workflow side**: I also publish template repositories that capture the collaboration patterns
+I also publish template repositories that capture the collaboration patterns
 behind these projects — how to structure context for an AI coding assistant, how to close the feedback
 loop between a reasoning model and an implementation tool, and where the human boundary sits in each case.
+
+**LLM infrastructure in .NET**: [RagLab](/posts/raglab-01.html) is a handbuilt RAG pipeline in .NET — because understanding
+what retrieval-augmented generation actually does requires building it yourself, not wrapping a library.
+[AiObservability](https://github.com/vvidman/AiObservability) is a cross-project tracing library that instruments Scaffold Protocol, ChaosForge and RagLab: every LLM call, retrieval step, and agent action becomes a queryable span.
+
+**Engineering tools:** the blog itself runs on a custom C# static site generator; the [Site Generator series](/posts/why-i-built-my-own-static-site-generator.html) documents how it works.
 
 I have a formal engineering background (MSc) and I rely on it more than I expected:
 structured decomposition, validation boundaries, and the discipline to separate
@@ -133,18 +148,20 @@ irányítja a folyamatot, validálja az outputot, felel az eredményért.
 
 Ez az elv húzódik végig mindenen, amit ezen a területen építek.
 
-**Pipeline oldalon**: a [Scaffold Protocol](/posts/scaffold-protocol-the-ai-executes-you-decide.html) egy human-in-the-loop AI pipeline
+**AI-támogatott munkafolyamat**: a [Scaffold Protocol](/posts/scaffold-protocol-the-ai-executes-you-decide.html) egy human-in-the-loop AI pipeline
 explicit orchestrációval és revision gate-ekkel. A [ChaosForge](/posts/chaosforge-let-go-of-the-reins.html) egy
 multi-agent Scrum szimulátor, ahol az ágensszerepek és a revision gate-ek first-class tervezési
-szempontok. A [RagLab](/posts/raglab-01.html) egy saját kezűleg épített RAG pipeline .NET-ben —
-mert a retrieval-augmented generation megértéséhez fel kell építeni, nem csak becsomagolni egy könyvtárat.
-Az [AiObservability](https://github.com/vvidman/AiObservability) egy cross-project tracing könyvtár, amely mindhárom
-projektet lefedi: minden LLM hívás, retrieval lépés és agent akció lekérdezhető spanként tárolódik.
-
-**Workflow oldalon**: publikus template repókat is közzéteszek, amelyek az ezek mögötti
+szempontok. Publikus template repókat is közzéteszek, amelyek az ezek mögötti
 együttműködési mintákat rögzítik — hogyan strukturáld az AI kódolási asszisztens kontextusát,
 hogyan zárd le a visszacsatolási hurkot egy reasoning modell és egy implementációs eszköz között,
 és hol legyen az emberi határ minden esetben.
+
+**LLM infrastruktúra .NET-ben**: A [RagLab](/posts/raglab-01.html) egy saját kezűleg épített RAG pipeline .NET-ben —
+mert a retrieval-augmented generation megértéséhez fel kell építeni, nem csak becsomagolni egy könyvtárat.
+Az [AiObservability](https://github.com/vvidman/AiObservability) egy cross-project tracing könyvtár, amely a Scaffold Protocolt, a ChaosForge-ot és a RagLabot
+lefedi: minden LLM hívás, retrieval lépés és agent akció lekérdezhető spanként tárolódik.
+
+**Mérnöki eszközök:** maga a blog is egy saját C# statikus oldalgenerátoron fut; a [Site Generator sorozat](/posts/why-i-built-my-own-static-site-generator.html) bemutatja, hogyan működik.
 
 Formális mérnöki háttérrel rendelkezem (MSc), és jobban támaszkodok rá, mint vártam:
 a strukturált dekompozíció, a validációs határok meghúzása, és az a fegyelem, hogy szétválasszuk

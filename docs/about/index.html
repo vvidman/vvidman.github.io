@@ -70,6 +70,10 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
   <p><img src="/assets/images/vv-profile.jpg" width="380" alt="Viktor Vidman" /></p>
 
 </section>
+<section class="page-section" data-key="thesis">
+  <p><strong>How to put AI into a real engineering process without losing control: workflows, guardrails, and the infrastructure underneath.</strong></p>
+
+</section>
 <section class="page-section" data-key="whoiam">
   <h2 id="who-i-am">Who I am</h2>
 <p>I am a <strong>software architect</strong> with over sixteen years of professional experience in backend development,
@@ -83,6 +87,7 @@ interesting than greenfield projects.</p>
 <strong>AI-augmented development workflows</strong> — not as a curiosity, but as a serious design problem.
 How do you structure a process where the AI is a real participant, not just a fancy autocomplete?
 That question has been driving most of what I build outside of work hours.</p>
+<p>At work I am also part of a small architect group that governs how AI coding assistants are used across a development organisation: which models are approved and how they are tiered for different kinds of work.</p>
 
 </section>
 <section class="page-section" data-key="focus">
@@ -111,16 +116,16 @@ changes almost every design decision that follows.</p>
 It's how to keep the human in the right position: setting direction, validating outputs,
 owning outcomes. <strong>The human orchestrates. The AI executes.</strong></p>
 <p>That principle runs through everything I build in this space.</p>
-<p>On the <strong>pipeline side</strong>: <a href="/posts/scaffold-protocol-the-ai-executes-you-decide.html">Scaffold Protocol</a> is a human-in-the-loop AI pipeline
+<p><strong>AI-augmented workflow</strong>: <a href="/posts/scaffold-protocol-the-ai-executes-you-decide.html">Scaffold Protocol</a> is a human-in-the-loop AI pipeline
 with explicit orchestration and revision gates. <a href="/posts/chaosforge-let-go-of-the-reins.html">ChaosForge</a> is a
 multi-agent Scrum simulator where agent roles and revision gates are first-class design concerns.
-<a href="/posts/raglab-01.html">RagLab</a> is a handbuilt RAG pipeline in .NET — because understanding
-what retrieval-augmented generation actually does requires building it yourself, not wrapping a library.
-<a href="https://github.com/vvidman/AiObservability">AiObservability</a> is a cross-project tracing library that instruments all
-three: every LLM call, retrieval step, and agent action becomes a queryable span.</p>
-<p>On the <strong>workflow side</strong>: I also publish template repositories that capture the collaboration patterns
+I also publish template repositories that capture the collaboration patterns
 behind these projects — how to structure context for an AI coding assistant, how to close the feedback
 loop between a reasoning model and an implementation tool, and where the human boundary sits in each case.</p>
+<p><strong>LLM infrastructure in .NET</strong>: <a href="/posts/raglab-01.html">RagLab</a> is a handbuilt RAG pipeline in .NET — because understanding
+what retrieval-augmented generation actually does requires building it yourself, not wrapping a library.
+<a href="https://github.com/vvidman/AiObservability">AiObservability</a> is a cross-project tracing library that instruments Scaffold Protocol, ChaosForge and RagLab: every LLM call, retrieval step, and agent action becomes a queryable span.</p>
+<p><strong>Engineering tools:</strong> the blog itself runs on a custom C# static site generator; the <a href="/posts/why-i-built-my-own-static-site-generator.html">Site Generator series</a> documents how it works.</p>
 <p>I have a formal engineering background (MSc) and I rely on it more than I expected:
 structured decomposition, validation boundaries, and the discipline to separate
 &quot;this is certainly wrong&quot; from &quot;this requires judgment&quot; turn out to be exactly
@@ -151,6 +156,10 @@ That felt more honest than using something off the shelf.</p>
   <p><img src="/assets/images/vv-profile.jpg" width="380" alt="Vidman Viktor" /></p>
 
 </section>
+<section class="page-section" data-key="thesis">
+  <p><strong>Hogyan kerül az AI egy valós fejlesztési folyamatba úgy, hogy közben nem veszítjük el az irányítást: workflow-k, korlátok és az alattuk lévő infrastruktúra.</strong></p>
+
+</section>
 <section class="page-section" data-key="whoiam">
   <h2 id="ki-vagyok">Ki vagyok</h2>
 <p><strong>Szoftver architekt</strong> vagyok, tizenhat évnyi szakmai tapasztalattal, elsősorban <strong>C# és .NET</strong> technológiákban.
@@ -163,6 +172,7 @@ ezeken a korlátok között zajlik — és ezt érdekesebbnek találom a zöldme
 <strong>AI-augmented fejlesztési workflow-k</strong> — nem kíváncsiságból, hanem komoly tervezési kérdésként kezelve.
 Hogyan építesz fel egy folyamatot, ahol az AI valódi résztvevő, nem csak egy felturbózott autocomplete?
 Ez a kérdés hajtja azt, amit munkán kívül építek.</p>
+<p>A munkahelyemen egy kis architekt csoport tagjaként abban is részt veszek, hogyan használja egy fejlesztői szervezet az AI kódoló asszisztenseket: mely modellek engedélyezettek, és hogyan soroljuk be őket különböző munkatípusokhoz.</p>
 
 </section>
 <section class="page-section" data-key="focus">
@@ -192,17 +202,18 @@ többet az AI-val. Hanem az, hogyan tartsuk az embert a megfelelő pozícióban:
 irányítja a folyamatot, validálja az outputot, felel az eredményért.
 <strong>Az ember orchestrál. Az AI végrehajtja.</strong></p>
 <p>Ez az elv húzódik végig mindenen, amit ezen a területen építek.</p>
-<p><strong>Pipeline oldalon</strong>: a <a href="/posts/scaffold-protocol-the-ai-executes-you-decide.html">Scaffold Protocol</a> egy human-in-the-loop AI pipeline
+<p><strong>AI-támogatott munkafolyamat</strong>: a <a href="/posts/scaffold-protocol-the-ai-executes-you-decide.html">Scaffold Protocol</a> egy human-in-the-loop AI pipeline
 explicit orchestrációval és revision gate-ekkel. A <a href="/posts/chaosforge-let-go-of-the-reins.html">ChaosForge</a> egy
 multi-agent Scrum szimulátor, ahol az ágensszerepek és a revision gate-ek first-class tervezési
-szempontok. A <a href="/posts/raglab-01.html">RagLab</a> egy saját kezűleg épített RAG pipeline .NET-ben —
-mert a retrieval-augmented generation megértéséhez fel kell építeni, nem csak becsomagolni egy könyvtárat.
-Az <a href="https://github.com/vvidman/AiObservability">AiObservability</a> egy cross-project tracing könyvtár, amely mindhárom
-projektet lefedi: minden LLM hívás, retrieval lépés és agent akció lekérdezhető spanként tárolódik.</p>
-<p><strong>Workflow oldalon</strong>: publikus template repókat is közzéteszek, amelyek az ezek mögötti
+szempontok. Publikus template repókat is közzéteszek, amelyek az ezek mögötti
 együttműködési mintákat rögzítik — hogyan strukturáld az AI kódolási asszisztens kontextusát,
 hogyan zárd le a visszacsatolási hurkot egy reasoning modell és egy implementációs eszköz között,
 és hol legyen az emberi határ minden esetben.</p>
+<p><strong>LLM infrastruktúra .NET-ben</strong>: A <a href="/posts/raglab-01.html">RagLab</a> egy saját kezűleg épített RAG pipeline .NET-ben —
+mert a retrieval-augmented generation megértéséhez fel kell építeni, nem csak becsomagolni egy könyvtárat.
+Az <a href="https://github.com/vvidman/AiObservability">AiObservability</a> egy cross-project tracing könyvtár, amely a Scaffold Protocolt, a ChaosForge-ot és a RagLabot
+lefedi: minden LLM hívás, retrieval lépés és agent akció lekérdezhető spanként tárolódik.</p>
+<p><strong>Mérnöki eszközök:</strong> maga a blog is egy saját C# statikus oldalgenerátoron fut; a <a href="/posts/why-i-built-my-own-static-site-generator.html">Site Generator sorozat</a> bemutatja, hogyan működik.</p>
 <p>Formális mérnöki háttérrel rendelkezem (MSc), és jobban támaszkodok rá, mint vártam:
 a strukturált dekompozíció, a validációs határok meghúzása, és az a fegyelem, hogy szétválasszuk
 a &quot;ez biztosan rossz&quot; és a &quot;ez emberi ítéletet igényel&quot; kategóriákat — pontosan ezek azok
