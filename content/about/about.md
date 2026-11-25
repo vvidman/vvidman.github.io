@@ -1,5 +1,6 @@
 ---
 title: About
+title_hu: Rólam
 slug: about/index.html
 layout: page
 description: Software architect with 16+ years in .NET backend development and a growing focus on AI-augmented engineering workflows.

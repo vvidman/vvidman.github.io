@@ -88,10 +88,17 @@ public class PostIndexTests : IClassFixture<SiteFixture>, IClassFixture<MixedTop
     [Fact]
     public void Series_blocks_come_before_standalone_posts_within_a_topic()
     {
-        // tooling: Site Generator series first, then the standalone home lab posts
-        var series = At(Index, "href=\"/posts/why-i-built-my-own-static-site-generator.html\"");
-        var standalone = At(Index, "href=\"/posts/homelab-docker-server.html\"");
+        var html = _one.Read("posts/index.html");
+        var series = At(html, "href=\"/posts/series-one.html\"");
+        var standalone = At(html, "href=\"/posts/only.html\"");
         Assert.True(series > 0 && series < standalone);
+    }
+
+    [Fact]
+    public void Home_lab_posts_are_their_own_series_inside_tooling()
+    {
+        Assert.Contains("<h2>Home Lab</h2>", Index);
+        Assert.Contains("<h2>Complications</h2>", Index);
     }
 
     [Fact]
