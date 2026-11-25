@@ -6,6 +6,7 @@ Source: content/posts/chaosforge-02-closing-the-loop.md (slug `posts/chaosforge-
 | Eyebrow | ChaosForge · Part 2 | front matter |
 | Title | Closing the loop | title |
 | Subtitle (square) | Closing the structural gap between planning and implementation. | description: "closing the structural gap between planning and implementation" |
+| Subtitle (og) | Closing the structural gap between planning and implementation. | same as square subtitle (description) |
 | Node 1 | **Reasoning partner** — Plans and writes the spec. | "the AI used for planning, architecture decisions, and design iteration"; full-loop diagram "write spec → docs/specs/feature-name.md" |
 | Node 2 | **Implementation agent** — Implements, then runs /review-ready. | "The AI used to turn plans into code"; diagram "implement └─► /review-ready" |
 | Node 3 (key) | **Review file + progress** — docs/review/ and docs/progress/ updated. | diagram "docs/review/feature-name-review.md" and "docs/progress/ updated" |
