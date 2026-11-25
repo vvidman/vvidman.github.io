@@ -9,6 +9,8 @@ layout: page
 date: 2026-03-01
 series: Site Generator
 part: 1
+image: /assets/images/infographics/why-i-built-my-own-static-site-generator-square.png
+og_image: /assets/images/infographics/why-i-built-my-own-static-site-generator-og.png
 ---
 
 :::section title

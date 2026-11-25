@@ -8,6 +8,8 @@ layout: page
 date: 2026-04-15
 series: SourceRAG
 part: 2
+image: /assets/images/infographics/sourcerag-01-square.png
+og_image: /assets/images/infographics/sourcerag-01-og.png
 ---
 
 :::section intro
@@ -30,18 +32,6 @@ Mindig visszatértem ugyanahhoz a kérdéshez: az overhead valós, de valóban s
 A git már tudja az összes fájlt, minden metódust, minden szerzőt, minden commit üzenetet — pontos időbélyeggel és teljes revíziótörténettel. Ha már source control alatt van a kódom, már fenntartok egy proof tárat. Csak nem kérdeztem le közvetlenül.
 
 A SourceRAG ennek a hipotézisnek a tesztelése. Ez egy koncepcióprojekt — a README és az architektúrális döntések megvannak, az implementáció folyamatban van. Menet közben írok róla.
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![SourceRAG Part 2 infographic: VCS as proof store](/assets/images/sourcerag_part1.png)
-:::lang
-
-:::lang hu
-![SourceRAG 2. rész infografika: VCS mint proof tár](/assets/images/sourcerag_part1.png)
 :::lang
 
 :::section

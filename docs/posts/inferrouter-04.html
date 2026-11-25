@@ -20,12 +20,12 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <meta property="og:description" content="How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="hu_HU">
-<meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/inferrouter-04-og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Viktor Vidman – InferRouter Part 4: Observability">
 <meta name="twitter:description" content="How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.">
-<meta name="twitter:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"InferRouter Part 4: Observability","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/inferrouter-04.html","image":"https://vvidman.github.io/assets/images/vv-profile.jpg","datePublished":"2026-06-03"}</script>
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/inferrouter-04-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"InferRouter Part 4: Observability","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/inferrouter-04.html","image":"https://vvidman.github.io/assets/images/infographics/inferrouter-04-og.png","datePublished":"2026-06-03"}</script>
 <link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -72,15 +72,11 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <p class="post-lead"><span data-l="en">How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.</span><span data-l="hu">Hogyan teszi láthatóvá az InferRouter a belső állapotát — provider-független JSONL műveleti napló és három HTTP végpont az élő állapothoz, a kvótastatisztikákhoz és a naplótörténethez.</span></p>
 <p class="post-meta">2026-06-03 · <span data-l="en">3 min read</span><span data-l="hu">3 perc olvasás</span> · EN / HU</p>
 </header>
-
+<figure><img src="/assets/images/infographics/inferrouter-04-square.png" alt="InferRouter Part 4: Observability — infographic" loading="lazy" width="1200" height="1200"></figure>
 <div class="prose" data-l="en">
 <section class="page-section" data-key="intro">
   <p><a href="/posts/inferrouter-03.html">Part 3</a> covered secret management. The core concerns — inference strategy, execution loop, key handling — are now closed. This part covers the remaining question: once the proxy is running, how do you know what is actually happening inside it?</p>
 <p>InferRouter answers this in two layers. The first is the operation log: a structured JSONL file that captures every inference event in a provider-agnostic format. The second is three HTTP endpoints that expose live internal state without requiring log file access.</p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/inferrouter-04-infograph.png" alt="InferRouter Part 4 infographic: observability" /></p>
 
 </section>
 <section class="page-section" data-key="log">
@@ -122,10 +118,6 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <section class="page-section" data-key="intro">
   <p>A <a href="/posts/inferrouter-03.html">3. rész</a> a titkos kulcsok kezelését tárgyalta. Az alapvető szempontok — inferencia stratégia, végrehajtási ciklus, kulcs kezelés — most már le vannak zárva. Ez a rész a fennmaradó kérdéssel foglalkozik: ha a proxy fut, hogyan tudod, mi történik valójában benne?</p>
 <p>Az InferRouter erre két rétegen válaszol. Az első a műveleti napló: egy strukturált JSONL fájl, amely minden inferencia eseményt provider-agnosztikus formátumban rögzít. A második három HTTP végpont, amelyek az élő belső állapotot teszik láthatóvá naplófájl-hozzáférés nélkül.</p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/inferrouter-04-infograph.png" alt="InferRouter 4. rész infografika: megfigyelhetőség" /></p>
 
 </section>
 <section class="page-section" data-key="log">

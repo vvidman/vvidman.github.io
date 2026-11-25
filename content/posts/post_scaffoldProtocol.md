@@ -9,6 +9,8 @@ description_hu: Hogyan tartja a Scaffold Protocol az embert orchestratorként, m
 date: 2026-03-20
 series: Scaffold Protocol
 part: 1
+image: /assets/images/infographics/scaffold-protocol-the-ai-executes-you-decide-square.png
+og_image: /assets/images/infographics/scaffold-protocol-the-ai-executes-you-decide-og.png
 ---
 
 :::section title
@@ -52,18 +54,6 @@ Ez az a feszültség, amit a Scaffold Protocol feloldani próbál. Nem az volt a
 A válasz architekturális lett. A rendszernek két elkülönített szerepe van: egy **human orchestrator**, aki eldönti mi következik, és egy **AI transzformációs motor**, amely egyetlen feladatot hajt végre egyszerre. Nem többet.
 
 Ez a cikk arról szól, hogyan működik ez az architektúra, hol törik el, és mit tanított öt éles tesztfutás az automatizáció és az ítéletalkotás határáról.
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![Scaffold Protocol infographic: the AI executes, you decide](/assets/images/post-sp01-infographics.png)
-:::lang
-
-:::lang hu
-![Scaffold Protocol infografika: az AI végrehajt, te döntesz](/assets/images/post-sp01-infographics.png)
 :::lang
 
 :::section

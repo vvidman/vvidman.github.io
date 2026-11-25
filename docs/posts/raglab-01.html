@@ -20,12 +20,12 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <meta property="og:description" content="What I learned by building a RAG pipeline in .NET without a framework — every component written from scratch, every decision made consciously.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="hu_HU">
-<meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/raglab-01-og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Viktor Vidman – Building a RAG Pipeline from Scratch">
 <meta name="twitter:description" content="What I learned by building a RAG pipeline in .NET without a framework — every component written from scratch, every decision made consciously.">
-<meta name="twitter:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Building a RAG Pipeline from Scratch","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/raglab-01.html","image":"https://vvidman.github.io/assets/images/vv-profile.jpg","datePublished":"2026-04-05"}</script>
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/raglab-01-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Building a RAG Pipeline from Scratch","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/raglab-01.html","image":"https://vvidman.github.io/assets/images/infographics/raglab-01-og.png","datePublished":"2026-04-05"}</script>
 <link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -69,16 +69,12 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <p class="post-lead"><span data-l="en">What I learned by building a RAG pipeline in .NET without a framework — every component written from scratch, every decision made consciously.</span><span data-l="hu">Amit egy RAG pipeline keretrendszer nélküli, .NET-ben történő felépítéséből tanultam — minden komponens az alapoktól megírva, minden döntés tudatosan meghozva.</span></p>
 <p class="post-meta">2026-04-05 · <span data-l="en">9 min read</span><span data-l="hu">8 perc olvasás</span> · EN / HU</p>
 </header>
-
+<figure><img src="/assets/images/infographics/raglab-01-square.png" alt="Building a RAG Pipeline from Scratch — infographic" loading="lazy" width="1200" height="1200"></figure>
 <div class="prose" data-l="en">
 <section class="page-section" data-key="intro">
   <h2 id="problem-statement">Problem statement</h2>
 <p>There is a pattern I keep seeing in the developer community around AI tooling. Someone discovers LangChain or LlamaIndex, chains together a few abstractions, gets a working demo in an afternoon, and walks away feeling like they understand Retrieval-Augmented Generation. Then someone asks them why their retrieval is returning irrelevant results, or why swapping the embedding model broke everything, and the answer is silence.</p>
 <p>I did not want that to be me. So I built RagLab — a hand-crafted RAG pipeline in .NET/C#, with no high-level framework magic. Every component written from scratch, every decision made consciously. This is what I learned.</p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/raglab-infographic-01.png" alt="RagLab infographic: building a RAG pipeline from scratch" /></p>
 
 </section>
 <section class="page-section" data-key="what-is-rag">
@@ -99,14 +95,6 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <pre><code>Question → Embedder → Vector → Search → Top Chunks → Generator → Answer
 </code></pre>
 <p>Notice that the embedder appears in both flows. This is not a coincidence — it is one of the most important architectural constraints in any RAG system. The same embedding model must be used during indexing and querying. Vectors produced by different models live in incompatible mathematical spaces. Swap the embedding model and you have to re-index everything from scratch.</p>
-
-</section>
-<section class="page-section" data-key="fig-two-flows">
-  <p><img src="/assets/images/raglab-infographic-02.png" alt="RagLab infographic: two flows, one shared constraint" /></p>
-
-</section>
-<section class="page-section" data-key="fig-components">
-  <p><img src="/assets/images/raglab-infographic-03.png" alt="RagLab infographic: five components, one responsibility each" /></p>
 
 </section>
 <section class="page-section" data-key="component-loader">
@@ -227,10 +215,6 @@ slice.Register(builder.Services, builder.Configuration);
 <p>Én nem akartam ilyen lenni. Ezért építettem meg a RagLab-et — egy kézzel írt RAG pipeline-t .NET/C#-ban, framework varázslat nélkül. Minden komponens nulláról megírva, minden döntés tudatosan meghozva. Ez az, amit megtanultam.</p>
 
 </section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/raglab-infographic-01.png" alt="RagLab infografika: RAG építése az alapoktól" /></p>
-
-</section>
 <section class="page-section" data-key="what-is-rag">
   <h2 id="mi-az-a-rag-es-miert-fontos">Mi az a RAG, és miért fontos?</h2>
 <p>A nagy nyelvi modellek erősek, de tudásuk befagy a tanítás időpontjában. Kérdezz egy modellt valamiről, ami múlt hónapban történt, vagy a céged belső szerverén lévő dokumentumról — és vagy hallucinálja a választ, vagy bevallja, hogy nem tudja.</p>
@@ -249,14 +233,6 @@ slice.Register(builder.Services, builder.Configuration);
 <pre><code>Kérdés → Embedder → Vektor → Keresés → Top Chunks → Generator → Válasz
 </code></pre>
 <p>Figyeld meg, hogy az embedder mindkét folyamatban szerepel. Ez nem véletlen — ez az egyik legfontosabb architektúrális megszorítás bármely RAG rendszerben. Ugyanazt az embedding modellt kell használni az indexeléskor és a lekérdezéskor. Különböző modellek által előállított vektorok inkompatibilis matematikai terekben élnek. Cseréld ki az embedding modellt, és mindent újra kell indexelned nulláról.</p>
-
-</section>
-<section class="page-section" data-key="fig-two-flows">
-  <p><img src="/assets/images/raglab-infographic-02.png" alt="RagLab infografika: két folyamat, egy közös megkötés" /></p>
-
-</section>
-<section class="page-section" data-key="fig-components">
-  <p><img src="/assets/images/raglab-infographic-03.png" alt="RagLab infografika: öt komponens, mindegyiknek egy felelőssége" /></p>
 
 </section>
 <section class="page-section" data-key="component-loader">

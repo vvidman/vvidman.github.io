@@ -9,6 +9,8 @@ layout: page
 date: 2026-03-03
 series: Site Generator
 part: 3
+image: /assets/images/infographics/generator-pipeline-to-github-pages-square.png
+og_image: /assets/images/infographics/generator-pipeline-to-github-pages-og.png
 ---
 
 :::section title

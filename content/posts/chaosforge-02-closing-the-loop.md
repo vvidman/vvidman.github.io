@@ -9,6 +9,8 @@ layout: page
 date: 2026-03-26
 series: ChaosForge
 part: 2
+image: /assets/images/infographics/chaosforge-closing-the-loop-square.png
+og_image: /assets/images/infographics/chaosforge-closing-the-loop-og.png
 ---
 
 :::section intro
@@ -269,18 +271,6 @@ Reasoning partner
 
 Minden nyíl explicit és dokumentált. Senki fejében nincs semmi elrejtve.
 
-:::lang
-
-:::section
-
-:::section fig-closed-loop
-
-:::lang en
-![Closing the loop infographic: reasoning model and coding assistant](/assets/images/closed-loop-infographics.png)
-:::lang
-
-:::lang hu
-![Zárd le a hurkot infografika: reasoning modell és kódoló asszisztens](/assets/images/closed-loop-infographics.png)
 :::lang
 
 :::section

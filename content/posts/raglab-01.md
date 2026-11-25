@@ -8,6 +8,8 @@ layout: page
 date: 2026-04-05
 series: RagLab
 part: 1
+image: /assets/images/infographics/raglab-01-square.png
+og_image: /assets/images/infographics/raglab-01-og.png
 ---
 
 :::section intro
@@ -26,18 +28,6 @@ I did not want that to be me. So I built RagLab — a hand-crafted RAG pipeline 
 Egy mintát látok újra és újra az AI eszközök körüli fejlesztői közösségben. Valaki felfedezi a LangChain-t vagy a LlamaIndex-et, összefűz néhány absztrakciót, egy délután alatt kap egy működő demót — és azzal a meggyőződéssel megy el, hogy érti a Retrieval-Augmented Generation-t. Aztán valaki megkérdezi, miért ad vissza irreleváns eredményeket a retrieval, vagy miért tört el minden, amikor kicserélte az embedding modellt. Csönd a válasz.
 
 Én nem akartam ilyen lenni. Ezért építettem meg a RagLab-et — egy kézzel írt RAG pipeline-t .NET/C#-ban, framework varázslat nélkül. Minden komponens nulláról megírva, minden döntés tudatosan meghozva. Ez az, amit megtanultam.
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![RagLab infographic: building a RAG pipeline from scratch](/assets/images/raglab-infographic-01.png)
-:::lang
-
-:::lang hu
-![RagLab infografika: RAG építése az alapoktól](/assets/images/raglab-infographic-01.png)
 :::lang
 
 :::section
@@ -115,30 +105,6 @@ Figyeld meg, hogy az embedder mindkét folyamatban szerepel. Ez nem véletlen �
 
 :::section
 
-:::section fig-two-flows
-
-:::lang en
-![RagLab infographic: two flows, one shared constraint](/assets/images/raglab-infographic-02.png)
-:::lang
-
-:::lang hu
-![RagLab infografika: két folyamat, egy közös megkötés](/assets/images/raglab-infographic-02.png)
-:::lang
-
-:::section
-
-
-:::section fig-components
-
-:::lang en
-![RagLab infographic: five components, one responsibility each](/assets/images/raglab-infographic-03.png)
-:::lang
-
-:::lang hu
-![RagLab infografika: öt komponens, mindegyiknek egy felelőssége](/assets/images/raglab-infographic-03.png)
-:::lang
-
-:::section
 
 
 :::section component-loader

@@ -9,6 +9,8 @@ layout: page
 date: 2026-03-02
 series: Site Generator
 part: 2
+image: /assets/images/infographics/bilingual-markdown-dsl-square.png
+og_image: /assets/images/infographics/bilingual-markdown-dsl-og.png
 ---
 
 :::section title

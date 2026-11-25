@@ -8,6 +8,8 @@ layout: page
 date: 2026-04-13
 series: SourceRAG
 part: 1
+image: /assets/images/infographics/sourcerag-00-square.png
+og_image: /assets/images/infographics/sourcerag-00-og.png
 ---
 
 :::section intro
@@ -26,18 +28,6 @@ Az AI kódoló asszisztensek egyre képesebbek. De hasznosságuk teljes egészé
 
 Ez egy rendszer tervdokumentuma, amelyet soha nem építettem meg. CaKB-nak neveztem — Codebase-aware Knowledge Base. Megterveztem, belső körben bemutattam, és nem valósult meg. De a mögötte lévő gondolkodás nem tűnt el — SourceRAG-gá vált.
 
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![SourceRAG infographic: making a legacy codebase queryable by AI](/assets/images/sourcerag-00.png)
-:::lang
-
-:::lang hu
-![SourceRAG infografika: legacy kódbázis, amit az AI is ismer](/assets/images/sourcerag-00.png)
 :::lang
 
 :::section

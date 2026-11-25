@@ -9,6 +9,8 @@ layout: page
 date: 2026-03-22
 series: ChaosForge
 part: 1
+image: /assets/images/infographics/chaosforge-let-go-of-the-reins-square.png
+og_image: /assets/images/infographics/chaosforge-let-go-of-the-reins-og.png
 ---
 
 :::section intro
@@ -41,18 +43,6 @@ Akkor tettem fel a valódi kérdést: **mi van ha a cél nem minden lépés kont
 
 Ez a ChaosForge.
 
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![ChaosForge infographic: let go of the reins](/assets/images/chaosforge-infographic-01.png)
-:::lang
-
-:::lang hu
-![ChaosForge infografika: engedd el a gyeplőt](/assets/images/chaosforge-infographic-01.png)
 :::lang
 
 :::section

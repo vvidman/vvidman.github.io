@@ -8,6 +8,8 @@ description_hu: Hol élnek az API kulcsok az InferRouterben — miért nem körn
 date: 2026-06-03
 series: InferRouter
 part: 3
+image: /assets/images/infographics/inferrouter-03-square.png
+og_image: /assets/images/infographics/inferrouter-03-og.png
 ---
 
 :::section intro
@@ -22,18 +24,6 @@ This is a question that is easy to get wrong.
 A [2. rész](/posts/inferrouter-02.html) az inferencia stratégiákkal foglalkozott: hogyan választja ki a ProviderOrchestrator a providereket és irányítja a kéréseket. A végrehajtási ciklus tudja, melyik providereket próbálja meg. Amit kérés időpontban még szükséges: minden cloud provider API kulcsa.
 
 Ez egy könnyen elrontható kérdés.
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![InferRouter Part 3 infographic: secret management](/assets/images/inferrouter-03-infograph.png)
-:::lang
-
-:::lang hu
-![InferRouter 3. rész infografika: titkos kulcsok kezelése](/assets/images/inferrouter-03-infograph.png)
 :::lang
 
 :::section

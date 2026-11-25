@@ -20,12 +20,12 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <meta property="og:description" content="Why managing LLM providers per project breaks down — and how a single self-hosted proxy with strategy-based inference routing solves it.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="hu_HU">
-<meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/inferrouter-01-og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Viktor Vidman – InferRouter: One Endpoint, Any Provider">
 <meta name="twitter:description" content="Why managing LLM providers per project breaks down — and how a single self-hosted proxy with strategy-based inference routing solves it.">
-<meta name="twitter:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"InferRouter: One Endpoint, Any Provider","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/inferrouter-01.html","image":"https://vvidman.github.io/assets/images/vv-profile.jpg","datePublished":"2026-06-03"}</script>
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/inferrouter-01-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"InferRouter: One Endpoint, Any Provider","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/inferrouter-01.html","image":"https://vvidman.github.io/assets/images/infographics/inferrouter-01-og.png","datePublished":"2026-06-03"}</script>
 <link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -72,17 +72,13 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <p class="post-lead"><span data-l="en">Why managing LLM providers per project breaks down — and how a single self-hosted proxy with strategy-based inference routing solves it.</span><span data-l="hu">Miért omlik össze az LLM providerek projektenkénti kezelése — és hogyan oldja meg ezt egyetlen self-hosted proxy stratégia alapú inferencia routinggal.</span></p>
 <p class="post-meta">2026-06-03 · <span data-l="en">3 min read</span><span data-l="hu">3 perc olvasás</span> · EN / HU</p>
 </header>
-
+<figure><img src="/assets/images/infographics/inferrouter-01-square.png" alt="InferRouter: One Endpoint, Any Provider — infographic" loading="lazy" width="1200" height="1200"></figure>
 <div class="prose" data-l="en">
 <section class="page-section" data-key="intro">
   <p>Running multiple AI projects in parallel means every one of them needs LLM inference. For a while, every one of them handled it separately — which provider to call, how to manage the API key, what to do when a quota runs out.</p>
 <p>The duplication wasn't incidental. It was structural: provider management was treated as application logic rather than infrastructure. The fix is to move it one layer up.</p>
 <p><strong>InferRouter</strong> is a self-hosted proxy that exposes a single OpenAI-compatible HTTP endpoint. Behind it, a configurable inference strategy routes each request across one or more cloud providers. When all of them are unavailable or exhausted, a local quantized model — running in-process via LlamaSharp — handles the call. The caller sees none of this.</p>
 <p>Available on Github: <a href="https://github.com/vvidman/InferRouter">InferRouter</a></p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/inferrouter-01-infograph.png" alt="InferRouter Part 1 infographic: one endpoint, any provider" /></p>
 
 </section>
 <section class="page-section" data-key="problem">
@@ -130,10 +126,6 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <p>A duplikáció nem véletlen volt. Strukturális volt: a provider menedzsmentet alkalmazáslogikának tekintették, nem infrastruktúrának. A megoldás az, hogy egy réteggel feljebb toljuk.</p>
 <p>Az <strong>InferRouter</strong> egy self-hosted proxy, amely egyetlen OpenAI-kompatibilis HTTP végpontot exponál. Mögötte egy konfigurálható inferencia stratégia irányítja az egyes kéréseket egy vagy több cloud provider között. Ha mindegyik elérhetetlen vagy kimerült, egy helyi kvantált modell — amely in-process fut LlamaSharp segítségével — kezeli a hívást. A hívó fél ebből semmit nem érzékel.</p>
 <p>Elérhető a Githubon: <a href="https://github.com/vvidman/InferRouter">InferRouter</a></p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/inferrouter-01-infograph.png" alt="InferRouter 1. rész infografika: egy végpont, bármilyen provider" /></p>
 
 </section>
 <section class="page-section" data-key="problem">

@@ -20,12 +20,12 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <meta property="og:description" content="How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="hu_HU">
-<meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/inferrouter-02-og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Viktor Vidman – InferRouter Part 2: Inference Strategies">
 <meta name="twitter:description" content="How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.">
-<meta name="twitter:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"InferRouter Part 2: Inference Strategies","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/inferrouter-02.html","image":"https://vvidman.github.io/assets/images/vv-profile.jpg","datePublished":"2026-06-03"}</script>
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/inferrouter-02-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"InferRouter Part 2: Inference Strategies","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/inferrouter-02.html","image":"https://vvidman.github.io/assets/images/infographics/inferrouter-02-og.png","datePublished":"2026-06-03"}</script>
 <link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -72,16 +72,12 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <p class="post-lead"><span data-l="en">How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.</span><span data-l="hu">Hogyan dönti el az InferRouter, melyik provider kezel egy kérést — három konfigurálható inferencia stratégia, a ProviderOrchestrator végrehajtási ciklusa, és a helyi fallback, amely mindig az utolsó.</span></p>
 <p class="post-meta">2026-06-03 · <span data-l="en">4 min read</span><span data-l="hu">4 perc olvasás</span> · EN / HU</p>
 </header>
-
+<figure><img src="/assets/images/infographics/inferrouter-02-square.png" alt="InferRouter Part 2: Inference Strategies — infographic" loading="lazy" width="1200" height="1200"></figure>
 <div class="prose" data-l="en">
 <section class="page-section" data-key="intro">
   <p><a href="/posts/inferrouter-01.html">Part 1</a> described the concept: one proxy, one endpoint, strategy-based routing across any number of OpenAI-compatible providers. This part goes into how that routing actually works.</p>
 <p>InferRouter does not have a hardcoded fallback chain. It has an inference strategy. The strategy is responsible for one thing: given the current state of the configured providers, return an ordered list of candidates to try. Everything else — executing attempts, handling errors, logging, rate limit tracking — belongs to the execution loop.</p>
 <p>The local LlamaSharp model is not part of any strategy. It is the guaranteed fallback that the execution loop appends after the strategy's list is exhausted.</p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/inferrouter-02-infograph.png" alt="InferRouter Part 2 infographic: inference strategies" /></p>
 
 </section>
 <section class="page-section" data-key="architecture">
@@ -153,10 +149,6 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
   <p>Az <a href="/posts/inferrouter-01.html">1. rész</a> leírta a koncepciót: egy proxy, egy végpont, stratégia alapú routing bármennyi OpenAI-kompatibilis provideren át. Ez a rész arról szól, hogyan működik ez a routing valójában.</p>
 <p>Az InferRouternek nincs beégetett fallback lánca. Inferencia stratégiája van. A stratégia egyetlen dologért felelős: az aktuális provider állapot alapján visszaad egy sorrendezett jelölt listát, amelyet meg kell próbálni. Minden más — kísérletek végrehajtása, hibakezelés, naplózás, rate limit követés — a végrehajtási ciklushoz tartozik.</p>
 <p>A helyi LlamaSharp modell nem része egyetlen stratégiának sem. Ez a garantált fallback, amelyet a végrehajtási ciklus hozzáfűz a stratégia listájának kimerítése után.</p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/inferrouter-02-infograph.png" alt="InferRouter 2. rész infografika: inferencia stratégiák" /></p>
 
 </section>
 <section class="page-section" data-key="architecture">

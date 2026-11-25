@@ -8,6 +8,8 @@ description_hu: Hogyan teszi láthatóvá az InferRouter a belső állapotát �
 date: 2026-06-03
 series: InferRouter
 part: 4
+image: /assets/images/infographics/inferrouter-04-square.png
+og_image: /assets/images/infographics/inferrouter-04-og.png
 ---
 
 :::section intro
@@ -22,18 +24,6 @@ InferRouter answers this in two layers. The first is the operation log: a struct
 A [3. rész](/posts/inferrouter-03.html) a titkos kulcsok kezelését tárgyalta. Az alapvető szempontok — inferencia stratégia, végrehajtási ciklus, kulcs kezelés — most már le vannak zárva. Ez a rész a fennmaradó kérdéssel foglalkozik: ha a proxy fut, hogyan tudod, mi történik valójában benne?
 
 Az InferRouter erre két rétegen válaszol. Az első a műveleti napló: egy strukturált JSONL fájl, amely minden inferencia eseményt provider-agnosztikus formátumban rögzít. A második három HTTP végpont, amelyek az élő belső állapotot teszik láthatóvá naplófájl-hozzáférés nélkül.
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![InferRouter Part 4 infographic: observability](/assets/images/inferrouter-04-infograph.png)
-:::lang
-
-:::lang hu
-![InferRouter 4. rész infografika: megfigyelhetőség](/assets/images/inferrouter-04-infograph.png)
 :::lang
 
 :::section

@@ -6,6 +6,8 @@ description: How to turn an old machine or WSL2 into a personal Docker host, and
 description_hu: Hogyan lehet egy régi gépből vagy a WSL2-ből személyes Docker hosztot csinálni, és olyan deploy workflow-t felállítani, amely mindkettőn ugyanúgy működik.
 layout: page
 date: 2026-05-31
+image: /assets/images/infographics/homelab-docker-server-square.png
+og_image: /assets/images/infographics/homelab-docker-server-og.png
 ---
 
 :::section intro

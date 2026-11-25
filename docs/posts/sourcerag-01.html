@@ -20,12 +20,12 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <meta property="og:description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="hu_HU">
-<meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/sourcerag-01-og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Viktor Vidman – VCS as Proof Store">
 <meta name="twitter:description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
-<meta name="twitter:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"VCS as Proof Store","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/sourcerag-01.html","image":"https://vvidman.github.io/assets/images/vv-profile.jpg","datePublished":"2026-04-15"}</script>
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/sourcerag-01-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"VCS as Proof Store","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/sourcerag-01.html","image":"https://vvidman.github.io/assets/images/infographics/sourcerag-01-og.png","datePublished":"2026-04-15"}</script>
 <link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -70,17 +70,13 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <p class="post-lead"><span data-l="en">Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.</span><span data-l="hu">Miért másoljuk a forrástartalmat egy proof adatbázisba, ha a verziókezelő már mindent követ? A SourceRAG magát a VCS-t használja proof tárként — tartalomduplikáció nélkül, teljes nyomon követhetőséggel.</span></p>
 <p class="post-meta">2026-04-15 · <span data-l="en">8 min read</span><span data-l="hu">7 perc olvasás</span> · EN / HU</p>
 </header>
-
+<figure><img src="/assets/images/infographics/sourcerag-01-square.png" alt="VCS as Proof Store — infographic" loading="lazy" width="1200" height="1200"></figure>
 <div class="prose" data-l="en">
 <section class="page-section" data-key="intro">
   <p>Every RAG system I've built or studied follows the same pattern. You have a source repository. You extract the content. You store it in a proof database. You embed it. You search it. Two copies of everything, an ongoing sync obligation, and a proof store you have to maintain yourself.</p>
 <p>I kept coming back to the same question: the overhead is real, but is it necessary?</p>
 <p>Git already knows every file, every method, every author, every commit message — with exact timestamps and full revision history. If I'm already on source control, I'm already maintaining a proof store. I just haven't been querying it directly.</p>
 <p>SourceRAG is my attempt to test this hypothesis. This is a concept project — README and architecture decisions are in place, implementation is underway. I'm writing about it as I build.</p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/sourcerag_part1.png" alt="SourceRAG Part 2 infographic: VCS as proof store" /></p>
 
 </section>
 <section class="page-section" data-key="problem">
@@ -221,10 +217,6 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <p>Mindig visszatértem ugyanahhoz a kérdéshez: az overhead valós, de valóban szükséges?</p>
 <p>A git már tudja az összes fájlt, minden metódust, minden szerzőt, minden commit üzenetet — pontos időbélyeggel és teljes revíziótörténettel. Ha már source control alatt van a kódom, már fenntartok egy proof tárat. Csak nem kérdeztem le közvetlenül.</p>
 <p>A SourceRAG ennek a hipotézisnek a tesztelése. Ez egy koncepcióprojekt — a README és az architektúrális döntések megvannak, az implementáció folyamatban van. Menet közben írok róla.</p>
-
-</section>
-<section class="page-section" data-key="fig-overview">
-  <p><img src="/assets/images/sourcerag_part1.png" alt="SourceRAG 2. rész infografika: VCS mint proof tár" /></p>
 
 </section>
 <section class="page-section" data-key="problem">

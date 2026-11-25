@@ -6,6 +6,8 @@ description: Why older machines refuse to boot after a successful Linux installa
 description_hu: Miért nem bootolnak a régebbi gépek egy sikeres Linux-telepítés után, és hogyan javítható ez a Debian klasszikus telepítőjével.
 layout: page
 date: 2026-05-31
+image: /assets/images/infographics/homelab-legacy-bios-square.png
+og_image: /assets/images/infographics/homelab-legacy-bios-og.png
 ---
 
 :::section intro

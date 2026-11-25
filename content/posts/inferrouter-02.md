@@ -8,6 +8,8 @@ description_hu: Hogyan dönti el az InferRouter, melyik provider kezel egy kér�
 date: 2026-06-03
 series: InferRouter
 part: 2
+image: /assets/images/infographics/inferrouter-02-square.png
+og_image: /assets/images/infographics/inferrouter-02-og.png
 ---
 
 :::section intro
@@ -26,18 +28,6 @@ Az [1. rész](/posts/inferrouter-01.html) leírta a koncepciót: egy proxy, egy 
 Az InferRouternek nincs beégetett fallback lánca. Inferencia stratégiája van. A stratégia egyetlen dologért felelős: az aktuális provider állapot alapján visszaad egy sorrendezett jelölt listát, amelyet meg kell próbálni. Minden más — kísérletek végrehajtása, hibakezelés, naplózás, rate limit követés — a végrehajtási ciklushoz tartozik.
 
 A helyi LlamaSharp modell nem része egyetlen stratégiának sem. Ez a garantált fallback, amelyet a végrehajtási ciklus hozzáfűz a stratégia listájának kimerítése után.
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![InferRouter Part 2 infographic: inference strategies](/assets/images/inferrouter-02-infograph.png)
-:::lang
-
-:::lang hu
-![InferRouter 2. rész infografika: inferencia stratégiák](/assets/images/inferrouter-02-infograph.png)
 :::lang
 
 :::section

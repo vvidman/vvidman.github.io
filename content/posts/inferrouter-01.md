@@ -8,6 +8,8 @@ description_hu: Miért omlik össze az LLM providerek projektenkénti kezelése 
 date: 2026-06-03
 series: InferRouter
 part: 1
+image: /assets/images/infographics/inferrouter-01-square.png
+og_image: /assets/images/infographics/inferrouter-01-og.png
 ---
 
 :::section intro
@@ -31,18 +33,6 @@ A duplikáció nem véletlen volt. Strukturális volt: a provider menedzsmentet 
 Az **InferRouter** egy self-hosted proxy, amely egyetlen OpenAI-kompatibilis HTTP végpontot exponál. Mögötte egy konfigurálható inferencia stratégia irányítja az egyes kéréseket egy vagy több cloud provider között. Ha mindegyik elérhetetlen vagy kimerült, egy helyi kvantált modell — amely in-process fut LlamaSharp segítségével — kezeli a hívást. A hívó fél ebből semmit nem érzékel.
 
 Elérhető a Githubon: [InferRouter](https://github.com/vvidman/InferRouter)
-:::lang
-
-:::section
-
-:::section fig-overview
-
-:::lang en
-![InferRouter Part 1 infographic: one endpoint, any provider](/assets/images/inferrouter-01-infograph.png)
-:::lang
-
-:::lang hu
-![InferRouter 1. rész infografika: egy végpont, bármilyen provider](/assets/images/inferrouter-01-infograph.png)
 :::lang
 
 :::section
