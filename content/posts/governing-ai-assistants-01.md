@@ -202,7 +202,7 @@ Ehhez nem kell új infrastruktúra. Egy rövid oldal, egy egyértelmű gazda és
 
 - **Not a ranking of people.** Junior developers are not restricted to cheap models. The class of work decides, not seniority.
 - **Not a ban list.** Excluding models, for licensing, data-handling or quality reasons, is a separate decision with its own criteria. Tiers organise what is already allowed.
-- **Not permanent.** A tier map is a snapshot. Part 3 of this series covers how to keep it alive.
+- **Not permanent.** A tier map is a snapshot. [Part 3](/posts/governing-ai-assistants-03-model-register.html) of this series covers how to keep it alive.
 :::lang
 
 :::lang hu
@@ -210,7 +210,7 @@ Ehhez nem kell új infrastruktúra. Egy rövid oldal, egy egyértelmű gazda és
 
 - **Nem az emberek rangsora.** A junior fejlesztők nincsenek az olcsó modellekre korlátozva. A munka típusa dönt, nem a tapasztalat.
 - **Nem tiltólista.** Modellek kizárása licenc, adatkezelés vagy minőség miatt külön döntés, saját szempontokkal. A szintek azt rendezik, ami már engedélyezett.
-- **Nem végleges.** A szinttérkép egy pillanatkép. A sorozat 3. része arról szól, hogyan tartsd életben.
+- **Nem végleges.** A szinttérkép egy pillanatkép. A sorozat [3. része](/posts/governing-ai-assistants-03-model-register.html) arról szól, hogyan tartsd életben.
 :::lang
 
 :::section
@@ -250,13 +250,13 @@ Mielőtt közzéteszel egy szinttérképet, legyen válaszod ezekre:
 :::lang en
 ## Next: choosing the models
 
-A tier map only says where a model goes. It does not say which model deserves the slot. Most organisations have to make that call without an internal evaluation lab. Part 2 is about doing it honestly anyway: public benchmarks as a filter rather than a verdict, and an evaluation library that grows out of real decisions.
+A tier map only says where a model goes. It does not say which model deserves the slot. Most organisations have to make that call without an internal evaluation lab. [Part 2](/posts/governing-ai-assistants-02-choosing-models.html) is about doing it honestly anyway: public benchmarks as a filter rather than a verdict, and an evaluation library that grows out of real decisions.
 :::lang
 
 :::lang hu
 ## Következik: a modellek kiválasztása
 
-A szinttérkép csak azt mondja meg, hová kerül egy modell. Azt nem, hogy melyik modell érdemli meg a helyet. A legtöbb szervezetnek ezt saját mérőkörnyezet nélkül kell eldöntenie. A 2. rész arról szól, hogyan lehet ezt mégis becsületesen csinálni: a publikus benchmarkok szűrőként, nem ítéletként, és egy eval-könyvtár, ami valódi döntésekből nő ki.
+A szinttérkép csak azt mondja meg, hová kerül egy modell. Azt nem, hogy melyik modell érdemli meg a helyet. A legtöbb szervezetnek ezt saját mérőkörnyezet nélkül kell eldöntenie. A [2. rész](/posts/governing-ai-assistants-02-choosing-models.html) arról szól, hogyan lehet ezt mégis becsületesen csinálni: a publikus benchmarkok szűrőként, nem ítéletként, és egy eval-könyvtár, ami valódi döntésekből nő ki.
 :::lang
 
 :::section

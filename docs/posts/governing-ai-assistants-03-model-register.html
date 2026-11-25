@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en" data-theme="light" data-title-en="Viktor Vidman – The Model Register Is a Living Document" data-title-hu="Viktor Vidman – A modellregiszter élő dokumentum">
+<head>
+<script>(function(){var d=document.documentElement,l,t;try{l=localStorage.getItem('lang');t=localStorage.getItem('theme')}catch(e){}
+if(l!=='en'&&l!=='hu'){l=(navigator.language||'').toLowerCase().indexOf('hu')===0?'hu':'en'}
+if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-theme',t)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viktor Vidman – The Model Register Is a Living Document</title>
+<meta name="description" content="How to keep an organisation&#39;s AI model choices current: what a model register records, the five states a model moves through, two review rhythms, and how to handle a model that goes away.">
+<meta name="author" content="Viktor Vidman">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#F4F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B121B" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://vvidman.github.io/posts/governing-ai-assistants-03-model-register.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vvidman.github.io/posts/governing-ai-assistants-03-model-register.html">
+<meta property="og:title" content="Viktor Vidman – The Model Register Is a Living Document">
+<meta property="og:description" content="How to keep an organisation&#39;s AI model choices current: what a model register records, the five states a model moves through, two review rhythms, and how to handle a model that goes away.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="hu_HU">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-03-model-register-og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Viktor Vidman – The Model Register Is a Living Document">
+<meta name="twitter:description" content="How to keep an organisation&#39;s AI model choices current: what a model register records, the five states a model moves through, two review rhythms, and how to handle a model that goes away.">
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-03-model-register-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Model Register Is a Living Document","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/governing-ai-assistants-03-model-register.html","image":"https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-03-model-register-og.png","datePublished":"2026-11-25"}</script>
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Viktor Vidman" href="/feed.xml">
+<script src="/assets/javascript/site.js" defer></script>
+
+</head>
+<body>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href="/"><span>~/</span>vvidman</a>
+<nav class="nav" aria-label="Main">
+<a href="/posts/" aria-current="page">/blog</a>
+<a href="/about/">/about</a>
+</nav>
+<div class="toggles">
+<div class="seg" role="group" aria-label="Language">
+<button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+<button type="button" data-set-lang="hu" aria-pressed="false">HU</button>
+</div>
+<button type="button" class="icon-btn" data-toggle-theme aria-label="Toggle dark mode">
+<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+</div>
+</div>
+</header>
+
+<main>
+<div class="post-layout has-series">
+<details class="series-tree" open>
+<summary><span class="st-name">Governing AI Coding Assistants</span><span class="st-count">3/3</span></summary>
+<a href="/posts/governing-ai-assistants-01-model-tiers.html"><span class="n">01</span><span data-l="en">Not Everyone Needs the Frontier Model</span><span data-l="hu">Nem kell mindenkinek a legerősebb modell</span></a>
+<a href="/posts/governing-ai-assistants-02-choosing-models.html"><span class="n">02</span><span data-l="en">Choosing Models Without an Eval Lab</span><span data-l="hu">Modellválasztás saját mérőkörnyezet nélkül</span></a>
+<a href="/posts/governing-ai-assistants-03-model-register.html" aria-current="page"><span class="n">03</span><span data-l="en">The Model Register Is a Living Document</span><span data-l="hu">A modellregiszter élő dokumentum</span></a>
+</details>
+<article class="article">
+<header class="post-head">
+<div class="pills"><span class="pill pill-accent">Governing AI Coding Assistants · 3/3</span></div>
+<h1 class="post-title"><span data-l="en">The Model Register Is a Living Document</span><span data-l="hu">A modellregiszter élő dokumentum</span></h1>
+<p class="post-lead"><span data-l="en">How to keep an organisation&#39;s AI model choices current: what a model register records, the five states a model moves through, two review rhythms, and how to handle a model that goes away.</span><span data-l="hu">Hogyan maradnak naprakészek egy szervezet AI-modelldöntései: mit rögzít a modellregiszter, milyen öt állapoton megy át egy modell, két felülvizsgálati ritmus, és mi a teendő, ha egy modell megszűnik.</span></p>
+<p class="post-meta">2026-11-25 · <span data-l="en">4 min read</span><span data-l="hu">4 perc olvasás</span> · EN / HU</p>
+</header>
+<figure><img src="/assets/images/infographics/governing-ai-assistants-03-model-register-square.png" alt="The Model Register Is a Living Document — infographic" loading="lazy" width="1200" height="1200"></figure>
+<div class="prose" data-l="en">
+<section class="page-section" data-key="intro">
+  <h2 id="snapshots-go-stale">Snapshots go stale</h2>
+<p><a href="/posts/governing-ai-assistants-01-model-tiers.html">Part 1</a> built a tier map. <a href="/posts/governing-ai-assistants-02-choosing-models.html">Part 2</a> filled its slots with decisions that each carry a date. Both are snapshots.</p>
+<p>The models behind them don't stand still. New ones appear, prices change, behaviour shifts between versions, and vendors retire models on their own schedule, not yours.</p>
+<p>A register that isn't maintained is worse than none. Developers notice the first time it recommends a model that no longer exists, and from then on they stop reading it. Everything from the first two parts depends on the register staying worth trusting.</p>
+
+</section>
+<section class="page-section" data-key="contents">
+  <h2 id="what-the-register-records">What the register records</h2>
+<p>Keep it to one table that fits on a screen. Each row is one model in one slot:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>name and version, as the tooling shows it</td>
+</tr>
+<tr>
+<td>Tier and slot</td>
+<td>for example: workhorse, default</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>one of the five states below</td>
+</tr>
+<tr>
+<td>Reason</td>
+<td>one sentence: why it is in this slot</td>
+</tr>
+<tr>
+<td>Evidence</td>
+<td>link to the decision record from part 2</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>who answers questions about this row</td>
+</tr>
+<tr>
+<td>Next review</td>
+<td>a date, not &quot;when needed&quot;</td>
+</tr>
+<tr>
+<td>Notes</td>
+<td>known weaknesses, workflows that depend on it</td>
+</tr>
+</tbody>
+</table>
+<p>Excluded models live in a separate list with their own reasons, as part 1 said. Mixing &quot;not allowed&quot; with &quot;allowed, not chosen&quot; makes both lists harder to read.</p>
+
+</section>
+<section class="page-section" data-key="states">
+  <h2 id="five-states">Five states</h2>
+<p>A model moves through five states. Each transition has a rule, so nobody has to argue about it from scratch.</p>
+<ol>
+<li><strong>Candidate.</strong> Shortlisted from benchmarks, not yet tried on real work.</li>
+<li><strong>Approved.</strong> Passed a time-boxed trial and its eval cases; holds an alternative slot.</li>
+<li><strong>Default.</strong> The tier's first choice. A model becomes default by replacing the previous one, never by being added next to it.</li>
+<li><strong>Deprecating.</strong> The vendor announced a retirement date, or a better option was approved. A successor is named, and a migration window starts.</li>
+<li><strong>Removed.</strong> The migration window is over; the row moves to the history.</li>
+</ol>
+<p>Two rules keep the states honest. A model never skips from candidate to default. And nothing stays in deprecating without an end date.</p>
+
+</section>
+<section class="page-section" data-key="rhythms">
+  <h2 id="two-review-rhythms">Two review rhythms</h2>
+<p><strong>A scheduled review, monthly.</strong> Short, with the same agenda every time: new candidates, vendor announcements since last time, open issues from developers, and rows whose next-review date has passed. Most months the outcome is &quot;no change&quot;, and that is fine. The point is that someone looked.</p>
+<p><strong>An event-triggered review.</strong> Vendors publish changelogs and release notes, many of them as feeds you can subscribe to. Watch them. A new model, a price change or a deprecation notice triggers an out-of-cycle review, but only if it touches a slot in the register. Everything else waits for the monthly review.</p>
+<p>The two rhythms protect each other. The schedule guarantees attention even in quiet months. The trigger guarantees that a retirement notice doesn't sit unread for four weeks.</p>
+
+</section>
+<section class="page-section" data-key="deprecation">
+  <h2 id="when-a-model-you-rely-on-goes-away">When a model you rely on goes away</h2>
+<p>Retirements are the moment a register earns its keep. Handle them the same way every time:</p>
+<ol>
+<li><strong>Find what depends on it.</strong> The register's notes and the specialised tier from part 1 tell you where it will hurt.</li>
+<li><strong>Name a successor through the normal process.</strong> Same criteria, same trial, same eval cases as in part 2, just on a deadline.</li>
+<li><strong>Set a migration window</strong> that ends before the vendor's date, not on it.</li>
+<li><strong>Tell developers what changes and when,</strong> and what they need to do. If shared instructions reference tiers instead of model names, usually nothing.</li>
+</ol>
+<p>A retirement handled this way is a routine change. Handled without a register, it is a surprise that lands on whoever happened to depend on the model.</p>
+
+</section>
+<section class="page-section" data-key="communication">
+  <h2 id="tell-developers-what-changed">Tell developers what changed</h2>
+<p>Keep a short changelog next to the register: one line per change, with the reason. Post it where developers already read, not in a channel created for it.</p>
+<p>One rule matters more than the rest: never change a default silently. Developers who notice a different model behind the same tier without an explanation stop trusting the whole setup, and they will be right to.</p>
+
+</section>
+<section class="page-section" data-key="checklist">
+  <h2 id="checklist">Checklist</h2>
+<p>To check that your register is alive, make sure you can answer these:</p>
+<ol>
+<li>Does every row have a status, an owner and a next-review date?</li>
+<li>When did the last monthly review happen, and what did it decide?</li>
+<li>Which vendor feeds are we watching, and who reads them?</li>
+<li>Which models are deprecating, who is the successor, and when does the window end?</li>
+<li>Which workflows depend on a single model?</li>
+<li>Where can a developer see what changed, and why?</li>
+</ol>
+
+</section>
+<section class="page-section" data-key="closing">
+  <h2 id="governance-is-not-prohibition">Governance is not prohibition</h2>
+<p>Across the three parts, the goal was never to restrict developers. It was to make the organisation's choices about AI models visible, explained and reversible: a tier map that matches models to work, decisions that state their evidence, and a register that keeps both current.</p>
+<p>That is what &quot;the human orchestrates&quot; means at the level of an organisation. Not choosing every model by hand, but owning the structure in which those choices are made.</p>
+
+</section>
+
+</div>
+<div class="prose" data-l="hu">
+<section class="page-section" data-key="intro">
+  <h2 id="a-pillanatkepek-elavulnak">A pillanatképek elavulnak</h2>
+<p>Az <a href="/posts/governing-ai-assistants-01-model-tiers.html">1. rész</a> felépített egy szinttérképet. A <a href="/posts/governing-ai-assistants-02-choosing-models.html">2. rész</a> a helyeit olyan döntésekkel töltötte fel, amelyek mindegyikének dátuma van. Mindkettő pillanatkép.</p>
+<p>A mögöttük álló modellek viszont nem állnak meg. Újak jelennek meg, az árak változnak, a viselkedés verzióról verzióra eltolódik, és a gyártók a saját ütemezésük szerint vezetik ki a modelleket, nem a tiéd szerint.</p>
+<p>Egy karbantartatlan regiszter rosszabb, mint ha nem is lenne. A fejlesztők az első alkalommal észreveszik, amikor egy már nem létező modellt ajánl, és onnantól nem olvassák. Az első két rész minden eredménye azon múlik, hogy a regiszterben meg lehessen bízni.</p>
+
+</section>
+<section class="page-section" data-key="contents">
+  <h2 id="mit-rogzit-a-regiszter">Mit rögzít a regiszter</h2>
+<p>Maradjon egyetlen táblázat, ami elfér egy képernyőn. Minden sor egy modell egy helyen:</p>
+<table>
+<thead>
+<tr>
+<th>Mező</th>
+<th>Tartalom</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modell</td>
+<td>név és verzió, ahogy az eszköz mutatja</td>
+</tr>
+<tr>
+<td>Szint és hely</td>
+<td>például: igásló, alapértelmezett</td>
+</tr>
+<tr>
+<td>Állapot</td>
+<td>a lenti öt állapot egyike</td>
+</tr>
+<tr>
+<td>Indoklás</td>
+<td>egy mondat: miért van ezen a helyen</td>
+</tr>
+<tr>
+<td>Bizonyíték</td>
+<td>link a 2. részben leírt döntési feljegyzésre</td>
+</tr>
+<tr>
+<td>Gazda</td>
+<td>ki válaszol a sorral kapcsolatos kérdésekre</td>
+</tr>
+<tr>
+<td>Következő felülvizsgálat</td>
+<td>egy dátum, nem „ha szükséges”</td>
+</tr>
+<tr>
+<td>Megjegyzés</td>
+<td>ismert gyengeségek, tőle függő workflow-k</td>
+</tr>
+</tbody>
+</table>
+<p>A kizárt modellek külön listán vannak, saját indoklással, ahogy az 1. rész mondta. Ha a „nem engedélyezett” és az „engedélyezett, de nem választott” keveredik, mindkét lista nehezebben olvasható.</p>
+
+</section>
+<section class="page-section" data-key="states">
+  <h2 id="ot-allapot">Öt állapot</h2>
+<p>Egy modell öt állapoton megy keresztül. Minden átmenetnek szabálya van, így senkinek nem kell minden alkalommal elölről vitatkoznia róla.</p>
+<ol>
+<li><strong>Jelölt.</strong> Benchmarkok alapján rövid listára került, valódi munkán még nem próbálták.</li>
+<li><strong>Jóváhagyott.</strong> Átment egy időkorlátos próbán és az eval-eseteken; alternatív helyet foglal el.</li>
+<li><strong>Alapértelmezett.</strong> A szint első választása. Egy modell úgy lesz alapértelmezett, hogy leváltja az előzőt, soha nem úgy, hogy mellé kerül.</li>
+<li><strong>Kivezetés alatt.</strong> A gyártó bejelentette a megszüntetés dátumát, vagy egy jobb lehetőséget hagytak jóvá. Kijelölt utódja van, és elindul egy átállási időszak.</li>
+<li><strong>Eltávolított.</strong> Az átállási időszak lejárt; a sor a történetbe kerül.</li>
+</ol>
+<p>Két szabály tartja tisztán az állapotokat. Egy modell soha nem ugrik jelöltből egyenesen alapértelmezetté. És semmi nem marad végdátum nélkül kivezetés alatt.</p>
+
+</section>
+<section class="page-section" data-key="rhythms">
+  <h2 id="ket-felulvizsgalati-ritmus">Két felülvizsgálati ritmus</h2>
+<p><strong>Ütemezett felülvizsgálat, havonta.</strong> Rövid, mindig ugyanazzal a napirenddel: új jelöltek, a legutóbbi óta megjelent gyártói bejelentések, a fejlesztőktől érkezett nyitott kérdések, és azok a sorok, amelyeknél lejárt a következő felülvizsgálat dátuma. A legtöbb hónapban az eredmény „nincs változás”, és ez így rendben van. A lényeg, hogy valaki ránézett.</p>
+<p><strong>Eseményvezérelt felülvizsgálat.</strong> A gyártók changelogokat és kiadási jegyzeteket tesznek közzé, sokszor feliratkozható feedként. Kövesd őket. Egy új modell, egy árváltozás vagy egy kivezetési értesítés soron kívüli felülvizsgálatot indít, de csak akkor, ha a regiszter valamelyik helyét érinti. Minden más várhat a havi felülvizsgálatig.</p>
+<p>A két ritmus védi egymást. Az ütemezés a csendes hónapokban is garantálja a figyelmet. Az esemény pedig azt, hogy egy megszüntetési értesítés ne várjon négy hétig olvasatlanul.</p>
+
+</section>
+<section class="page-section" data-key="deprecation">
+  <h2 id="amikor-megszunik-egy-modell-amire-epitesz">Amikor megszűnik egy modell, amire építesz</h2>
+<p>A kivezetéseknél derül ki, mennyit ér egy regiszter. Kezeld őket mindig ugyanúgy:</p>
+<ol>
+<li><strong>Keresd meg, mi függ tőle.</strong> A regiszter megjegyzései és az 1. rész specializált szintje megmutatják, hol fog fájni.</li>
+<li><strong>Jelölj ki utódot a szokásos folyamattal.</strong> Ugyanazok a szempontok, ugyanaz a próba, ugyanazok az eval-esetek, mint a 2. részben, csak határidővel.</li>
+<li><strong>Állíts be átállási időszakot,</strong> ami a gyártó dátuma előtt ér véget, nem pont akkor.</li>
+<li><strong>Mondd el a fejlesztőknek, mi változik és mikor,</strong> és mit kell tenniük. Ha a közös instrukciók szintekre hivatkoznak, nem modellnevekre, többnyire semmit.</li>
+</ol>
+<p>Az így kezelt kivezetés rutinváltozás. Regiszter nélkül meglepetés, ami azon csattan, aki éppen függött a modelltől.</p>
+
+</section>
+<section class="page-section" data-key="communication">
+  <h2 id="mondd-el-a-fejlesztoknek-mi-valtozott">Mondd el a fejlesztőknek, mi változott</h2>
+<p>Vezess egy rövid változásnaplót a regiszter mellett: változásonként egy sor, indoklással. Oda tedd közzé, ahol a fejlesztők amúgy is olvasnak, ne egy erre létrehozott csatornán.</p>
+<p>Egy szabály mindennél fontosabb: alapértelmezett modellt soha ne cserélj csendben. Ha a fejlesztők magyarázat nélkül másik modellt vesznek észre ugyanazon szint mögött, elveszítik a bizalmukat az egész rendszerben, és jogosan.</p>
+
+</section>
+<section class="page-section" data-key="checklist">
+  <h2 id="ellenorzolista">Ellenőrzőlista</h2>
+<p>Hogy lásd, él-e a regisztered, legyen válaszod ezekre:</p>
+<ol>
+<li>Minden sornak van állapota, gazdája és következő felülvizsgálati dátuma?</li>
+<li>Mikor volt az utolsó havi felülvizsgálat, és mit döntött?</li>
+<li>Mely gyártói feedeket követjük, és ki olvassa őket?</li>
+<li>Mely modellek vannak kivezetés alatt, ki az utódjuk, és mikor ér véget az átállási időszak?</li>
+<li>Mely workflow-k függenek egyetlen modelltől?</li>
+<li>Hol látja egy fejlesztő, mi változott és miért?</li>
+</ol>
+
+</section>
+<section class="page-section" data-key="closing">
+  <h2 id="az-iranyitas-nem-tiltas">Az irányítás nem tiltás</h2>
+<p>A három rész során a cél soha nem a fejlesztők korlátozása volt, hanem az, hogy a szervezet AI-modellekkel kapcsolatos döntései láthatók, megindokoltak és visszafordíthatók legyenek: egy szinttérkép, ami a modelleket a munkához illeszti, döntések, amelyek kimondják, mire épülnek, és egy regiszter, ami mindkettőt naprakészen tartja.</p>
+<p>Szervezeti szinten ezt jelenti az, hogy „az ember orchestrál”. Nem azt, hogy minden modellt kézzel választasz ki, hanem azt, hogy tiéd a keret, amiben ezek a döntések születnek.</p>
+
+</section>
+
+</div>
+<nav class="pager" aria-label="Series navigation">
+<a href="/posts/governing-ai-assistants-02-choosing-models.html" rel="prev"><span class="dir">← <span data-l="en">Previous</span><span data-l="hu">Előző</span></span><span data-l="en">Choosing Models Without an Eval Lab</span><span data-l="hu">Modellválasztás saját mérőkörnyezet nélkül</span></a>
+</nav>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p>© 2026 Viktor Vidman · <span data-l="en">built with a custom C# generator</span><span data-l="hu">saját C# generátorral építve</span></p>
+<nav aria-label="Footer">
+<a href="https://github.com/vvidman">github</a>
+<a href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">linkedin</a>
+<a href="/feed.xml">rss</a>
+</nav>
+</div>
+</footer>
+
+</body>
+</html>

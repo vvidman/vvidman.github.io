@@ -57,10 +57,16 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 </header>
 
 <main>
-<div class="post-layout">
-
+<div class="post-layout has-series">
+<details class="series-tree" open>
+<summary><span class="st-name">Governing AI Coding Assistants</span><span class="st-count">1/3</span></summary>
+<a href="/posts/governing-ai-assistants-01-model-tiers.html" aria-current="page"><span class="n">01</span><span data-l="en">Not Everyone Needs the Frontier Model</span><span data-l="hu">Nem kell mindenkinek a legerősebb modell</span></a>
+<a href="/posts/governing-ai-assistants-02-choosing-models.html"><span class="n">02</span><span data-l="en">Choosing Models Without an Eval Lab</span><span data-l="hu">Modellválasztás saját mérőkörnyezet nélkül</span></a>
+<a href="/posts/governing-ai-assistants-03-model-register.html"><span class="n">03</span><span data-l="en">The Model Register Is a Living Document</span><span data-l="hu">A modellregiszter élő dokumentum</span></a>
+</details>
 <article class="article">
 <header class="post-head">
+<div class="pills"><span class="pill pill-accent">Governing AI Coding Assistants · 1/3</span></div>
 <h1 class="post-title"><span data-l="en">Not Everyone Needs the Frontier Model</span><span data-l="hu">Nem kell mindenkinek a legerősebb modell</span></h1>
 <p class="post-lead"><span data-l="en">Why the models behind an organisation&#39;s AI coding assistants should be tiered by type of work, with one default and at most two alternatives per tier.</span><span data-l="hu">Miért érdemes egy szervezetben az AI kódoló asszisztensek modelljeit munkatípus szerint szintekbe sorolni, szintenként egy alapértelmezett és legfeljebb két alternatív modellel.</span></p>
 <p class="post-meta">2026-11-25 · <span data-l="en">5 min read</span><span data-l="hu">5 perc olvasás</span> · EN / HU</p>
@@ -157,7 +163,7 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <ul>
 <li><strong>Not a ranking of people.</strong> Junior developers are not restricted to cheap models. The class of work decides, not seniority.</li>
 <li><strong>Not a ban list.</strong> Excluding models, for licensing, data-handling or quality reasons, is a separate decision with its own criteria. Tiers organise what is already allowed.</li>
-<li><strong>Not permanent.</strong> A tier map is a snapshot. Part 3 of this series covers how to keep it alive.</li>
+<li><strong>Not permanent.</strong> A tier map is a snapshot. <a href="/posts/governing-ai-assistants-03-model-register.html">Part 3</a> of this series covers how to keep it alive.</li>
 </ul>
 
 </section>
@@ -176,7 +182,7 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 </section>
 <section class="page-section" data-key="next">
   <h2 id="next-choosing-the-models">Next: choosing the models</h2>
-<p>A tier map only says where a model goes. It does not say which model deserves the slot. Most organisations have to make that call without an internal evaluation lab. Part 2 is about doing it honestly anyway: public benchmarks as a filter rather than a verdict, and an evaluation library that grows out of real decisions.</p>
+<p>A tier map only says where a model goes. It does not say which model deserves the slot. Most organisations have to make that call without an internal evaluation lab. <a href="/posts/governing-ai-assistants-02-choosing-models.html">Part 2</a> is about doing it honestly anyway: public benchmarks as a filter rather than a verdict, and an evaluation library that grows out of real decisions.</p>
 
 </section>
 
@@ -272,7 +278,7 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 <ul>
 <li><strong>Nem az emberek rangsora.</strong> A junior fejlesztők nincsenek az olcsó modellekre korlátozva. A munka típusa dönt, nem a tapasztalat.</li>
 <li><strong>Nem tiltólista.</strong> Modellek kizárása licenc, adatkezelés vagy minőség miatt külön döntés, saját szempontokkal. A szintek azt rendezik, ami már engedélyezett.</li>
-<li><strong>Nem végleges.</strong> A szinttérkép egy pillanatkép. A sorozat 3. része arról szól, hogyan tartsd életben.</li>
+<li><strong>Nem végleges.</strong> A szinttérkép egy pillanatkép. A sorozat <a href="/posts/governing-ai-assistants-03-model-register.html">3. része</a> arról szól, hogyan tartsd életben.</li>
 </ul>
 
 </section>
@@ -291,12 +297,14 @@ d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-them
 </section>
 <section class="page-section" data-key="next">
   <h2 id="kovetkezik-a-modellek-kivalasztasa">Következik: a modellek kiválasztása</h2>
-<p>A szinttérkép csak azt mondja meg, hová kerül egy modell. Azt nem, hogy melyik modell érdemli meg a helyet. A legtöbb szervezetnek ezt saját mérőkörnyezet nélkül kell eldöntenie. A 2. rész arról szól, hogyan lehet ezt mégis becsületesen csinálni: a publikus benchmarkok szűrőként, nem ítéletként, és egy eval-könyvtár, ami valódi döntésekből nő ki.</p>
+<p>A szinttérkép csak azt mondja meg, hová kerül egy modell. Azt nem, hogy melyik modell érdemli meg a helyet. A legtöbb szervezetnek ezt saját mérőkörnyezet nélkül kell eldöntenie. A <a href="/posts/governing-ai-assistants-02-choosing-models.html">2. rész</a> arról szól, hogyan lehet ezt mégis becsületesen csinálni: a publikus benchmarkok szűrőként, nem ítéletként, és egy eval-könyvtár, ami valódi döntésekből nő ki.</p>
 
 </section>
 
 </div>
-
+<nav class="pager" aria-label="Series navigation">
+<a href="/posts/governing-ai-assistants-02-choosing-models.html" rel="next"><span class="dir"><span data-l="en">Next</span><span data-l="hu">Következő</span> →</span><span data-l="en">Choosing Models Without an Eval Lab</span><span data-l="hu">Modellválasztás saját mérőkörnyezet nélkül</span></a>
+</nav>
 </article>
 </div>
 </main>

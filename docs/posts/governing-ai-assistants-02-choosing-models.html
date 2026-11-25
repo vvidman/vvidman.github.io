@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en" data-theme="light" data-title-en="Viktor Vidman – Choosing Models Without an Eval Lab" data-title-hu="Viktor Vidman – Modellválasztás saját mérőkörnyezet nélkül">
+<head>
+<script>(function(){var d=document.documentElement,l,t;try{l=localStorage.getItem('lang');t=localStorage.getItem('theme')}catch(e){}
+if(l!=='en'&&l!=='hu'){l=(navigator.language||'').toLowerCase().indexOf('hu')===0?'hu':'en'}
+if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-theme',t)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viktor Vidman – Choosing Models Without an Eval Lab</title>
+<meta name="description" content="How to choose the models for each tier when you have no internal evaluation lab: public benchmarks as a filter, five decision criteria, short trials and an eval library that grows out of real decisions.">
+<meta name="author" content="Viktor Vidman">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#F4F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B121B" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://vvidman.github.io/posts/governing-ai-assistants-02-choosing-models.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vvidman.github.io/posts/governing-ai-assistants-02-choosing-models.html">
+<meta property="og:title" content="Viktor Vidman – Choosing Models Without an Eval Lab">
+<meta property="og:description" content="How to choose the models for each tier when you have no internal evaluation lab: public benchmarks as a filter, five decision criteria, short trials and an eval library that grows out of real decisions.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="hu_HU">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-02-choosing-models-og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Viktor Vidman – Choosing Models Without an Eval Lab">
+<meta name="twitter:description" content="How to choose the models for each tier when you have no internal evaluation lab: public benchmarks as a filter, five decision criteria, short trials and an eval library that grows out of real decisions.">
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-02-choosing-models-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Choosing Models Without an Eval Lab","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/governing-ai-assistants-02-choosing-models.html","image":"https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-02-choosing-models-og.png","datePublished":"2026-11-25"}</script>
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Viktor Vidman" href="/feed.xml">
+<script src="/assets/javascript/site.js" defer></script>
+
+</head>
+<body>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href="/"><span>~/</span>vvidman</a>
+<nav class="nav" aria-label="Main">
+<a href="/posts/" aria-current="page">/blog</a>
+<a href="/about/">/about</a>
+</nav>
+<div class="toggles">
+<div class="seg" role="group" aria-label="Language">
+<button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+<button type="button" data-set-lang="hu" aria-pressed="false">HU</button>
+</div>
+<button type="button" class="icon-btn" data-toggle-theme aria-label="Toggle dark mode">
+<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+</div>
+</div>
+</header>
+
+<main>
+<div class="post-layout has-series">
+<details class="series-tree" open>
+<summary><span class="st-name">Governing AI Coding Assistants</span><span class="st-count">2/3</span></summary>
+<a href="/posts/governing-ai-assistants-01-model-tiers.html"><span class="n">01</span><span data-l="en">Not Everyone Needs the Frontier Model</span><span data-l="hu">Nem kell mindenkinek a legerősebb modell</span></a>
+<a href="/posts/governing-ai-assistants-02-choosing-models.html" aria-current="page"><span class="n">02</span><span data-l="en">Choosing Models Without an Eval Lab</span><span data-l="hu">Modellválasztás saját mérőkörnyezet nélkül</span></a>
+<a href="/posts/governing-ai-assistants-03-model-register.html"><span class="n">03</span><span data-l="en">The Model Register Is a Living Document</span><span data-l="hu">A modellregiszter élő dokumentum</span></a>
+</details>
+<article class="article">
+<header class="post-head">
+<div class="pills"><span class="pill pill-accent">Governing AI Coding Assistants · 2/3</span></div>
+<h1 class="post-title"><span data-l="en">Choosing Models Without an Eval Lab</span><span data-l="hu">Modellválasztás saját mérőkörnyezet nélkül</span></h1>
+<p class="post-lead"><span data-l="en">How to choose the models for each tier when you have no internal evaluation lab: public benchmarks as a filter, five decision criteria, short trials and an eval library that grows out of real decisions.</span><span data-l="hu">Hogyan válassz modellt az egyes szintekre belső mérőkörnyezet nélkül: publikus benchmarkok szűrőként, öt döntési szempont, rövid próbaidőszak és egy eval-könyvtár, ami valódi döntésekből nő ki.</span></p>
+<p class="post-meta">2026-11-25 · <span data-l="en">5 min read</span><span data-l="hu">4 perc olvasás</span> · EN / HU</p>
+</header>
+<figure><img src="/assets/images/infographics/governing-ai-assistants-02-choosing-models-square.png" alt="Choosing Models Without an Eval Lab — infographic" loading="lazy" width="1200" height="1200"></figure>
+<div class="prose" data-l="en">
+<section class="page-section" data-key="intro">
+  <h2 id="the-lab-you-dont-have">The lab you don't have</h2>
+<p><a href="/posts/governing-ai-assistants-01-model-tiers.html">Part 1</a> gave every tier a fixed number of slots: one default, at most two alternatives. It did not say which model deserves a slot.</p>
+<p>The textbook answer is an internal evaluation suite: your own tasks, your own codebase, repeatable scores. The honest answer is that most organisations don't have one when the decision is due, and won't have one for a while.</p>
+<p>Waiting is not a neutral option. If the organisation doesn't decide, every developer decides alone, and you are back to the free-for-all from part 1.</p>
+<p>So decide with what you have, and make the decision honest: state what it rests on, and what would change it.</p>
+
+</section>
+<section class="page-section" data-key="benchmarks">
+  <h2 id="public-benchmarks-a-filter-not-a-verdict">Public benchmarks: a filter, not a verdict</h2>
+<p>Public benchmark results and the sites that aggregate them are the cheapest evidence you have. They are good at a few things:</p>
+<ul>
+<li><strong>narrowing the field:</strong> a model far behind on coding tasks rarely belongs in the frontier tier;</li>
+<li><strong>spotting large gaps</strong> between generations or price classes;</li>
+<li><strong>tracking movement:</strong> how quickly a model family improves, or how quickly a cheaper model catches up;</li>
+<li><strong>comparing price and speed</strong> on the same scale.</li>
+</ul>
+<p>They are bad at others:</p>
+<ul>
+<li>the tasks are not your tasks, your languages or your codebase;</li>
+<li>scores move with every model version, and older snapshots linger;</li>
+<li>an aggregate score hides where a model is strong and where it is weak;</li>
+<li>small differences are mostly noise.</li>
+</ul>
+<p>The rule that follows: use benchmarks to shortlist and to exclude clearly weaker candidates. Never choose between two close candidates on a benchmark delta alone.</p>
+
+</section>
+<section class="page-section" data-key="criteria">
+  <h2 id="capability-is-one-column-of-five">Capability is one column of five</h2>
+<p>A model that wins on capability can still be the wrong choice for a slot. Five criteria cover most decisions:</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Question</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capability</td>
+<td>Does it handle this class of work well?</td>
+<td>benchmarks to shortlist, your own trial to decide</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Does its price fit the tier?</td>
+<td>the vendor's pricing, including any premium multiplier</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Is it fast enough for how this tier is used?</td>
+<td>your own trial</td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Can it hold the code and history the work needs?</td>
+<td>documented context window, your own trial</td>
+</tr>
+<tr>
+<td>Lifecycle risk</td>
+<td>How likely is it to change or disappear soon?</td>
+<td>preview status, announced deprecations, the vendor's track record</td>
+</tr>
+</tbody>
+</table>
+<p>The weights come from part 1. The frontier tier weighs capability first. The fast iterative tier weighs latency and cost. The specialised tier weighs lifecycle risk above everything, because the workflow depends on that one model staying the same.</p>
+
+</section>
+<section class="page-section" data-key="trial">
+  <h2 id="a-short-trial-beats-a-long-debate">A short trial beats a long debate</h2>
+<p>The alternative slots from part 1 exist for exactly this. Put the candidate into one of them for a fixed period, and let real work decide.</p>
+<ul>
+<li><strong>Time-box it.</strong> Two to four weeks is usually enough to see a pattern without the trial quietly becoming permanent.</li>
+<li><strong>Pick a few volunteers from different teams,</strong> so the result is not one team's taste.</li>
+<li><strong>Use work they would do anyway.</strong> No synthetic exercises; the point is your tasks, in your codebase.</li>
+<li><strong>Collect short, structured notes:</strong> class of work, outcome, how much rework was needed, anything surprising.</li>
+<li><strong>End with a decision:</strong> promote, keep as an alternative, or drop. A trial without a decision date is just another free-for-all.</li>
+</ul>
+<p>The notes are not statistics, and they should not pretend to be. They are evidence that you can show and explain, which is more than a benchmark delta gives you.</p>
+
+</section>
+<section class="page-section" data-key="eval-library">
+  <h2 id="grow-the-eval-library-from-decisions">Grow the eval library from decisions</h2>
+<p>You don't need an evaluation project to start an evaluation library. You need a habit: every disputed decision becomes a test case.</p>
+<p>A case is small:</p>
+<ul>
+<li><strong>the task,</strong> written the way a developer would ask it;</li>
+<li><strong>the context,</strong> a minimal, sanitised slice of code or documentation that the task needs;</li>
+<li><strong>what good looks like,</strong> the properties a correct answer must have;</li>
+<li><strong>how to judge it,</strong> an automated check where possible, a short rubric otherwise.</li>
+</ul>
+<p>Start with five to ten cases, kept next to the model register. Rerun them whenever a new candidate appears or a default changes. Over time this library becomes the internal lab you didn't have, built from real disagreements instead of from a project plan.</p>
+
+</section>
+<section class="page-section" data-key="decision-record">
+  <h2 id="write-the-decision-down">Write the decision down</h2>
+<p>A slot assignment deserves the same treatment as an architecture decision. One short record per decision:</p>
+<ul>
+<li>the model, the tier and the slot;</li>
+<li>the evidence used: benchmark snapshot and its date, trial notes, eval cases;</li>
+<li>known weaknesses, stated plainly;</li>
+<li>what would trigger a review.</li>
+</ul>
+<p>The record does two jobs. It explains the decision to developers today, and it lets you revisit it later without reconstructing why it was made. Part 3 is about that revisiting.</p>
+
+</section>
+<section class="page-section" data-key="checklist">
+  <h2 id="checklist">Checklist</h2>
+<p>Before a model takes a slot, make sure you can answer these:</p>
+<ol>
+<li>Which benchmarks did we use to shortlist, and from what date?</li>
+<li>How does the candidate score on all five criteria, with the tier's weights?</li>
+<li>Did it go through a time-boxed trial on real work?</li>
+<li>Which eval cases did we run, and what did they show?</li>
+<li>What are its known weaknesses?</li>
+<li>What would make us review this decision?</li>
+</ol>
+
+</section>
+<section class="page-section" data-key="next">
+  <h2 id="next-keeping-it-alive">Next: keeping it alive</h2>
+<p>Every decision in this post has a date on it. Models improve, prices change, vendors retire versions on their own schedule. Part 3 is about the model register: what it records, the states a model moves through, and the two review rhythms that keep the register worth trusting.</p>
+
+</section>
+
+</div>
+<div class="prose" data-l="hu">
+<section class="page-section" data-key="intro">
+  <h2 id="a-labor-ami-nincs">A labor, ami nincs</h2>
+<p>Az <a href="/posts/governing-ai-assistants-01-model-tiers.html">1. rész</a> minden szintnek fix számú helyet adott: egy alapértelmezettet és legfeljebb két alternatívát. Azt nem mondta meg, melyik modell érdemli meg a helyet.</p>
+<p>A tankönyvi válasz egy belső mérőkörnyezet: saját feladatok, saját kódbázis, megismételhető pontszámok. Az őszinte válasz az, hogy a legtöbb szervezetnek nincs ilyen, amikor dönteni kell, és egy ideig nem is lesz.</p>
+<p>A várakozás nem semleges lehetőség. Ha a szervezet nem dönt, minden fejlesztő egyedül dönt, és visszajutottál az 1. rész „mindenki azt használ, amit akar” állapotához.</p>
+<p>Dönts tehát abból, ami van, de becsületesen: mondd ki, mire épül a döntés, és mi változtatna rajta.</p>
+
+</section>
+<section class="page-section" data-key="benchmarks">
+  <h2 id="publikus-benchmarkok-szuro-nem-itelet">Publikus benchmarkok: szűrő, nem ítélet</h2>
+<p>A publikus benchmark-eredmények és az ezeket összesítő oldalak a legolcsóbb bizonyítékok, amelyek a rendelkezésedre állnak. Néhány dologra jók:</p>
+<ul>
+<li><strong>szűkítésre:</strong> egy kódolási feladatokban messze lemaradó modell ritkán való a frontier szintre;</li>
+<li><strong>nagy különbségek észrevételére</strong> generációk vagy árkategóriák között;</li>
+<li><strong>a mozgás követésére:</strong> milyen gyorsan fejlődik egy modellcsalád, vagy milyen gyorsan zárkózik fel egy olcsóbb modell;</li>
+<li><strong>ár és sebesség összevetésére</strong> ugyanazon a skálán.</li>
+</ul>
+<p>Másra viszont nem:</p>
+<ul>
+<li>a feladatok nem a te feladataid, nem a te nyelveid, nem a te kódbázisod;</li>
+<li>a pontszámok minden modellverzióval változnak, a régi mérések pedig sokáig keringenek;</li>
+<li>egy összesített pontszám elfedi, hol erős és hol gyenge egy modell;</li>
+<li>a kis különbségek többnyire zajok.</li>
+</ul>
+<p>A szabály ebből: a benchmarkokat rövid lista készítésére és az egyértelműen gyengébb jelöltek kiszűrésére használd. Két közeli jelölt között soha ne dönts pusztán egy benchmark-különbség alapján.</p>
+
+</section>
+<section class="page-section" data-key="criteria">
+  <h2 id="a-kepesseg-csak-egy-oszlop-az-otbol">A képesség csak egy oszlop az ötből</h2>
+<p>Egy modell, ami képességben nyer, egy adott helyre mégis rossz választás lehet. Öt szempont lefedi a döntések többségét:</p>
+<table>
+<thead>
+<tr>
+<th>Szempont</th>
+<th>Kérdés</th>
+<th>Bizonyíték</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Képesség</td>
+<td>Jól kezeli ezt a munkatípust?</td>
+<td>benchmark a szűkítéshez, saját próba a döntéshez</td>
+</tr>
+<tr>
+<td>Költség</td>
+<td>Az ára illik a szinthez?</td>
+<td>a gyártó árazása, a prémium szorzóval együtt</td>
+</tr>
+<tr>
+<td>Késleltetés</td>
+<td>Elég gyors ahhoz, ahogy ezt a szintet használják?</td>
+<td>saját próba</td>
+</tr>
+<tr>
+<td>Kontextus</td>
+<td>Elfér benne a kód és az előzmény, ami a munkához kell?</td>
+<td>dokumentált kontextusablak, saját próba</td>
+</tr>
+<tr>
+<td>Életciklus-kockázat</td>
+<td>Mennyire valószínű, hogy hamarosan változik vagy megszűnik?</td>
+<td>preview státusz, bejelentett kivezetések, a gyártó eddigi gyakorlata</td>
+</tr>
+</tbody>
+</table>
+<p>A súlyokat az 1. rész adja. A frontier szinten a képesség az első. A gyors-iteratív szinten a késleltetés és a költség. A specializált szinten az életciklus-kockázat mindennél fontosabb, mert a workflow arra épül, hogy az az egy modell ugyanolyan marad.</p>
+
+</section>
+<section class="page-section" data-key="trial">
+  <h2 id="egy-rovid-proba-tobbet-er-egy-hosszu-vitanal">Egy rövid próba többet ér egy hosszú vitánál</h2>
+<p>Az 1. rész alternatív helyei pontosan erre valók. Tedd a jelöltet az egyikbe egy meghatározott időre, és hagyd, hogy a valódi munka döntsön.</p>
+<ul>
+<li><strong>Legyen időkorlátja.</strong> Két-négy hét általában elég ahhoz, hogy kirajzolódjon egy minta, anélkül hogy a próba csendben véglegessé válna.</li>
+<li><strong>Válassz néhány önkéntest különböző csapatokból,</strong> hogy az eredmény ne egyetlen csapat ízlését tükrözze.</li>
+<li><strong>Olyan munkán próbáljátok, amit amúgy is elvégeznének.</strong> Nem mesterséges feladatokon; a lényeg a ti feladataitok, a ti kódbázisotokban.</li>
+<li><strong>Gyűjts rövid, strukturált jegyzeteket:</strong> munkatípus, eredmény, mennyi utómunka kellett, mi volt meglepő.</li>
+<li><strong>Döntéssel zárd:</strong> előléptetés, alternatívaként marad, vagy kikerül. Egy döntési határidő nélküli próba csak egy újabb „mindenki azt használ, amit akar”.</li>
+</ul>
+<p>A jegyzetek nem statisztikák, és nem is kell annak tűnniük. Olyan bizonyítékok, amelyeket meg tudsz mutatni és meg tudsz magyarázni, és ez több, mint amit egy benchmark-különbség ad.</p>
+
+</section>
+<section class="page-section" data-key="eval-library">
+  <h2 id="az-eval-konyvtar-a-dontesekbol-nojon-ki">Az eval-könyvtár a döntésekből nőjön ki</h2>
+<p>Eval-könyvtárat indítani nem kell külön projekt. Egy szokás kell hozzá: minden vitatott döntésből teszteset lesz.</p>
+<p>Egy eset kicsi:</p>
+<ul>
+<li><strong>a feladat,</strong> úgy megfogalmazva, ahogy egy fejlesztő kérdezné;</li>
+<li><strong>a kontextus,</strong> a feladathoz szükséges kód vagy dokumentáció minimális, megtisztított részlete;</li>
+<li><strong>milyen a jó válasz,</strong> azok a tulajdonságok, amelyekkel egy helyes válasznak rendelkeznie kell;</li>
+<li><strong>hogyan ítéled meg,</strong> ahol lehet, automatikus ellenőrzéssel, máskor egy rövid értékelési szemponttal.</li>
+</ul>
+<p>Kezdd öt-tíz esettel, a modellregiszter mellett tárolva. Futtasd újra őket, valahányszor új jelölt érkezik vagy változik egy alapértelmezett modell. Idővel ebből a könyvtárból lesz a belső labor, ami eddig hiányzott, és valódi vitákból épül, nem egy projekttervből.</p>
+
+</section>
+<section class="page-section" data-key="decision-record">
+  <h2 id="ird-le-a-dontest">Írd le a döntést</h2>
+<p>Egy hely kiosztása ugyanazt a bánásmódot érdemli, mint egy architektúra-döntés. Döntésenként egy rövid feljegyzés:</p>
+<ul>
+<li>a modell, a szint és a hely;</li>
+<li>a felhasznált bizonyíték: benchmark-mérés és annak dátuma, próbajegyzetek, eval-esetek;</li>
+<li>az ismert gyengeségek, nyíltan kimondva;</li>
+<li>mi indítana felülvizsgálatot.</li>
+</ul>
+<p>A feljegyzés két feladatot lát el. Ma elmagyarázza a döntést a fejlesztőknek, később pedig lehetővé teszi, hogy újragondold, anélkül hogy rekonstruálnod kellene, miért született. A 3. rész erről az újragondolásról szól.</p>
+
+</section>
+<section class="page-section" data-key="checklist">
+  <h2 id="ellenorzolista">Ellenőrzőlista</h2>
+<p>Mielőtt egy modell helyet kap, legyen válaszod ezekre:</p>
+<ol>
+<li>Mely benchmarkokat használtuk a szűkítéshez, és milyen dátumú mérésből?</li>
+<li>Hogyan teljesít a jelölt mind az öt szempont szerint, a szint súlyaival?</li>
+<li>Átment egy időkorlátos próbán valódi munkán?</li>
+<li>Mely eval-eseteket futtattuk, és mit mutattak?</li>
+<li>Mik az ismert gyengeségei?</li>
+<li>Mi indítaná el a döntés felülvizsgálatát?</li>
+</ol>
+
+</section>
+<section class="page-section" data-key="next">
+  <h2 id="kovetkezik-eletben-tartas">Következik: életben tartás</h2>
+<p>Ebben a posztban minden döntésnek dátuma van. A modellek fejlődnek, az árak változnak, a gyártók a saját ütemezésük szerint vezetnek ki verziókat. A 3. rész a modellregiszterről szól: mit rögzít, milyen állapotokon megy át egy modell, és melyik az a két felülvizsgálati ritmus, amitől a regiszter megbízható marad.</p>
+
+</section>
+
+</div>
+<nav class="pager" aria-label="Series navigation">
+<a href="/posts/governing-ai-assistants-01-model-tiers.html" rel="prev"><span class="dir">← <span data-l="en">Previous</span><span data-l="hu">Előző</span></span><span data-l="en">Not Everyone Needs the Frontier Model</span><span data-l="hu">Nem kell mindenkinek a legerősebb modell</span></a>
+<a href="/posts/governing-ai-assistants-03-model-register.html" rel="next"><span class="dir"><span data-l="en">Next</span><span data-l="hu">Következő</span> →</span><span data-l="en">The Model Register Is a Living Document</span><span data-l="hu">A modellregiszter élő dokumentum</span></a>
+</nav>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p>© 2026 Viktor Vidman · <span data-l="en">built with a custom C# generator</span><span data-l="hu">saját C# generátorral építve</span></p>
+<nav aria-label="Footer">
+<a href="https://github.com/vvidman">github</a>
+<a href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">linkedin</a>
+<a href="/feed.xml">rss</a>
+</nav>
+</div>
+</footer>
+
+</body>
+</html>

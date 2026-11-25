@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>governing-ai-assistants-03-model-register square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+<style>
+.ig-title { font-size: 68px; }
+.ig-body { justify-content: space-between; padding-top: 32px; padding-bottom: 44px; gap: 0; }
+.ig-section { margin-bottom: 0; }
+.ig-section .ig-label { font-size: 18px; margin-bottom: 14px; }
+.ig-flow .ig-node { padding: 22px 12px; text-align: center; }
+.ig-flow .ig-node-title { font-size: 24px; }
+.ig-flow .ig-node-text { font-size: 18px; margin-top: 8px; }
+.ig-flow .ig-arrow { flex: 0 0 34px; }
+.ig-flow .ig-arrow svg { width: 24px; height: 24px; }
+.ig-cards { gap: 20px; }
+.ig-card { padding: 26px 30px; }
+.ig-card-title { font-size: 36px; }
+.ig-card-body { font-size: 24px; margin-top: 14px; color: var(--ink); }
+.ig-callout { font-size: 36px; padding: 24px 36px; }
+</style>
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Governing AI Coding Assistants · Part 3</div>
+  <h1 class="ig-title">The model register is a living document</h1>
+
+  <div class="ig-body">
+    <div class="ig-section">
+      <div class="ig-label">Five states</div>
+      <div class="ig-flow">
+      <div class="ig-node"><div class="ig-node-title">Candidate</div><div class="ig-node-text">Shortlisted</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node"><div class="ig-node-title">Approved</div><div class="ig-node-text">Passed trial</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node"><div class="ig-node-title">Default</div><div class="ig-node-text">First choice</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node"><div class="ig-node-title">Deprecating</div><div class="ig-node-text">Successor named</div></div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node"><div class="ig-node-title">Removed</div><div class="ig-node-text">Moved to history</div></div>
+      </div>
+    </div>
+
+    <div class="ig-section">
+      <div class="ig-label">Two review rhythms</div>
+      <div class="ig-cards" style="--cols:2">
+        <div class="ig-card"><div class="ig-card-title">Scheduled</div><div class="ig-card-body">Monthly, same agenda every time.</div></div>
+        <div class="ig-card"><div class="ig-card-title">Event-triggered</div><div class="ig-card-body">A new model, price change or deprecation notice that touches a slot.</div></div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Never change a default silently.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>
