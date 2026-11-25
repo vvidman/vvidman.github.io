@@ -339,6 +339,7 @@ a { color: var(--accent); }
   letter-spacing: -0.02em;
   margin: 0 0 16px;
 }
+.wrap > .post-head { padding-top: 48px; }  /* posts index: same top spacing as .page-layout */
 .post-lead { font-size: 1.25rem; line-height: 1.5; color: var(--muted); margin: 0 0 16px; }
 .post-meta { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); margin: 0; }
 .article figure { margin: 0 0 32px; }
