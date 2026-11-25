@@ -41,3 +41,9 @@ public sealed class BadTopicSiteFixture()
 
 public sealed class NoTopicSiteFixture()
     : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "notopic"));
+
+public sealed class MixedTopicSiteFixture()
+    : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "mixedtopic"));
+
+public sealed class OneTopicSiteFixture()
+    : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "onetopic"));

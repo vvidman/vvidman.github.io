@@ -21,6 +21,7 @@ public class CssSanityTests
         "post-title", "post-lead", "post-meta", "prose", "pager", "dir",
         "code-head", "tk-kw", "tk-ty", "tk-str", "tk-num", "tk-com", "tk-fn",
         "series-block", "series-head", "part-badge",
+        "topic-block", "topic-head", "topic-blurb", "topic-nav",
     };
 
     internal static string StripComments(string css) => Regex.Replace(css, @"/\*.*?\*/", "", RegexOptions.Singleline);
