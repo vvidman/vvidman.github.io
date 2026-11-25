@@ -26,6 +26,16 @@ public class PageRenderingTests : IClassFixture<SiteFixture>, IClassFixture<NoHu
     }
 
     [Fact]
+    public void Single_part_series_has_no_tree_pill_or_pager()
+    {
+        var html = _site.Read("posts/raglab-01.html");
+        Assert.DoesNotContain("series-tree", html);
+        Assert.DoesNotContain("1/1", html);
+        Assert.DoesNotContain("class=\"pager\"", html);
+        Assert.DoesNotContain("has-series", html);
+    }
+
+    [Fact]
     public void About_page_has_no_post_meta()
     {
         var html = _site.Read("about/index.html");

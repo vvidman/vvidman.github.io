@@ -68,6 +68,9 @@ public sealed class SiteIndex
             if (!string.Equals(seriesName, name.Trim(), StringComparison.OrdinalIgnoreCase))
                 continue;
 
+            if (parts.Count < 2)
+                return null;
+
             var idx = -1;
             for (var i = 0; i < parts.Count; i++)
                 if (ReferenceEquals(parts[i], post)) { idx = i; break; }

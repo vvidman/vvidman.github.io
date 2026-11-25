@@ -66,6 +66,14 @@ public class SiteIndexTests
     }
 
     [Fact]
+    public void Single_part_series_has_no_context()
+    {
+        var (index, _) = Build();
+        Assert.Null(index.ContextFor(index.Posts.Single(p => p.Metadata.Title == "SP")));
+        Assert.Contains(index.Series, s => s.Name == "Scaffold");
+    }
+
+    [Fact]
     public void Latest_skips_undated_and_orders_newest_first()
     {
         var (index, _) = Build();
