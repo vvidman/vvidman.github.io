@@ -1,0 +1,63 @@
+using System.Text.RegularExpressions;
+using VVidman.BlogBuild;
+
+namespace BlogBuild.Tests;
+
+public class HomeTests : IClassFixture<SiteFixture>
+{
+    private readonly SiteFixture _site;
+    public HomeTests(SiteFixture site) => _site = site;
+
+    private string Home => _site.Read("index.html");
+
+    [Fact]
+    public void Hero_copy_is_present_in_both_languages()
+    {
+        Assert.Contains("The human orchestrates.", Home);
+        Assert.Contains("The AI executes.", Home);
+        Assert.Contains("Az ember orchestrál.", Home);
+        Assert.Contains("Az AI végrehajt.", Home);
+        Assert.Contains("Read the blog →", Home);
+        Assert.Contains("Irány a blog →", Home);
+        Assert.Contains("$ whoami", Home);
+    }
+
+    [Fact]
+    public void Shows_profile_panel_with_latest_post_title()
+    {
+        Assert.Contains("profile.json", Home);
+        Assert.Contains("\"Software Architect\"", Home);
+        var firstTitle = Regex.Match(Home, "class=\"row-title\"><span data-l=\"en\">([^<]*)</span>|class=\"row-title\">([^<]*)<").Groups;
+        var title = firstTitle[1].Success ? firstTitle[1].Value : firstTitle[2].Value;
+        Assert.Contains($"<span class=\"s\">\"{title}\"</span>", Home);
+    }
+
+    [Fact]
+    public void Lists_exactly_five_rows_newest_first()
+    {
+        Assert.Equal(5, Regex.Matches(Home, "class=\"post-row\"").Count);
+
+        var dates = new Dictionary<string, DateOnly>();
+        foreach (var file in Directory.GetFiles(Path.Combine(TestPaths.RepoRoot, "content", "posts"), "*.md"))
+        {
+            var m = MarkdownDslParser.Parse(file).Metadata;
+            if (m.Date is { } d) dates["/" + m.Slug] = d;
+        }
+
+        var listed = Regex.Matches(Home, "class=\"post-row\" href=\"([^\"]+)\"").Select(m => m.Groups[1].Value).ToList();
+        var listedDates = listed.Select(h => dates[h]).ToList();
+        Assert.Equal(listedDates.OrderByDescending(d => d), listedDates);
+        Assert.True(listedDates.Min() >= dates.Where(kv => !listed.Contains(kv.Key)).Max(kv => kv.Value));
+    }
+
+    [Theory]
+    [InlineData("InferRouter", "IR")]
+    [InlineData("Scaffold Protocol", "SP")]
+    [InlineData(".NET Agentic AI", "NA")]
+    [InlineData("ChaosForge", "CF")]
+    [InlineData("Homelab", "HO")]
+    public void Monogram(string name, string expected) => Assert.Equal(expected, HomeGenerator.Monogram(name));
+
+    [Fact]
+    public void Nav_has_no_current_page_on_home() => Assert.DoesNotContain("aria-current", Home);
+}

@@ -27,6 +27,9 @@ public static class SiteBuilder
         // Fázis 3: posts/index.html generálása
         GeneratePostsIndex(paths, index, engine, written, log, ref errors);
 
+        // Fázis 4: home (docs/index.html)
+        GenerateHome(paths, index, engine, written, log, ref errors);
+
         log.WriteLine("Processing completed");
         return new BuildReport(errors, written);
     }
@@ -94,6 +97,25 @@ public static class SiteBuilder
         {
             errors++;
             log.WriteLine($"[ERROR] Failed to generate posts index: {ex.Message}");
+        }
+    }
+
+    private static void GenerateHome(
+        ResolvedPaths paths, SiteIndex index, TemplateEngine engine,
+        List<string> written, TextWriter log, ref int errors)
+    {
+        try
+        {
+            var outputPath = Path.Combine(paths.Output, HomeGenerator.Slug);
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+            File.WriteAllText(outputPath, HomeGenerator.Generate(index, engine));
+            written.Add(outputPath);
+            log.WriteLine("Generated: index.html");
+        }
+        catch (Exception ex)
+        {
+            errors++;
+            log.WriteLine($"[ERROR] Failed to generate home page: {ex.Message}");
         }
     }
 }
