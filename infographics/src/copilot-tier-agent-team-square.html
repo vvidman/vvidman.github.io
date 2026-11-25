@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>copilot-tier-agent-team square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+<style>
+.ig-title { font-size: 72px; }
+.ig-sub { font-size: 28px; margin-top: 18px; }
+.ig-body { justify-content: space-between; padding-top: 36px; padding-bottom: 36px; gap: 0; }
+.ig-orch { display: flex; align-items: center; gap: 24px; padding: 24px 32px; }
+.ig-orch .ig-node-title { font-size: 34px; }
+.ig-orch .ig-node-text { margin-top: 6px; font-size: 22px; }
+.ig-orch .ig-tier { margin-left: auto; }
+.ig-tier { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.ig-down { display: flex; justify-content: center; color: var(--accent); height: 40px; align-items: center; }
+.ig-down svg { width: 30px; height: 30px; transform: rotate(90deg); }
+.ig-cards { gap: 18px; }
+.ig-card { padding: 26px 22px; display: flex; flex-direction: column; }
+.ig-card-title { font-size: 30px; margin-top: 8px; }
+.ig-card-body { font-size: 21px; margin-top: 12px; color: var(--ink); flex: 1; }
+.ig-cannot { font-size: 18px; line-height: 1.35; color: var(--muted); margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+.ig-register { display: flex; align-items: center; gap: 24px; padding: 22px 32px; }
+.ig-register .ig-node-title { font-size: 30px; }
+.ig-register .ig-node-text { margin-top: 6px; font-size: 22px; }
+.ig-callout { font-size: 34px; padding: 26px 34px; }
+</style>
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">GitHub Copilot · Agent team</div>
+  <h1 class="ig-title">From tier map to agent team</h1>
+  <div class="ig-sub">Roles bind to tiers, tiers bind to models in exactly one place.</div>
+
+  <div class="ig-body">
+    <div>
+      <div class="ig-node is-key ig-orch">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></div>
+        <div>
+          <div class="ig-node-title">Orchestrator</div>
+          <div class="ig-node-text">Plans, delegates, decides, judges</div>
+        </div>
+        <div class="ig-tier">Frontier</div>
+      </div>
+      <div class="ig-down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-cards" style="--cols:4">
+        <div class="ig-card"><div class="ig-tier">Workhorse</div><div class="ig-card-title">Builder</div><div class="ig-card-body">Implements from a brief</div><div class="ig-cannot">Cannot start other agents</div></div>
+        <div class="ig-card"><div class="ig-tier">Workhorse</div><div class="ig-card-title">Checker</div><div class="ig-card-body">Tests, reads the diff, reports</div><div class="ig-cannot">Cannot edit files</div></div>
+        <div class="ig-card"><div class="ig-tier">Fast iterative</div><div class="ig-card-title">Worker</div><div class="ig-card-body">Repetitive, verifiable work</div><div class="ig-cannot">Cannot write code</div></div>
+        <div class="ig-card"><div class="ig-tier">Frontier</div><div class="ig-card-title">Advisor</div><div class="ig-card-body">Second opinion</div><div class="ig-cannot">Cannot edit or run commands</div></div>
+      </div>
+      <div class="ig-down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node ig-register">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+        <div>
+          <div class="ig-node-title">Register</div>
+          <div class="ig-node-text">One default and at most two alternatives per tier</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Replacing a model is a register update, not a rewrite.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

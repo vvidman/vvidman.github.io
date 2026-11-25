@@ -199,7 +199,7 @@ A slot assignment deserves the same treatment as an architecture decision. One s
 - known weaknesses, stated plainly;
 - what would trigger a review.
 
-The record does two jobs. It explains the decision to developers today, and it lets you revisit it later without reconstructing why it was made. Part 3 is about that revisiting.
+The record does two jobs. It explains the decision to developers today, and it lets you revisit it later without reconstructing why it was made. [Part 3](/posts/governing-ai-assistants-03-model-register.html) is about that revisiting.
 :::lang
 
 :::lang hu
@@ -212,7 +212,7 @@ Egy hely kiosztása ugyanazt a bánásmódot érdemli, mint egy architektúra-d�
 - az ismert gyengeségek, nyíltan kimondva;
 - mi indítana felülvizsgálatot.
 
-A feljegyzés két feladatot lát el. Ma elmagyarázza a döntést a fejlesztőknek, később pedig lehetővé teszi, hogy újragondold, anélkül hogy rekonstruálnod kellene, miért született. A 3. rész erről az újragondolásról szól.
+A feljegyzés két feladatot lát el. Ma elmagyarázza a döntést a fejlesztőknek, később pedig lehetővé teszi, hogy újragondold, anélkül hogy rekonstruálnod kellene, miért született. A [3. rész](/posts/governing-ai-assistants-03-model-register.html) erről az újragondolásról szól.
 :::lang
 
 :::section
@@ -252,13 +252,13 @@ Mielőtt egy modell helyet kap, legyen válaszod ezekre:
 :::lang en
 ## Next: keeping it alive
 
-Every decision in this post has a date on it. Models improve, prices change, vendors retire versions on their own schedule. Part 3 is about the model register: what it records, the states a model moves through, and the two review rhythms that keep the register worth trusting.
+Every decision in this post has a date on it. Models improve, prices change, vendors retire versions on their own schedule. [Part 3](/posts/governing-ai-assistants-03-model-register.html) is about the model register: what it records, the states a model moves through, and the two review rhythms that keep the register worth trusting.
 :::lang
 
 :::lang hu
 ## Következik: életben tartás
 
-Ebben a posztban minden döntésnek dátuma van. A modellek fejlődnek, az árak változnak, a gyártók a saját ütemezésük szerint vezetnek ki verziókat. A 3. rész a modellregiszterről szól: mit rögzít, milyen állapotokon megy át egy modell, és melyik az a két felülvizsgálati ritmus, amitől a regiszter megbízható marad.
+Ebben a posztban minden döntésnek dátuma van. A modellek fejlődnek, az árak változnak, a gyártók a saját ütemezésük szerint vezetnek ki verziókat. A [3. rész](/posts/governing-ai-assistants-03-model-register.html) a modellregiszterről szól: mit rögzít, milyen állapotokon megy át egy modell, és melyik az a két felülvizsgálati ritmus, amitől a regiszter megbízható marad.
 :::lang
 
 :::section
