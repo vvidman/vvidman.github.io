@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>why-i-built-my-own-static-site-generator square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Site Generator · Part 1</div>
+  <h1 class="ig-title">Why I built my own<br>static site generator</h1>
+  <p class="ig-sub">Not because the others are bad.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-node-title">Markdown input</div>
+        <div class="ig-node-text">Structured text goes in.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-node-title">Custom generator</div>
+        <div class="ig-node-text">A DSL marks sections and languages. HTML is rendered from a template.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">docs/</div>
+        <div class="ig-node-text">Served directly by GitHub Pages.</div>
+      </div>
+    </div>
+
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title">Not a content management problem</div>
+        <div class="ig-card-body">A blog is a transformation pipeline: structured text goes in, HTML comes out.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">The actual constraint</div>
+        <div class="ig-card-body">Bilingual content: one file per article. No translation keys, no duplicated directory trees.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Simpler in the long run</div>
+        <div class="ig-card-body">A custom tool is simpler when your problem is small and well-defined.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">A custom tool isn't a hobby project. It's an engineering decision.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

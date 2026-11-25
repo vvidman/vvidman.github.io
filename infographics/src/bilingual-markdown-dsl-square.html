@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>bilingual-markdown-dsl square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Site Generator · Part 2</div>
+  <h1 class="ig-title" style="font-size:64px">Designing a minimal DSL<br>for bilingual Markdown content</h1>
+  <p class="ig-sub">One file. Two languages. No duplication.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-split">
+      <div class="ig-code"><span class="d">:::section intro</span>
+<span class="d">:::lang en</span>
+Markdown
+<span class="d">:::lang</span>
+
+<span class="d">:::lang hu</span>
+Markdown
+<span class="d">:::lang</span>
+<span class="d">:::section</span></div>
+      <div class="ig-stack">
+        <div class="ig-card">
+          <div class="ig-card-title">One file per article</div>
+          <div class="ig-card-body">Not one file per language. Not a source file with a translation sidecar.</div>
+        </div>
+        <div class="ig-card is-key">
+          <div class="ig-card-title">Two levels, not one</div>
+          <div class="ig-card-body">:::section name — a named content block. :::lang en / :::lang hu — a language block inside a section.</div>
+        </div>
+        <div class="ig-card">
+          <div class="ig-card-title">A simple state machine</div>
+          <div class="ig-card-body">The parser reads line by line. No regex. No recursive descent.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Explicit over clever.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

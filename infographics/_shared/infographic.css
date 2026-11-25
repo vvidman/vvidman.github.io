@@ -126,6 +126,14 @@ body { overflow: hidden; }
 .ig-layer-title { font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 26px; white-space: nowrap; }
 .ig-layer-text { font-size: 20px; color: var(--muted); text-align: right; }
 
+/* ---- code block and split layout ---- */
+.ig-split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+.ig-stack { display: flex; flex-direction: column; gap: 16px; }
+.ig-stack .ig-card { flex: 1; }
+.ig-code { background: var(--code-bg); border: 2px solid var(--line); border-radius: 12px; padding: 24px; font-family: "JetBrains Mono", monospace; font-weight: 400; font-size: 22px; line-height: 1.6; color: var(--ink); white-space: pre; }
+.ig-code .d { color: var(--accent); }
+.ig-og .ig-code { font-size: 17px; line-height: 1.5; padding: 16px 20px; }
+
 /* ---- modifiers ---- */
 .ig-card-title.is-mono, .ig-node-title.is-mono { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 21px; letter-spacing: -0.01em; }
 .ig-og .ig-card-title.is-mono, .ig-og .ig-node-title.is-mono { font-size: 17px; }

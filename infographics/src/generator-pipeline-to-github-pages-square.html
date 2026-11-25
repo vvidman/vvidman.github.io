@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>generator-pipeline-to-github-pages square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Site Generator · Part 3</div>
+  <h1 class="ig-title" style="font-size:64px">The generator pipeline<br>from Markdown to GitHub Pages</h1>
+  <p class="ig-sub">No CI/CD. No build server. A local command, a docs/ folder, and a git push.</p>
+
+  <div class="ig-body" style="gap:22px">
+    <div>
+      <div class="ig-label">Build · a single command, a single pass</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title">Configuration</div><div class="ig-node-text">Loaded from appsettings.json.</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Parse</div><div class="ig-node-text">Produces a PageDocument.</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Render</div><div class="ig-node-text">Produces a finished HTML string.</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Write</div><div class="ig-node-text">Places it in docs/ at the path of the slug.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="ig-label">Publish · a deliberate human step</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title">Write</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Build</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Review on desktop</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Review on mobile</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Push</div></div>
+      </div>
+    </div>
+
+    <div class="ig-cards" style="--cols:3; gap:16px">
+      <div class="ig-card">
+        <div class="ig-card-title">The docs/ folder</div>
+        <div class="ig-card-body">GitHub Pages serves it directly. No build step on the server side.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Local preview</div>
+        <div class="ig-card-body">preview.ps1 serves the exact same output that GitHub Pages will.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Why manual</div>
+        <div class="ig-card-body">Automating the review would mean trusting the build output without looking at it.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">What you see locally is what ships.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>
