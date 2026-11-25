@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>sourcerag-01 og</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-og">
+  <div class="ig-eyebrow">SourceRAG · Part 2</div>
+  <h1 class="ig-title">VCS as proof store</h1>
+
+  <div class="ig-body" style="gap:16px">
+    <div class="ig-compare">
+      <div class="ig-compare-col">
+        <div class="ig-compare-head">Traditional RAG over a codebase</div>
+        <div class="ig-compare-item">Two copies of everything</div>
+        <div class="ig-compare-item">An ongoing sync obligation</div>
+        <div class="ig-compare-item">A proof store you have to maintain yourself</div>
+      </div>
+      <div class="ig-compare-col is-key">
+        <div class="ig-compare-head">SourceRAG</div>
+        <div class="ig-compare-item">No source content outside the repository</div>
+        <div class="ig-compare-item">Vector store: embeddings and metadata only</div>
+        <div class="ig-compare-item">Content reconstructed on demand from the VCS</div>
+      </div>
+    </div>
+    <div class="ig-callout">Every answer is traceable to a specific revision, its author and its commit message.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

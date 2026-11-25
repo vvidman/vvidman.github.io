@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>raglab-01 square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">RagLab · Part 1</div>
+  <h1 class="ig-title">Building a RAG pipeline<br>from scratch</h1>
+  <p class="ig-sub">Every component written from scratch, every decision made consciously.</p>
+
+  <div class="ig-body" style="gap:24px">
+    <div>
+      <div class="ig-label">Indexing · runs once, or whenever your documents change</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title">File</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Loader</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Chunker</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Embedder</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Vector store</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="ig-label">Querying · runs for every question</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title">Question</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Embedder</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Search</div><div class="ig-node-text">Top chunks</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Generator</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Answer</div></div>
+      </div>
+    </div>
+
+    <div class="ig-cards" style="--cols:5; gap:14px">
+      <div class="ig-card">
+        <div class="ig-card-title">Loader</div>
+        <div class="ig-card-body">Reads a file into a clean, normalized Document.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Chunker</div>
+        <div class="ig-card-body">Splits a document into manageable pieces.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Embedder</div>
+        <div class="ig-card-body">Turns text into a vector that encodes its meaning.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Vector store</div>
+        <div class="ig-card-body">Given a query vector, finds the closest stored vectors.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Generator</div>
+        <div class="ig-card-body">The only component that involves a generative language model.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">The same embedding model must be used during indexing and querying.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

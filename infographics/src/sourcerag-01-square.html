@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>sourcerag-01 square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">SourceRAG · Part 2</div>
+  <h1 class="ig-title">VCS as proof store</h1>
+  <p class="ig-sub">Why duplicate source content into a proof database when source control already tracks everything?</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-compare">
+      <div class="ig-compare-col">
+        <div class="ig-compare-head">Traditional RAG over a codebase</div>
+        <div class="ig-compare-item">Two copies of everything</div>
+        <div class="ig-compare-item">An ongoing sync obligation</div>
+        <div class="ig-compare-item">A proof store you have to maintain yourself</div>
+      </div>
+      <div class="ig-compare-col is-key">
+        <div class="ig-compare-head">SourceRAG</div>
+        <div class="ig-compare-item">No source content is stored outside the repository</div>
+        <div class="ig-compare-item">The vector store holds only embeddings and metadata</div>
+        <div class="ig-compare-item">File content is reconstructed on demand from the VCS</div>
+      </div>
+    </div>
+
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg></div>
+        <div class="ig-node-title">Revision + file path</div>
+        <div class="ig-node-text">Taken from the vector store payload.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M18 11.5c0 3-5 2-11 5"/></svg></div>
+        <div class="ig-node-title">VCS call</div>
+        <div class="ig-node-text">Asked for that revision of the file.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></div>
+        <div class="ig-node-title">Exact content</div>
+        <div class="ig-node-text">As it existed at that commit.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">The proof isn't a database row — it's a commit in your repository's history.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

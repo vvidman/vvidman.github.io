@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>raglab-01 og</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-og">
+  <div class="ig-eyebrow">RagLab · Part 1</div>
+  <h1 class="ig-title">Building a RAG pipeline from scratch</h1>
+
+  <div class="ig-body" style="gap:14px">
+    <div>
+      <div class="ig-label">Indexing</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title">File</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Loader</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Chunker</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Embedder</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Vector store</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="ig-label">Querying</div>
+      <div class="ig-flow is-compact">
+        <div class="ig-node"><div class="ig-node-title">Question</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node is-key"><div class="ig-node-title">Embedder</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Search</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Generator</div></div>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="ig-node"><div class="ig-node-title">Answer</div></div>
+      </div>
+    </div>
+    <div class="ig-callout">The same embedding model must be used during indexing and querying.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

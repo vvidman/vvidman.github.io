@@ -108,6 +108,17 @@ body { overflow: hidden; }
 .ig-og .ig-body { padding-top: 16px; }
 .ig-body > .ig-node { flex: none; }
 
+/* ---- labels and compact flows ---- */
+.ig-label { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.ig-og .ig-label { font-size: 14px; margin-bottom: 6px; }
+.ig-flow.is-compact .ig-node { padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; }
+.ig-flow.is-compact .ig-node-title { font-size: 24px; }
+.ig-flow.is-compact .ig-node-text { font-size: 17px; margin-top: 4px; }
+.ig-flow.is-compact .ig-arrow { flex: 0 0 36px; }
+.ig-flow.is-compact .ig-arrow svg { width: 24px; height: 24px; }
+.ig-og .ig-flow.is-compact .ig-node { padding: 10px 14px; }
+.ig-og .ig-flow.is-compact .ig-node-title { font-size: 20px; }
+
 /* ---- modifiers ---- */
 .ig-card-title.is-mono, .ig-node-title.is-mono { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 21px; letter-spacing: -0.01em; }
 .ig-og .ig-card-title.is-mono, .ig-og .ig-node-title.is-mono { font-size: 17px; }

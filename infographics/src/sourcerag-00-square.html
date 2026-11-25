@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>sourcerag-00 square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">SourceRAG · Part 1</div>
+  <h1 class="ig-title">Making a 2M-line legacy codebase queryable by AI</h1>
+  <p class="ig-sub">Designed and presented internally, never implemented.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z"/></svg></div>
+        <div class="ig-node-title">CI/CD hook</div>
+        <div class="ig-node-text">Triggered when a build completes.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg></div>
+        <div class="ig-node-title">Indexer Service</div>
+        <div class="ig-node-text">Processes changed source files, generates embeddings.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+        <div class="ig-node-title">Qdrant + SQLite Manifest DB</div>
+        <div class="ig-node-text">Semantic search, and index state.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg></div>
+        <div class="ig-node-title">Retrieval API</div>
+        <div class="ig-node-text">ASP.NET Core. Accepts queries from any AI tool.</div>
+      </div>
+    </div>
+
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title">Qdrant</div>
+        <div class="ig-card-body">Purpose-built for vector similarity search, Docker-deployable, no cloud dependency.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">SQLite Manifest DB</div>
+        <div class="ig-card-body">A lightweight, file-based tracking layer. No separate database server.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Tool-agnostic API</div>
+        <div class="ig-card-body">Decouples every consumer from the storage layer.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Does the proof store need to be built — or does it already exist?</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>
