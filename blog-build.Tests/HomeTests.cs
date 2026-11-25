@@ -71,7 +71,7 @@ public class HomeTests : IClassFixture<SiteFixture>
     [Fact]
     public void Profile_latest_is_newest_post()
     {
-        Assert.Contains("<span class=\"s\">\"InferRouter Part 4: Observability\"</span>", Home);
+        Assert.Contains("<span class=\"s\">\"Not Everyone Needs the Frontier Model\"</span>", Home);
     }
 
     [Fact]

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en" data-theme="light" data-title-en="Viktor Vidman – Not Everyone Needs the Frontier Model" data-title-hu="Viktor Vidman – Nem kell mindenkinek a legerősebb modell">
+<head>
+<script>(function(){var d=document.documentElement,l,t;try{l=localStorage.getItem('lang');t=localStorage.getItem('theme')}catch(e){}
+if(l!=='en'&&l!=='hu'){l=(navigator.language||'').toLowerCase().indexOf('hu')===0?'hu':'en'}
+if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-theme',t)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viktor Vidman – Not Everyone Needs the Frontier Model</title>
+<meta name="description" content="Why the models behind an organisation&#39;s AI coding assistants should be tiered by type of work, with one default and at most two alternatives per tier.">
+<meta name="author" content="Viktor Vidman">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#F4F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B121B" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://vvidman.github.io/posts/governing-ai-assistants-01-model-tiers.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vvidman.github.io/posts/governing-ai-assistants-01-model-tiers.html">
+<meta property="og:title" content="Viktor Vidman – Not Everyone Needs the Frontier Model">
+<meta property="og:description" content="Why the models behind an organisation&#39;s AI coding assistants should be tiered by type of work, with one default and at most two alternatives per tier.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="hu_HU">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-01-model-tiers-og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Viktor Vidman – Not Everyone Needs the Frontier Model">
+<meta name="twitter:description" content="Why the models behind an organisation&#39;s AI coding assistants should be tiered by type of work, with one default and at most two alternatives per tier.">
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-01-model-tiers-og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Not Everyone Needs the Frontier Model","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/governing-ai-assistants-01-model-tiers.html","image":"https://vvidman.github.io/assets/images/infographics/governing-ai-assistants-01-model-tiers-og.png","datePublished":"2026-11-25"}</script>
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Viktor Vidman" href="/feed.xml">
+<script src="/assets/javascript/site.js" defer></script>
+
+</head>
+<body>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href="/"><span>~/</span>vvidman</a>
+<nav class="nav" aria-label="Main">
+<a href="/posts/" aria-current="page">/blog</a>
+<a href="/about/">/about</a>
+</nav>
+<div class="toggles">
+<div class="seg" role="group" aria-label="Language">
+<button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+<button type="button" data-set-lang="hu" aria-pressed="false">HU</button>
+</div>
+<button type="button" class="icon-btn" data-toggle-theme aria-label="Toggle dark mode">
+<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+</div>
+</div>
+</header>
+
+<main>
+<div class="post-layout">
+
+<article class="article">
+<header class="post-head">
+<h1 class="post-title"><span data-l="en">Not Everyone Needs the Frontier Model</span><span data-l="hu">Nem kell mindenkinek a legerősebb modell</span></h1>
+<p class="post-lead"><span data-l="en">Why the models behind an organisation&#39;s AI coding assistants should be tiered by type of work, with one default and at most two alternatives per tier.</span><span data-l="hu">Miért érdemes egy szervezetben az AI kódoló asszisztensek modelljeit munkatípus szerint szintekbe sorolni, szintenként egy alapértelmezett és legfeljebb két alternatív modellel.</span></p>
+<p class="post-meta">2026-11-25 · <span data-l="en">5 min read</span><span data-l="hu">5 perc olvasás</span> · EN / HU</p>
+</header>
+<figure><img src="/assets/images/infographics/governing-ai-assistants-01-model-tiers-square.png" alt="Not Everyone Needs the Frontier Model — infographic" loading="lazy" width="1200" height="1200"></figure>
+<div class="prose" data-l="en">
+<section class="page-section" data-key="intro">
+  <h2 id="the-question-nobody-owns">The question nobody owns</h2>
+<p>When a development organisation adopts an AI coding assistant, the first visible decision is the licence. The second one is quieter and lasts much longer: which models are developers allowed to use, and for what?</p>
+<p>In most organisations this question has no owner. The assistant ships with a model picker, the list grows every month, and every developer makes their own call. Usually by habit, sometimes by hype.</p>
+<p>This series is about giving that question an owner and a method. Not a policy document nobody reads, but a small set of decisions that keep the human in control at the level of the organisation, not just at the level of a single prompt.</p>
+<p>Part 1 starts with the structure everything else hangs on: model tiers.</p>
+
+</section>
+<section class="page-section" data-key="two-extremes">
+  <h2 id="two-ways-to-get-it-wrong">Two ways to get it wrong</h2>
+<p><strong>Free for all.</strong> Every model in the picker is available to everyone. It looks like freedom. In practice:</p>
+<ul>
+<li>cost becomes unpredictable, because premium models are often billed at a multiple of the standard rate;</li>
+<li>results stop being comparable, because two developers solving the same kind of task are using different engines;</li>
+<li>nobody can tell which choices were deliberate and which were accidental.</li>
+</ul>
+<p><strong>One size fits all.</strong> One model for everyone, for everything. Easy to govern, but either you pay frontier prices for renaming variables, or you hand a mid-range model a cross-cutting refactor and blame the developer when it fails.</p>
+<p>Both extremes skip the same step: matching the model to the kind of work.</p>
+
+</section>
+<section class="page-section" data-key="tiers">
+  <h2 id="a-tier-is-a-class-of-work-not-a-model">A tier is a class of work, not a model</h2>
+<p>Start from the work, not from the model list. Four classes cover most of what developers ask an assistant to do:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Typical work</th>
+<th>What matters most</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontier</td>
+<td>multi-step changes, architecture-level reasoning, unfamiliar code</td>
+<td>capability</td>
+</tr>
+<tr>
+<td>Workhorse</td>
+<td>daily development: features, fixes, tests, reviews</td>
+<td>balance of quality, speed and cost</td>
+</tr>
+<tr>
+<td>Fast iterative</td>
+<td>small, repetitive steps: renames, formatting, boilerplate, quick questions</td>
+<td>latency and cost</td>
+</tr>
+<tr>
+<td>Specialised</td>
+<td>a workflow built around one specific model's behaviour</td>
+<td>stability of that one model</td>
+</tr>
+</tbody>
+</table>
+<p>The tier names describe work. Models move between tiers as they improve or get cheaper; the tiers themselves stay stable. That is the point: developers learn &quot;use the workhorse tier for this&quot;, not a model name that will be deprecated next quarter.</p>
+<p>The specialised tier deserves a note. Some workflows, such as an agent setup, a review pipeline or a prompt library, are tuned to one model's quirks. Swapping the model silently breaks them. Giving them their own tier makes that dependency visible instead of accidental.</p>
+
+</section>
+<section class="page-section" data-key="defaults">
+  <h2 id="one-default-at-most-two-alternatives">One default, at most two alternatives</h2>
+<p>Each tier gets exactly one default and at most two alternatives.</p>
+<ul>
+<li><strong>The default</strong> is what developers should reach for without thinking. Most of the work happens here, which makes results comparable and support possible.</li>
+<li><strong>The alternatives</strong> exist for a stated reason: a different strength, a fallback when the default is slow or unavailable, or a candidate under evaluation.</li>
+<li><strong>Three is the ceiling.</strong> Beyond that, the picker becomes a menu again, and you are back to free for all with extra paperwork.</li>
+</ul>
+<p>The limit has a useful side effect. Every time someone wants to add a model, it forces the honest question: which one does it replace?</p>
+
+</section>
+<section class="page-section" data-key="where-to-decide">
+  <h2 id="decide-centrally-start-simple">Decide centrally, start simple</h2>
+<p>Tiers can be assigned per team, per repository or for the whole organisation. Start at the organisation level with a single tier map. Per-team differences are real, but they are a second-order optimisation, and every split doubles the number of decisions you have to review later.</p>
+<p>Split only when a team can name the class of work the shared map gets wrong.</p>
+<p>Who decides matters as much as where. A small group with a clear mandate, such as the architects or whoever owns technical standards, beats a wide committee. The goal is not consensus on every model, but a decision that is visible, explained and reversible.</p>
+
+</section>
+<section class="page-section" data-key="in-practice">
+  <h2 id="from-map-to-practice">From map to practice</h2>
+<p>A tier map that lives in a document nobody opens changes nothing. Three things make it part of daily work.</p>
+<p><strong>Find the classes of work from real usage, not from a whiteboard.</strong> Ask a few developers from different teams to list what they used the assistant for last week. The four classes above are a starting point; rename or merge them if your list says otherwise. A tier nobody can map their work to is a tier too many.</p>
+<p><strong>Make the default the path of least resistance.</strong> If the tooling allows it, set the workhorse default as the preselected model. Reference tiers, not model names, in shared instructions, templates and onboarding material. Then the model behind a tier can change without rewriting every guide.</p>
+<p><strong>Publish the reasoning, not just the result.</strong> For each slot, one sentence on why this model is there and what would make you replace it. Developers accept a constraint they understand. They work around one they don't.</p>
+<p>None of this requires new infrastructure. A short page, a clear owner and a predictable review rhythm are enough to start.</p>
+
+</section>
+<section class="page-section" data-key="what-tiers-are-not">
+  <h2 id="what-tiers-are-not">What tiers are not</h2>
+<ul>
+<li><strong>Not a ranking of people.</strong> Junior developers are not restricted to cheap models. The class of work decides, not seniority.</li>
+<li><strong>Not a ban list.</strong> Excluding models, for licensing, data-handling or quality reasons, is a separate decision with its own criteria. Tiers organise what is already allowed.</li>
+<li><strong>Not permanent.</strong> A tier map is a snapshot. Part 3 of this series covers how to keep it alive.</li>
+</ul>
+
+</section>
+<section class="page-section" data-key="checklist">
+  <h2 id="checklist">Checklist</h2>
+<p>Before you publish a tier map, make sure you can answer these:</p>
+<ol>
+<li>Which classes of work do our developers actually use the assistant for?</li>
+<li>For each class: what matters most, capability, latency, cost or stability?</li>
+<li>Which model is the default in each tier, and why?</li>
+<li>Which alternatives exist, and what is each one for?</li>
+<li>Which workflows depend on one specific model?</li>
+<li>Who owns the map, and how does someone propose a change?</li>
+</ol>
+
+</section>
+<section class="page-section" data-key="next">
+  <h2 id="next-choosing-the-models">Next: choosing the models</h2>
+<p>A tier map only says where a model goes. It does not say which model deserves the slot. Most organisations have to make that call without an internal evaluation lab. Part 2 is about doing it honestly anyway: public benchmarks as a filter rather than a verdict, and an evaluation library that grows out of real decisions.</p>
+
+</section>
+
+</div>
+<div class="prose" data-l="hu">
+<section class="page-section" data-key="intro">
+  <h2 id="a-kerdes-aminek-nincs-gazdaja">A kérdés, aminek nincs gazdája</h2>
+<p>Amikor egy fejlesztői szervezet bevezet egy AI kódoló asszisztenst, az első látható döntés a licenc. A második csendesebb, és sokkal tovább hat: milyen modelleket használhatnak a fejlesztők, és mire?</p>
+<p>A legtöbb szervezetben ennek a kérdésnek nincs gazdája. Az asszisztens egy modellválasztóval érkezik, a lista hónapról hónapra hosszabb, és mindenki maga dönt. Többnyire megszokásból, néha a hype alapján.</p>
+<p>Ez a sorozat arról szól, hogyan kap ez a kérdés gazdát és módszert. Nem egy szabályzatot, amit senki nem olvas el, hanem néhány döntést, amelyekkel az irányítás az embernél marad, és nem csak egy-egy prompt szintjén, hanem az egész szervezetén.</p>
+<p>Az 1. rész azzal a szerkezettel kezdi, amire minden más épül: a modellek szintekbe sorolásával.</p>
+
+</section>
+<section class="page-section" data-key="two-extremes">
+  <h2 id="ket-rossz-veglet">Két rossz véglet</h2>
+<p><strong>Mindenki azt használ, amit akar.</strong> A választó összes modellje mindenkinek elérhető. Szabadságnak tűnik. A gyakorlatban:</p>
+<ul>
+<li>a költség kiszámíthatatlanná válik, mert a prémium modellek használata gyakran a normál díj többszöröse;</li>
+<li>az eredmények nem összehasonlíthatók, mert két fejlesztő ugyanazt a feladattípust más motorral oldja meg;</li>
+<li>senki nem tudja megmondani, melyik választás volt tudatos és melyik véletlen.</li>
+</ul>
+<p><strong>Mindenkinek ugyanaz.</strong> Egy modell mindenkinek, mindenre. Könnyű irányítani, de vagy frontier árat fizetsz egy változó átnevezéséért, vagy egy közepes modellre bízol egy több rétegen átnyúló refaktort, és utána a fejlesztőt hibáztatod, amikor elbukik.</p>
+<p>Mindkét véglet ugyanazt a lépést hagyja ki: a modell hozzáillesztését a munka típusához.</p>
+
+</section>
+<section class="page-section" data-key="tiers">
+  <h2 id="a-szint-munkatipus-nem-modell">A szint munkatípus, nem modell</h2>
+<p>A munkából indulj ki, ne a modellistából. Négy munkatípus lefedi a legtöbbet abból, amire a fejlesztők egy asszisztenst használnak:</p>
+<table>
+<thead>
+<tr>
+<th>Szint</th>
+<th>Jellemző munka</th>
+<th>Mi számít leginkább</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontier</td>
+<td>többlépéses változtatások, architektúra-szintű gondolkodás, ismeretlen kód</td>
+<td>képesség</td>
+</tr>
+<tr>
+<td>Igásló</td>
+<td>napi fejlesztés: funkciók, javítások, tesztek, review</td>
+<td>minőség, sebesség és költség egyensúlya</td>
+</tr>
+<tr>
+<td>Gyors-iteratív</td>
+<td>kis, ismétlődő lépések: átnevezés, formázás, boilerplate, gyors kérdések</td>
+<td>késleltetés és költség</td>
+</tr>
+<tr>
+<td>Specializált</td>
+<td>egy workflow, ami egy konkrét modell viselkedésére épül</td>
+<td>annak az egy modellnek a stabilitása</td>
+</tr>
+</tbody>
+</table>
+<p>A szintek neve a munkát írja le. A modellek vándorolnak a szintek között, ahogy jobbak vagy olcsóbbak lesznek, maguk a szintek viszont stabilak. Pont ez a lényeg: a fejlesztő azt tanulja meg, hogy „erre az igásló szint való”, nem egy modellnevet, amit a következő negyedévben kivezetnek.</p>
+<p>A specializált szint külön említést érdemel. Bizonyos workflow-k, például egy agent-összeállítás, egy review pipeline vagy egy prompt-könyvtár, egy modell sajátosságaira vannak hangolva. Ha a modellt csendben lecseréled, eltörnek. Ha saját szintet kapnak, ez a függőség láthatóvá válik, és nem véletlenül derül ki.</p>
+
+</section>
+<section class="page-section" data-key="defaults">
+  <h2 id="egy-alapertelmezett-legfeljebb-ket-alternativa">Egy alapértelmezett, legfeljebb két alternatíva</h2>
+<p>Minden szint pontosan egy alapértelmezett és legfeljebb két alternatív modellt kap.</p>
+<ul>
+<li><strong>Az alapértelmezett</strong> az, amihez a fejlesztő gondolkodás nélkül nyúl. A munka nagy része itt történik, így az eredmények összehasonlíthatók, és a támogatás is megoldható.</li>
+<li><strong>Az alternatíváknak</strong> kimondott oka van: más erősség, tartalék arra az esetre, ha az alapértelmezett lassú vagy elérhetetlen, vagy egy éppen értékelés alatt álló jelölt.</li>
+<li><strong>A plafon három.</strong> Ennél több esetén a választó újra étlappá válik, és visszajutottál a „mindenki azt használ, amit akar” állapotba, csak több papírmunkával.</li>
+</ul>
+<p>A korlátnak van egy hasznos mellékhatása. Valahányszor valaki új modellt akar felvenni, kikényszeríti az őszinte kérdést: melyiket váltja le?</p>
+
+</section>
+<section class="page-section" data-key="where-to-decide">
+  <h2 id="kozponti-dontes-egyszeru-kezdes">Központi döntés, egyszerű kezdés</h2>
+<p>A szinteket lehet csapatonként, repónként vagy az egész szervezetre beállítani. Kezdd szervezeti szinten, egyetlen szinttérképpel. A csapatok közötti különbségek valósak, de ez másodrendű optimalizálás, és minden szétválasztás megduplázza a később felülvizsgálandó döntések számát.</p>
+<p>Akkor válaszd szét, ha egy csapat meg tudja nevezni azt a munkatípust, amit a közös térkép rosszul kezel.</p>
+<p>Az, hogy ki dönt, ugyanannyira fontos, mint az, hogy hol. Egy kis csoport világos felhatalmazással, például az architektek vagy akik a technikai szabványokért felelnek, jobb, mint egy széles bizottság. A cél nem az, hogy minden modellről konszenzus legyen, hanem egy látható, megindokolt és visszafordítható döntés.</p>
+
+</section>
+<section class="page-section" data-key="in-practice">
+  <h2 id="a-terkeptol-a-gyakorlatig">A térképtől a gyakorlatig</h2>
+<p>Egy szinttérkép, ami egy soha meg nem nyitott dokumentumban él, semmin nem változtat. Három dolog teszi a napi munka részévé.</p>
+<p><strong>A munkatípusokat a valódi használatból keresd meg, ne a táblánál.</strong> Kérj meg néhány fejlesztőt különböző csapatokból, hogy írják össze, mire használták az asszisztenst az elmúlt héten. A fenti négy típus kiindulópont; nevezd át vagy vond össze őket, ha a lista mást mutat. Ha egy szinthez senki nem tudja a munkáját hozzárendelni, az eggyel több a kelleténél.</p>
+<p><strong>Az alapértelmezett legyen a legkisebb ellenállás útja.</strong> Ha az eszköz engedi, az igásló szint alapértelmezett modellje legyen előre kiválasztva. A közös instrukciókban, sablonokban és az onboarding anyagokban szintekre hivatkozz, ne modellnevekre. Így a szint mögötti modell lecserélhető anélkül, hogy minden útmutatót át kellene írni.</p>
+<p><strong>Az indoklást tedd közzé, ne csak az eredményt.</strong> Minden helyhez egy mondat arról, miért ez a modell van ott, és mi miatt cserélnéd le. A fejlesztők elfogadják a korlátot, ha értik. Ha nem értik, megkerülik.</p>
+<p>Ehhez nem kell új infrastruktúra. Egy rövid oldal, egy egyértelmű gazda és kiszámítható felülvizsgálati ritmus elég az induláshoz.</p>
+
+</section>
+<section class="page-section" data-key="what-tiers-are-not">
+  <h2 id="mi-nem-a-szint">Mi nem a szint</h2>
+<ul>
+<li><strong>Nem az emberek rangsora.</strong> A junior fejlesztők nincsenek az olcsó modellekre korlátozva. A munka típusa dönt, nem a tapasztalat.</li>
+<li><strong>Nem tiltólista.</strong> Modellek kizárása licenc, adatkezelés vagy minőség miatt külön döntés, saját szempontokkal. A szintek azt rendezik, ami már engedélyezett.</li>
+<li><strong>Nem végleges.</strong> A szinttérkép egy pillanatkép. A sorozat 3. része arról szól, hogyan tartsd életben.</li>
+</ul>
+
+</section>
+<section class="page-section" data-key="checklist">
+  <h2 id="ellenorzolista">Ellenőrzőlista</h2>
+<p>Mielőtt közzéteszel egy szinttérképet, legyen válaszod ezekre:</p>
+<ol>
+<li>Valójában milyen munkatípusokra használják a fejlesztőink az asszisztenst?</li>
+<li>Az egyes típusoknál mi számít leginkább: képesség, késleltetés, költség vagy stabilitás?</li>
+<li>Melyik modell az alapértelmezett az egyes szinteken, és miért?</li>
+<li>Milyen alternatívák vannak, és mire való mindegyik?</li>
+<li>Mely workflow-k függenek egy konkrét modelltől?</li>
+<li>Kié a térkép, és hogyan javasolhat valaki változtatást?</li>
+</ol>
+
+</section>
+<section class="page-section" data-key="next">
+  <h2 id="kovetkezik-a-modellek-kivalasztasa">Következik: a modellek kiválasztása</h2>
+<p>A szinttérkép csak azt mondja meg, hová kerül egy modell. Azt nem, hogy melyik modell érdemli meg a helyet. A legtöbb szervezetnek ezt saját mérőkörnyezet nélkül kell eldöntenie. A 2. rész arról szól, hogyan lehet ezt mégis becsületesen csinálni: a publikus benchmarkok szűrőként, nem ítéletként, és egy eval-könyvtár, ami valódi döntésekből nő ki.</p>
+
+</section>
+
+</div>
+
+</article>
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p>© 2026 Viktor Vidman · <span data-l="en">built with a custom C# generator</span><span data-l="hu">saját C# generátorral építve</span></p>
+<nav aria-label="Footer">
+<a href="https://github.com/vvidman">github</a>
+<a href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">linkedin</a>
+<a href="/feed.xml">rss</a>
+</nav>
+</div>
+</footer>
+
+</body>
+</html>

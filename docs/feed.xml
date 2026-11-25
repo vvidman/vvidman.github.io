@@ -6,6 +6,13 @@
     <description>Software architecture, AI-augmented delivery and local-first LLM infrastructure.</description>
     <language>en</language>
     <item>
+      <title>Not Everyone Needs the Frontier Model</title>
+      <link>https://vvidman.github.io/posts/governing-ai-assistants-01-model-tiers.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/governing-ai-assistants-01-model-tiers.html</guid>
+      <pubDate>Wed, 25 Nov 2026 00:00:00 GMT</pubDate>
+      <description>Why the models behind an organisation's AI coding assistants should be tiered by type of work, with one default and at most two alternatives per tier.</description>
+    </item>
+    <item>
       <title>InferRouter Part 4: Observability</title>
       <link>https://vvidman.github.io/posts/inferrouter-04.html</link>
       <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-04.html</guid>

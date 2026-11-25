@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>governing-ai-assistants-01-model-tiers square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+<style>
+.ig-title { font-size: 68px; }
+.ig-body { justify-content: space-between; padding-top: 32px; padding-bottom: 44px; gap: 0; }
+.ig-cards { gap: 22px; flex: 1; margin-bottom: 28px; }
+.ig-card { padding: 22px 28px; display: flex; flex-direction: column; }
+.ig-card-title { font-size: 36px; }
+.ig-card-body { font-size: 24px; margin-top: 14px; margin-bottom: 16px; color: var(--ink); }
+.ig-card-meta { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); }
+.ig-card-meta .ig-label { margin-bottom: 6px; }
+.ig-card-meta-text { font-size: 24px; line-height: 1.3; color: var(--accent); font-weight: 500; }
+.ig-callout { font-size: 36px; padding: 24px 36px; }
+</style>
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Governing AI Coding Assistants · Part 1</div>
+  <h1 class="ig-title">Not everyone needs the frontier model</h1>
+  <p class="ig-sub">A tier is a class of work, not a model.</p>
+
+  <div class="ig-body">
+    <div class="ig-cards" style="--cols:2">
+      <div class="ig-card">
+        <div class="ig-card-title">Frontier</div>
+        <div class="ig-card-body">Multi-step changes, architecture-level reasoning, unfamiliar code.</div>
+        <div class="ig-card-meta"><div class="ig-label">Matters most</div><div class="ig-card-meta-text">Capability</div></div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Workhorse</div>
+        <div class="ig-card-body">Daily development: features, fixes, tests, reviews.</div>
+        <div class="ig-card-meta"><div class="ig-label">Matters most</div><div class="ig-card-meta-text">Balance of quality, speed and cost</div></div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Fast iterative</div>
+        <div class="ig-card-body">Small, repetitive steps: renames, formatting, boilerplate, quick questions.</div>
+        <div class="ig-card-meta"><div class="ig-label">Matters most</div><div class="ig-card-meta-text">Latency and cost</div></div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Specialised</div>
+        <div class="ig-card-body">A workflow built around one specific model's behaviour.</div>
+        <div class="ig-card-meta"><div class="ig-label">Matters most</div><div class="ig-card-meta-text">Stability of that one model</div></div>
+      </div>
+    </div>
+
+    <div class="ig-callout">One default per tier, at most two alternatives.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>
