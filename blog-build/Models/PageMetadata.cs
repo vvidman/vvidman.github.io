@@ -10,4 +10,8 @@ public sealed class PageMetadata
     public IReadOnlyList<string> Tags { get; init; } = Array.Empty<string>();
     public string? Series { get; init; }   // pl. "ChaosForge"
     public int?    Part   { get; init; }   // pl. 1
+    public string DescriptionHu { get; init; } = string.Empty;
+    public string? Image { get; init; }
+    public string? OgImage { get; init; }
+    public IReadOnlyList<string> RedirectFrom { get; init; } = Array.Empty<string>();
 }

@@ -68,6 +68,9 @@ public static class MarkdownDslParser
         string titleHu = "";
         string? series = null;
         int? part = null;
+        string descriptionHu = "";
+        string? image = null, ogImage = null;
+        var redirectFrom = Array.Empty<string>();
 
         while (index < lines.Length && lines[index].Trim() != "---")
         {
@@ -92,6 +95,11 @@ public static class MarkdownDslParser
                 layout = value;
             else if (key == "description")
                 description = value;
+            else if (key == "description_hu") descriptionHu = value;
+            else if (key == "image") image = value;
+            else if (key == "og_image") ogImage = value;
+            else if (key == "redirect_from")
+                redirectFrom = value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToArray();
             else if (key == "title_hu")  titleHu = value;
             else if (key == "series")    series  = value;
             else if (key == "part")
@@ -131,7 +139,11 @@ public static class MarkdownDslParser
             Date        = date,
             Tags        = tags,
             Series      = series,
-            Part        = part
+            Part        = part,
+            DescriptionHu = descriptionHu,
+            Image       = image,
+            OgImage     = ogImage,
+            RedirectFrom = redirectFrom
         };
     }
 
