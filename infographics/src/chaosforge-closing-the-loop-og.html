@@ -5,9 +5,12 @@
 <title>chaosforge-closing-the-loop og</title>
 <link rel="stylesheet" href="../_shared/infographic.css">
 <style>
-.ig-flow .ig-node { padding: 30px 16px; display: flex; flex-direction: column; justify-content: center; }
+.ig-og .ig-body { padding-top: 30px; padding-bottom: 6px; gap: 26px; justify-content: space-between; }
+.ig-flow .ig-node { padding: 22px 18px; display: flex; flex-direction: column; justify-content: center; }
 .ig-flow .ig-node-title { font-size: 25px; }
-.ig-callout { font-size: 28px; padding: 20px 24px; }
+.ig-flow .ig-node-text { font-size: 20px; margin-top: 10px; }
+.ig-flow .ig-arrow { flex-basis: 48px; }
+.ig-callout { font-size: 28px; padding: 18px 26px; }
 </style>
 </head>
 <body>
@@ -16,15 +19,15 @@
   <h1 class="ig-title">Closing the loop</h1>
   <p class="ig-sub">Closing the structural gap between planning and implementation.</p>
 
-  <div class="ig-body" style="gap:20px">
+  <div class="ig-body">
     <div class="ig-flow">
-      <div class="ig-node"><div class="ig-node-title">Reasoning partner</div></div>
+      <div class="ig-node"><div class="ig-node-title">Reasoning partner</div><div class="ig-node-text">Plans and writes the spec.</div></div>
       <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
-      <div class="ig-node"><div class="ig-node-title">Implementation agent</div></div>
+      <div class="ig-node"><div class="ig-node-title">Implementation agent</div><div class="ig-node-text">Implements, then runs /review-ready.</div></div>
       <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
-      <div class="ig-node is-key"><div class="ig-node-title">Review file</div></div>
+      <div class="ig-node is-key"><div class="ig-node-title">Review file</div><div class="ig-node-text">docs/review/ and docs/progress/ updated.</div></div>
       <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
-      <div class="ig-node"><div class="ig-node-title">Reasoning partner</div></div>
+      <div class="ig-node"><div class="ig-node-title">Reasoning partner</div><div class="ig-node-text">Reads the progress index and review file.</div></div>
     </div>
     <div class="ig-callout">The return direction is where the loop breaks.</div>
   </div>
