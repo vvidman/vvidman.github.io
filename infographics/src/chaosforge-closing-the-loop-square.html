@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>chaosforge-closing-the-loop square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+<style>.ig-flow .ig-node { padding: 20px 18px; } .ig-flow .ig-node-title { font-size: 23px; }</style>
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">ChaosForge · Part 2</div>
+  <h1 class="ig-title">Closing the loop</h1>
+  <p class="ig-sub">Closing the structural gap between planning and implementation.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-node-title">Reasoning partner</div>
+        <div class="ig-node-text">Plans and writes the spec.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">Implementation agent</div>
+        <div class="ig-node-text">Implements, then runs /review-ready.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-node-title">Review file + progress</div>
+        <div class="ig-node-text">docs/review/ and docs/progress/ updated.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">Reasoning partner, new session</div>
+        <div class="ig-node-text">Reads the progress index and the review file.</div>
+      </div>
+    </div>
+
+    <div class="ig-cards" style="--cols:3">
+      <div class="ig-card">
+        <div class="ig-card-title">The review file</div>
+        <div class="ig-card-body">The only file dropped into the reasoning partner's context for a review session.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title is-mono">docs/progress/</div>
+        <div class="ig-card-body">Ground truth of what's been built.</div>
+      </div>
+      <div class="ig-card">
+        <div class="ig-card-title">Proposed doc updates</div>
+        <div class="ig-card-body">Every review file lists which living documents need updating. The human decides what gets incorporated.</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Every arrow is explicit and documented. Nothing is carried in anyone's head.</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>

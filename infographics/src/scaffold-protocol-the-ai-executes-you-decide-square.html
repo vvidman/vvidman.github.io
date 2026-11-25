@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>scaffold-protocol square</title>
+<link rel="stylesheet" href="../_shared/infographic.css">
+</head>
+<body>
+<div class="ig ig-square">
+  <div class="ig-eyebrow">Scaffold Protocol · Part 1</div>
+  <h1 class="ig-title">The AI executes. You decide.</h1>
+  <p class="ig-sub">A human orchestrator who decides what happens next, and an AI transformation engine that executes exactly one task at a time.</p>
+
+  <div class="ig-body" style="gap:28px">
+    <div class="ig-flow">
+      <div class="ig-node">
+        <div class="ig-node-title">Human orchestrator</div>
+        <div class="ig-node-text">Decides what happens next.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node is-key">
+        <div class="ig-node-title">AI step</div>
+        <div class="ig-node-text">Given a defined input, produces a defined output in a specific format.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">Validator</div>
+        <div class="ig-node-text">Finds the certainly wrong outputs.</div>
+      </div>
+      <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="ig-node">
+        <div class="ig-node-title">Human decision</div>
+        <div class="ig-node-text">Passed output might be good. The human decides.</div>
+      </div>
+    </div>
+
+    <div class="ig-compare">
+      <div class="ig-compare-col">
+        <div class="ig-compare-head">Retry</div>
+        <div class="ig-compare-item">Sends the same request again and hopes for a better output</div>
+        <div class="ig-compare-item">Gives the model no information about what went wrong</div>
+      </div>
+      <div class="ig-compare-col is-key">
+        <div class="ig-compare-head">Error-driven refinement</div>
+        <div class="ig-compare-item">The specific violation is mapped to a targeted error message</div>
+        <div class="ig-compare-item">The message is injected into a new prompt that says exactly what to fix</div>
+      </div>
+    </div>
+
+    <div class="ig-callout">Run 5: accepted after one automatic refinement. “I'd do it differently, but I can't fault it.”</div>
+  </div>
+
+  <div class="ig-footer">Viktor Vidman · vvidman.github.io</div>
+</div>
+</body>
+</html>
