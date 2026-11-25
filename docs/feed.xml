@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Viktor Vidman</title>
+    <link>https://vvidman.github.io/</link>
+    <description>Software architecture, AI-augmented delivery and local-first LLM infrastructure.</description>
+    <language>en</language>
+    <item>
+      <title>InferRouter Part 2: Inference Strategies</title>
+      <link>https://vvidman.github.io/posts/inferrouter-02.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-02.html</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.</description>
+    </item>
+    <item>
+      <title>InferRouter Part 3: Secret Management</title>
+      <link>https://vvidman.github.io/posts/inferrouter-03.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-03.html</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Where API keys live in InferRouter — why not environment variables, why not config files, and what per-request key reading gives you in practice.</description>
+    </item>
+    <item>
+      <title>InferRouter Part 4: Observability</title>
+      <link>https://vvidman.github.io/posts/inferrouter-04.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-04.html</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.</description>
+    </item>
+    <item>
+      <title>InferRouter: One Endpoint, Any Provider</title>
+      <link>https://vvidman.github.io/posts/inferrouter-01.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/inferrouter-01.html</guid>
+      <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Why managing LLM providers per project breaks down — and how a single self-hosted proxy with strategy-based inference routing solves it.</description>
+    </item>
+    <item>
+      <title>Home Lab Docker Server and Deploy Workflow</title>
+      <link>https://vvidman.github.io/posts/homelab-docker-server.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/homelab-docker-server.html</guid>
+      <pubDate>Sun, 31 May 2026 00:00:00 GMT</pubDate>
+      <description>How to turn an old machine or WSL2 into a personal Docker host, and set up a deploy workflow that works identically on both.</description>
+    </item>
+    <item>
+      <title>The Legacy BIOS + GPT Trap</title>
+      <link>https://vvidman.github.io/posts/homelab-legacy-bios.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/homelab-legacy-bios.html</guid>
+      <pubDate>Sun, 31 May 2026 00:00:00 GMT</pubDate>
+      <description>Why older machines refuse to boot after a successful Linux installation, and how to fix it with Debian's classic installer.</description>
+    </item>
+    <item>
+      <title>Building the .NET AI Stack from First Principles</title>
+      <link>https://vvidman.github.io/posts/dotnet-ai-stack-01.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/dotnet-ai-stack-01.html</guid>
+      <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
+      <description>What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.</description>
+    </item>
+    <item>
+      <title>From .NET Dev to AI Engineer — Why I Started This Series</title>
+      <link>https://vvidman.github.io/posts/dotnet-ai-stack-00.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/dotnet-ai-stack-00.html</guid>
+      <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
+      <description>I completed a strong theoretical course on Agentic AI. Then I realised I could not build anything with it. This is what I did about that.</description>
+    </item>
+    <item>
+      <title>VCS as Proof Store</title>
+      <link>https://vvidman.github.io/posts/sourcerag-01.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/sourcerag-01.html</guid>
+      <pubDate>Wed, 15 Apr 2026 00:00:00 GMT</pubDate>
+      <description>Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.</description>
+    </item>
+    <item>
+      <title>Making a 2M-line legacy codebase queryable by AI</title>
+      <link>https://vvidman.github.io/posts/sourcerag-00.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/sourcerag-00.html</guid>
+      <pubDate>Mon, 13 Apr 2026 00:00:00 GMT</pubDate>
+      <description>I designed a system to make a 2M+ line on-premise legacy codebase queryable by any AI tool. It was presented, never implemented. Here is the design — and the question it left open.</description>
+    </item>
+    <item>
+      <title>Building a RAG Pipeline from Scratch</title>
+      <link>https://vvidman.github.io/posts/raglab-01.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/raglab-01.html</guid>
+      <pubDate>Sun, 05 Apr 2026 00:00:00 GMT</pubDate>
+      <description>What I learned by building a RAG pipeline in .NET without a framework — every component written from scratch, every decision made consciously.</description>
+    </item>
+    <item>
+      <title>Closing the Loop</title>
+      <link>https://vvidman.github.io/posts/chaosforge-closing-the-loop.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/chaosforge-closing-the-loop.html</guid>
+      <pubDate>Thu, 26 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A practical workflow for pairing a reasoning model with an agentic coding assistant — and closing the structural gap between planning and implementation.</description>
+    </item>
+    <item>
+      <title>ChaosForge - Let Go of the Reins</title>
+      <link>https://vvidman.github.io/posts/chaosforge-let-go-of-the-reins.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/chaosforge-let-go-of-the-reins.html</guid>
+      <pubDate>Sun, 22 Mar 2026 00:00:00 GMT</pubDate>
+      <description>From Scaffold Protocol to ChaosForge – why I stopped trying to control every AI step, and what I built instead.</description>
+    </item>
+    <item>
+      <title>The AI Executes. You Decide.</title>
+      <link>https://vvidman.github.io/posts/scaffold-protocol-the-ai-executes-you-decide.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/scaffold-protocol-the-ai-executes-you-decide.html</guid>
+      <pubDate>Fri, 20 Mar 2026 00:00:00 GMT</pubDate>
+      <description>How Scaffold Protocol keeps the human as orchestrator while using AI as a transformation engine — with a real validation layer and error-driven refinement.</description>
+    </item>
+    <item>
+      <title>The generator pipeline — from Markdown to GitHub Pages</title>
+      <link>https://vvidman.github.io/posts/generator-pipeline-to-github-pages.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/generator-pipeline-to-github-pages.html</guid>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <description>No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.</description>
+    </item>
+    <item>
+      <title>Designing a minimal DSL for bilingual Markdown content</title>
+      <link>https://vvidman.github.io/posts/bilingual-markdown-dsl.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/bilingual-markdown-dsl.html</guid>
+      <pubDate>Mon, 02 Mar 2026 00:00:00 GMT</pubDate>
+      <description>One file. Two languages. No duplication. Here's the syntax that makes it work.</description>
+    </item>
+    <item>
+      <title>Why I built my own static site generator — not because the others are bad</title>
+      <link>https://vvidman.github.io/posts/why-i-built-my-own-static-site-generator.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/why-i-built-my-own-static-site-generator.html</guid>
+      <pubDate>Sun, 01 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Why I wrote my own static site generator for this blog: I never compared generators — the first question I asked was what a blog actually is.</description>
+    </item>
+  </channel>
+</rss>

@@ -33,6 +33,9 @@ public static class SiteBuilder
         // Fázis 5: redirect stubok a régi slugokhoz
         WriteRedirects(paths, allPages, engine, written, log, ref errors);
 
+        // Fázis 6: sitemap, robots, RSS, 404
+        WriteSeoFiles(paths, allPages, index, engine, cfg, written, log, ref errors);
+
         log.WriteLine("Processing completed");
         return new BuildReport(errors, written);
     }
@@ -139,6 +142,37 @@ public static class SiteBuilder
                 }
             }
         }
+    }
+
+    private static void WriteSeoFiles(
+        ResolvedPaths paths, IReadOnlyList<PageDocument> pages, SiteIndex index, TemplateEngine engine,
+        BuildConfig cfg, List<string> written, TextWriter log, ref int errors)
+    {
+        var files = new (string Name, Func<string> Content)[]
+        {
+            ("sitemap.xml", () => SeoGenerator.Sitemap(pages)),
+            ("robots.txt",  SeoGenerator.Robots),
+            ("feed.xml",    () => SeoGenerator.Rss(index.Latest(SeoGenerator.FeedLimit))),
+        };
+
+        foreach (var (name, content) in files)
+        {
+            try
+            {
+                var path = Path.Combine(paths.Output, name);
+                Directory.CreateDirectory(paths.Output);
+                File.WriteAllText(path, content());
+                written.Add(path);
+                log.WriteLine($"Generated: {name}");
+            }
+            catch (Exception ex)
+            {
+                errors++;
+                log.WriteLine($"[ERROR] Failed to generate {name}: {ex.Message}");
+            }
+        }
+
+        RenderAndWrite(cfg, paths, SeoGenerator.NotFoundPage(), index, engine, written, log, ref errors);
     }
 
     private static string NormalizeSlug(string slug) => slug.Trim().TrimStart('/').Replace('\\', '/');
