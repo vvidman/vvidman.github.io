@@ -24,3 +24,6 @@ obj/
 *.dll
 *.exe
 *.pdb
+
+# Claude session outputs
+Claude outputs/
