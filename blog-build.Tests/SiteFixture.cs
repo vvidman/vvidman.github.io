@@ -35,3 +35,9 @@ public sealed class NoHuSiteFixture()
 
 public sealed class CollisionSiteFixture()
     : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "collision"));
+
+public sealed class BadTopicSiteFixture()
+    : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "badtopic"));
+
+public sealed class NoTopicSiteFixture()
+    : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "notopic"));

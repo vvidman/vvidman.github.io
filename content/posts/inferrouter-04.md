@@ -8,6 +8,7 @@ description_hu: Hogyan teszi láthatóvá az InferRouter a belső állapotát �
 date: 2026-06-03
 series: InferRouter
 part: 4
+topic: llm-infra
 image: /assets/images/infographics/inferrouter-04-square.png
 og_image: /assets/images/infographics/inferrouter-04-og.png
 ---

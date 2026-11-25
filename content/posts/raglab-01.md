@@ -8,6 +8,7 @@ layout: page
 date: 2026-04-05
 series: RagLab
 part: 1
+topic: llm-infra
 image: /assets/images/infographics/raglab-01-square.png
 og_image: /assets/images/infographics/raglab-01-og.png
 ---

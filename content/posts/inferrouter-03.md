@@ -8,6 +8,7 @@ description_hu: Hol élnek az API kulcsok az InferRouterben — miért nem körn
 date: 2026-06-03
 series: InferRouter
 part: 3
+topic: llm-infra
 image: /assets/images/infographics/inferrouter-03-square.png
 og_image: /assets/images/infographics/inferrouter-03-og.png
 ---

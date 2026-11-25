@@ -9,6 +9,7 @@ description_hu: Hogyan tartja a Scaffold Protocol az embert orchestratorként, m
 date: 2026-03-20
 series: Scaffold Protocol
 part: 1
+topic: ai-workflow
 image: /assets/images/infographics/scaffold-protocol-the-ai-executes-you-decide-square.png
 og_image: /assets/images/infographics/scaffold-protocol-the-ai-executes-you-decide-og.png
 ---

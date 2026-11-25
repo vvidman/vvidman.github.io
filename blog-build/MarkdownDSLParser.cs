@@ -68,6 +68,7 @@ public static class MarkdownDslParser
         string titleHu = "";
         string? series = null;
         int? part = null;
+        string? topic = null;
         string descriptionHu = "";
         string? image = null, ogImage = null;
         var redirectFrom = Array.Empty<string>();
@@ -102,6 +103,7 @@ public static class MarkdownDslParser
                 redirectFrom = value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToArray();
             else if (key == "title_hu")  titleHu = value;
             else if (key == "series")    series  = value;
+            else if (key == "topic")     topic   = value;
             else if (key == "part")
             {
                 if (int.TryParse(value, out var p)) part = p;
@@ -140,6 +142,7 @@ public static class MarkdownDslParser
             Tags        = tags,
             Series      = series,
             Part        = part,
+            Topic       = topic,
             DescriptionHu = descriptionHu,
             Image       = image,
             OgImage     = ogImage,

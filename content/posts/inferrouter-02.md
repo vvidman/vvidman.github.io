@@ -8,6 +8,7 @@ description_hu: Hogyan dönti el az InferRouter, melyik provider kezel egy kér�
 date: 2026-06-03
 series: InferRouter
 part: 2
+topic: llm-infra
 image: /assets/images/infographics/inferrouter-02-square.png
 og_image: /assets/images/infographics/inferrouter-02-og.png
 ---

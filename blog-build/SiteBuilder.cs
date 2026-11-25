@@ -46,8 +46,10 @@ public static class SiteBuilder
         {
             try
             {
-                pages.Add(MarkdownDslParser.Parse(file));
+                var page = MarkdownDslParser.Parse(file);
+                pages.Add(page);
                 log.WriteLine($"Parsed: {file}");
+                ValidateTopic(page, file, log, ref errors);
             }
             catch (Exception ex)
             {
@@ -58,6 +60,21 @@ public static class SiteBuilder
 
         foreach (var dir in Directory.EnumerateDirectories(currentPath))
             CollectPages(dir, pages, log, ref errors);
+    }
+
+    private static void ValidateTopic(PageDocument page, string file, TextWriter log, ref int errors)
+    {
+        var topic = page.Metadata.Topic;
+        if (!string.IsNullOrWhiteSpace(topic))
+        {
+            if (!Topics.TryGet(topic, out _))
+            {
+                errors++;
+                log.WriteLine($"[ERROR] Unknown topic '{topic}' in {file}");
+            }
+        }
+        else if (page.Metadata.Slug.StartsWith("posts/", StringComparison.OrdinalIgnoreCase))
+            log.WriteLine($"[WARN] Post without topic: {file}");
     }
 
     private static void RenderAndWrite(

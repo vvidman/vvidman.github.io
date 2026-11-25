@@ -8,6 +8,7 @@ layout: page
 date: 2026-04-15
 series: SourceRAG
 part: 2
+topic: llm-infra
 image: /assets/images/infographics/sourcerag-01-square.png
 og_image: /assets/images/infographics/sourcerag-01-og.png
 ---

@@ -9,6 +9,7 @@ layout: page
 date: 2026-03-26
 series: ChaosForge
 part: 2
+topic: ai-workflow
 image: /assets/images/infographics/chaosforge-closing-the-loop-square.png
 og_image: /assets/images/infographics/chaosforge-closing-the-loop-og.png
 ---

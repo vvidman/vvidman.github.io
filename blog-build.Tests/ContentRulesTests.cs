@@ -58,4 +58,12 @@ public class ContentRulesTests
             .Select(p => p.File).ToList();
         Assert.True(bad.Count == 0, "Description equals title: " + string.Join(", ", bad));
     }
+
+    [Fact]
+    public void Every_post_has_a_known_topic()
+    {
+        var bad = Posts().Where(p => p.Doc.Metadata.Topic is null || !Topics.TryGet(p.Doc.Metadata.Topic, out _))
+            .Select(p => p.File).ToList();
+        Assert.True(bad.Count == 0, "Missing or unknown topic: " + string.Join(", ", bad));
+    }
 }

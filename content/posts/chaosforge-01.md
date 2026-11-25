@@ -9,6 +9,7 @@ layout: page
 date: 2026-03-22
 series: ChaosForge
 part: 1
+topic: ai-workflow
 image: /assets/images/infographics/chaosforge-let-go-of-the-reins-square.png
 og_image: /assets/images/infographics/chaosforge-let-go-of-the-reins-og.png
 ---

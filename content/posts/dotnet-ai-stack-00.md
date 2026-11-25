@@ -8,6 +8,7 @@ layout: page
 date: 2026-05-10
 series: .NET Agentic AI
 part: 0
+topic: llm-infra
 image: /assets/images/infographics/dotnet-ai-stack-00-square.png
 og_image: /assets/images/infographics/dotnet-ai-stack-00-og.png
 ---

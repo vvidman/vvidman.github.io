@@ -8,6 +8,7 @@ description_hu: Miért omlik össze az LLM providerek projektenkénti kezelése 
 date: 2026-06-03
 series: InferRouter
 part: 1
+topic: llm-infra
 image: /assets/images/infographics/inferrouter-01-square.png
 og_image: /assets/images/infographics/inferrouter-01-og.png
 ---
