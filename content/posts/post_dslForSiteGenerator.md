@@ -1,7 +1,8 @@
 ---
 title: Designing a minimal DSL for bilingual Markdown content
 title_hu: Minimális DSL tervezése kétnyelvű Markdown tartalomhoz
-slug: posts/post-03.html
+slug: posts/bilingual-markdown-dsl.html
+redirect_from: posts/post-03.html
 description: One file. Two languages. No duplication. Here's the syntax that makes it work.
 description_hu: Egy fájl. Két nyelv. Duplikáció nélkül. Ez a szintaxis, ami működővé teszi.
 layout: page
@@ -263,4 +264,4 @@ Explicit a trükkös helyett. Ez volt az elv. Azt hiszem, tartotta magát.
 A következő részben: a generátor pipeline — hogyan lesz a parser kimenetéből kész HTML fájl,
 és hogyan illeszkedik a build a GitHub Pages-be.
 :::lang
-:::section
+:::section

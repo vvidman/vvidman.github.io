@@ -32,3 +32,6 @@ public class SiteFixture : IDisposable
 
 public sealed class NoHuSiteFixture()
     : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "nohu"));
+
+public sealed class CollisionSiteFixture()
+    : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "collision"));

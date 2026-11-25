@@ -101,8 +101,8 @@ owning outcomes. **The human orchestrates. The AI executes.**
 
 That principle runs through everything I build in this space.
 
-On the **pipeline side**: [Scaffold Protocol](/posts/post-sp01.html) is a human-in-the-loop AI pipeline
-with explicit orchestration and revision gates. [ChaosForge](/posts/post-chaosforge-01.html) is a
+On the **pipeline side**: [Scaffold Protocol](/posts/scaffold-protocol-the-ai-executes-you-decide.html) is a human-in-the-loop AI pipeline
+with explicit orchestration and revision gates. [ChaosForge](/posts/chaosforge-let-go-of-the-reins.html) is a
 multi-agent Scrum simulator where agent roles and revision gates are first-class design concerns.
 [RagLab](/posts/raglab-01.html) is a handbuilt RAG pipeline in .NET — because understanding
 what retrieval-augmented generation actually does requires building it yourself, not wrapping a library.
@@ -133,8 +133,8 @@ irányítja a folyamatot, validálja az outputot, felel az eredményért.
 
 Ez az elv húzódik végig mindenen, amit ezen a területen építek.
 
-**Pipeline oldalon**: a [Scaffold Protocol](/posts/post-sp01.html) egy human-in-the-loop AI pipeline
-explicit orchestrációval és revision gate-ekkel. A [ChaosForge](/posts/post-chaosforge-01.html) egy
+**Pipeline oldalon**: a [Scaffold Protocol](/posts/scaffold-protocol-the-ai-executes-you-decide.html) egy human-in-the-loop AI pipeline
+explicit orchestrációval és revision gate-ekkel. A [ChaosForge](/posts/chaosforge-let-go-of-the-reins.html) egy
 multi-agent Scrum szimulátor, ahol az ágensszerepek és a revision gate-ek first-class tervezési
 szempontok. A [RagLab](/posts/raglab-01.html) egy saját kezűleg épített RAG pipeline .NET-ben —
 mert a retrieval-augmented generation megértéséhez fel kell építeni, nem csak becsomagolni egy könyvtárat.
@@ -187,11 +187,11 @@ Ez őszintébbnek tűnt, mint egy kész megoldás használata.
 :::lang en
 ## Licenses & certifications
 Here you can see the trainings I have completed recently:
-[Licenses & certifications](/posts/post-01.html)
+[Licenses & certifications](/certifications/)
 :::lang
 :::lang hu
 ## Képzések és tanusítványok
 Itt láthatod a képzéseket miket elvégeztem mostanában:
-[Képzések és tanusítványok](/posts/post-01.html)
+[Képzések és tanusítványok](/certifications/)
 :::lang
 :::section

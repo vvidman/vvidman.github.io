@@ -81,6 +81,7 @@ public class PageRenderingTests : IClassFixture<SiteFixture>, IClassFixture<NoHu
                      .Where(f => !f.EndsWith(Path.Combine("posts", "index.html"))))
         {
             var html = File.ReadAllText(file);
+            if (html.Contains("http-equiv=\"refresh\"")) continue; // redirect stubs have no content
             Assert.True(Regex.Matches(html, "<h1[ >]").Count >= 1, file);
         }
     }

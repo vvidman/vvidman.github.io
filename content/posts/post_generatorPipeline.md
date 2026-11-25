@@ -1,7 +1,8 @@
 ---
 title: The generator pipeline — from Markdown to GitHub Pages
 title_hu: A generátor pipeline — Markdowntól a GitHub Pages-ig
-slug: posts/post-04.html
+slug: posts/generator-pipeline-to-github-pages.html
+redirect_from: posts/post-04.html
 description: No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.
 description_hu: Nincs CI/CD. Nincs build szerver. Egy lokális parancs, egy docs/ mappa, és egy git push. Ez az egész.
 layout: page
@@ -179,9 +180,9 @@ minutes. It catches things that automated checks never would.
 
 This was the third and final part of the static site generator series:
 
-- Part 1: [Why a custom generator — the constraints and the decision](/posts/post-02.html)
-- Part 2: [The DSL — one file, two languages, explicit structure](/posts/post-03.html)
-- Part 3: [The pipeline — configuration, build, output, local preview](/posts/post-04.html)
+- Part 1: [Why a custom generator — the constraints and the decision](/posts/why-i-built-my-own-static-site-generator.html)
+- Part 2: [The DSL — one file, two languages, explicit structure](/posts/bilingual-markdown-dsl.html)
+- Part 3: [The pipeline — configuration, build, output, local preview](/posts/generator-pipeline-to-github-pages.html)
 
 The generator itself is not a framework and not a product. It's a small, focused tool
 that does exactly what this blog needs. That's the point.
@@ -335,9 +336,9 @@ igénybe. Olyan dolgokat is megfog, amit automatizált ellenőrzés soha nem ven
 
 Ez volt a statikus oldalgenerátor sorozat harmadik és egyben utolsó része:
 
-- 1. rész: [Miért saját generátor — a korlátok és a döntés](/posts/post-02.html)
-- 2. rész: [A DSL — egy fájl, két nyelv, explicit struktúra](/posts/post-03.html)
-- 3. rész: [A pipeline — konfiguráció, build, kimenet, lokális preview](/posts/post-04.html)
+- 1. rész: [Miért saját generátor — a korlátok és a döntés](/posts/why-i-built-my-own-static-site-generator.html)
+- 2. rész: [A DSL — egy fájl, két nyelv, explicit struktúra](/posts/bilingual-markdown-dsl.html)
+- 3. rész: [A pipeline — konfiguráció, build, kimenet, lokális preview](/posts/generator-pipeline-to-github-pages.html)
 
 Maga a generátor nem framework és nem termék. Egy kis, fókuszált eszköz, ami pontosan
 azt csinálja, amire ennek a blognak szüksége van. Ez a lényeg.
@@ -345,4 +346,4 @@ azt csinálja, amire ennek a blognak szüksége van. Ez a lényeg.
 **Következő:** 
 > Egy másféle projekt — ami még épül.
 :::lang
-:::section
+:::section

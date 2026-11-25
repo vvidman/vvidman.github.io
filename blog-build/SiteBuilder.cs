@@ -30,6 +30,9 @@ public static class SiteBuilder
         // Fázis 4: home (docs/index.html)
         GenerateHome(paths, index, engine, written, log, ref errors);
 
+        // Fázis 5: redirect stubok a régi slugokhoz
+        WriteRedirects(paths, allPages, engine, written, log, ref errors);
+
         log.WriteLine("Processing completed");
         return new BuildReport(errors, written);
     }
@@ -99,6 +102,46 @@ public static class SiteBuilder
             log.WriteLine($"[ERROR] Failed to generate posts index: {ex.Message}");
         }
     }
+
+    private static void WriteRedirects(
+        ResolvedPaths paths, IReadOnlyList<PageDocument> pages, TemplateEngine engine,
+        List<string> written, TextWriter log, ref int errors)
+    {
+        // Real pages and generated indexes own their paths; a stub must never overwrite them.
+        var taken = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { HomeGenerator.Slug, "posts/index.html" };
+        foreach (var p in pages) taken.Add(NormalizeSlug(p.Metadata.Slug));
+
+        foreach (var page in pages)
+        {
+            foreach (var old in page.Metadata.RedirectFrom)
+            {
+                var oldSlug = NormalizeSlug(old);
+                if (taken.Contains(oldSlug))
+                {
+                    errors++;
+                    log.WriteLine($"[ERROR] Redirect '{oldSlug}' (from '{page.Metadata.Slug}') collides with a real page.");
+                    continue;
+                }
+
+                try
+                {
+                    var stubPath = Path.Combine(paths.Output, oldSlug);
+                    Directory.CreateDirectory(Path.GetDirectoryName(stubPath)!);
+                    File.WriteAllText(stubPath, RedirectWriter.Render(engine, page.Metadata.Slug));
+                    written.Add(stubPath);
+                    taken.Add(oldSlug);
+                    log.WriteLine($"Redirect: {oldSlug} -> {page.Metadata.Slug}");
+                }
+                catch (Exception ex)
+                {
+                    errors++;
+                    log.WriteLine($"[ERROR] Failed to write redirect '{oldSlug}': {ex.Message}");
+                }
+            }
+        }
+    }
+
+    private static string NormalizeSlug(string slug) => slug.Trim().TrimStart('/').Replace('\\', '/');
 
     private static void GenerateHome(
         ResolvedPaths paths, SiteIndex index, TemplateEngine engine,

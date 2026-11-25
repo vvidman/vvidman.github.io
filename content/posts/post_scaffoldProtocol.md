@@ -1,7 +1,8 @@
 ---
 title: The AI Executes. You Decide.
 title_hu: AI végrehajt. Te döntesz.
-slug: posts/post-sp01.html
+slug: posts/scaffold-protocol-the-ai-executes-you-decide.html
+redirect_from: posts/post-sp01.html
 layout: page
 description: How Scaffold Protocol keeps the human as orchestrator while using AI as a transformation engine — with a real validation layer and error-driven refinement.
 description_hu: Hogyan tartja a Scaffold Protocol az embert orchestratorként, miközben az AI transzformációs motorként dolgozik — valódi validációs réteggel és error-driven refinement-tel.

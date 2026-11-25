@@ -1,7 +1,8 @@
 ---
 title: Why I built my own static site generator — not because the others are bad
 title_hu: Miért írtam saját statikus oldalgenerátort? (Nem azért, mert a többi rossz.)
-slug: posts/post-02.html
+slug: posts/why-i-built-my-own-static-site-generator.html
+redirect_from: posts/post-02.html
 description: Why I wrote my own static site generator for this blog: I never compared generators — the first question I asked was what a blog actually is.
 description_hu: Miért írtam saját statikus oldalgenerátort ehhez a bloghoz: nem hasonlítottam össze generátorokat — az első kérdésem az volt, hogy mi is valójában egy blog.
 layout: page
@@ -94,4 +95,4 @@ De ha valakinek specifikus korlátai vannak, és tudja pontosan, mit akar – a 
 
 A következő részben megmutatom, hogyan néz ki a DSL, amit terveztem, és miért pont ilyen lett.
 :::lang
-:::section
+:::section

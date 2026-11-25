@@ -16,6 +16,7 @@ public class PostIndexTests : IClassFixture<SiteFixture>
         var posts = Directory.GetFiles(Path.Combine(_site.Output, "posts"), "*.html")
             .Select(Path.GetFileName)
             .Where(n => n != "index.html")
+            .Where(n => !File.ReadAllText(Path.Combine(_site.Output, "posts", n!)).Contains("http-equiv=\"refresh\"")) // redirect stubs are not posts
             .ToList();
         Assert.NotEmpty(posts);
 
