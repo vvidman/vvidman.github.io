@@ -143,7 +143,10 @@ a { color: var(--accent); }
   color: var(--muted);
   cursor: pointer;
 }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); 
+/* no-flash: reflect the language set by the inline head script before JS syncs aria-pressed */
+[data-lang="en"] .seg [data-set-lang="en"],
+[data-lang="hu"] .seg [data-set-lang="hu"] { background: var(--accent); color: var(--accent-ink); }
 .icon-btn {
   width: 44px;
   height: 44px;
