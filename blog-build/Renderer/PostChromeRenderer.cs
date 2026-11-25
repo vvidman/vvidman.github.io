@@ -49,8 +49,11 @@ public static class PostChromeRenderer
             return string.Empty;
 
         var sb = new StringBuilder();
-        sb.Append("<aside class=\"series-tree\" aria-label=\"Series\">\n");
-        sb.Append("<h2>").Append(I18n.Encode(s.Name)).Append("</h2>\n");
+        // `open` keeps it expanded without JS; site.js closes it on narrow screens only.
+        sb.Append("<details class=\"series-tree\" open>\n");
+        sb.Append("<summary><span class=\"st-name\">").Append(I18n.Encode(s.Name))
+          .Append("</span><span class=\"st-count\">").Append(s.Index + 1).Append('/').Append(s.Parts.Count)
+          .Append("</span></summary>\n");
         for (var i = 0; i < s.Parts.Count; i++)
         {
             var p = s.Parts[i];
@@ -58,7 +61,7 @@ public static class PostChromeRenderer
             var current = i == s.Index ? " aria-current=\"page\"" : "";
             sb.Append($"<a href=\"{Urls.Path(p.Metadata.Slug)}\"{current}><span class=\"n\">{number}</span>{I18n.Text(p.Metadata.Title, p.Metadata.TitleHu)}</a>\n");
         }
-        sb.Append("</aside>");
+        sb.Append("</details>");
         return sb.ToString();
     }
 

@@ -112,7 +112,24 @@
     }
   }
 
+  // ── Series tree: collapsible on mobile, always open on desktop ──
+  function initSeriesTree() {
+    var tree = document.querySelector('details.series-tree');
+    if (!tree || !window.matchMedia) return;
+    var mq = window.matchMedia('(max-width: 760px)');
+    function sync() {
+      if (mq.matches) tree.removeAttribute('open'); else tree.setAttribute('open', '');
+    }
+    sync();
+    if (mq.addEventListener) mq.addEventListener('change', sync);
+    // keyboard toggling must not collapse the tree on desktop
+    tree.addEventListener('toggle', function () {
+      if (!mq.matches && !tree.open) tree.setAttribute('open', '');
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initSeriesTree();
     // The inline <head> script already set data-lang / data-theme; sync the UI to it.
     applyLang(root.getAttribute('data-lang') || 'en', false);
 

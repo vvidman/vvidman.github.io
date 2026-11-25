@@ -26,6 +26,24 @@ public class PageRenderingTests : IClassFixture<SiteFixture>, IClassFixture<NoHu
     }
 
     [Fact]
+    public void Series_tree_is_open_collapsible_details_with_name_and_position()
+    {
+        var html = _site.Read("posts/inferrouter-02.html");
+        Assert.Matches("<details class=\"series-tree\" open>", html);
+        Assert.Matches(new Regex("<summary>(?:(?!</summary>).)*InferRouter(?:(?!</summary>).)*2/4(?:(?!</summary>).)*</summary>", RegexOptions.Singleline), html);
+        Assert.Contains("</details>", html);
+        Assert.DoesNotContain("<aside class=\"series-tree\"", html);
+    }
+
+    [Fact]
+    public void Js_collapses_series_tree_only_on_mobile()
+    {
+        var js = File.ReadAllText(Path.Combine(TestPaths.RepoRoot, "docs", "assets", "javascript", "site.js"));
+        Assert.Contains("series-tree", js);
+        Assert.Contains("(max-width: 760px)", js);
+    }
+
+    [Fact]
     public void Single_part_series_has_no_tree_pill_or_pager()
     {
         var html = _site.Read("posts/raglab-01.html");
