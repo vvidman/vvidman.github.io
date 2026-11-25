@@ -71,7 +71,9 @@ public class HomeTests : IClassFixture<SiteFixture>
     [Fact]
     public void Profile_latest_is_newest_post()
     {
-        Assert.Contains("<span class=\"s\">\"The Model Register Is a Living Document\"</span>", Home);
+        var firstTitle = Regex.Match(Home, "class=\"row-title\"><span data-l=\"en\">([^<]*)</span>|class=\"row-title\">([^<]*)<").Groups;
+        var title = firstTitle[1].Success ? firstTitle[1].Value : firstTitle[2].Value;
+        Assert.Contains($"<span class=\"s\">\"{title}\"</span>", Home);
     }
 
     [Fact]
