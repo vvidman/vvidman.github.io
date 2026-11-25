@@ -6,6 +6,13 @@
     <description>Software architecture, AI-augmented delivery and local-first LLM infrastructure.</description>
     <language>en</language>
     <item>
+      <title>From Tier Map to Agent Team in GitHub Copilot</title>
+      <link>https://vvidman.github.io/posts/copilot-tier-agent-team.html</link>
+      <guid isPermaLink="true">https://vvidman.github.io/posts/copilot-tier-agent-team.html</guid>
+      <pubDate>Wed, 25 Nov 2026 20:00:00 GMT</pubDate>
+      <description>How to turn a model tier map into a model-independent agent team in GitHub Copilot: roles bound to tiers, tiers bound to models in one register, and where Copilot Fusion fits next to it.</description>
+    </item>
+    <item>
       <title>The Model Register Is a Living Document</title>
       <link>https://vvidman.github.io/posts/governing-ai-assistants-03-model-register.html</link>
       <guid isPermaLink="true">https://vvidman.github.io/posts/governing-ai-assistants-03-model-register.html</guid>
@@ -137,13 +144,6 @@
       <guid isPermaLink="true">https://vvidman.github.io/posts/bilingual-markdown-dsl.html</guid>
       <pubDate>Mon, 02 Mar 2026 00:00:00 GMT</pubDate>
       <description>One file. Two languages. No duplication. Here's the syntax that makes it work.</description>
-    </item>
-    <item>
-      <title>Why I built my own static site generator — not because the others are bad</title>
-      <link>https://vvidman.github.io/posts/why-i-built-my-own-static-site-generator.html</link>
-      <guid isPermaLink="true">https://vvidman.github.io/posts/why-i-built-my-own-static-site-generator.html</guid>
-      <pubDate>Sun, 01 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Why I wrote my own static site generator for this blog: I never compared generators — the first question I asked was what a blog actually is.</description>
     </item>
   </channel>
 </rss>
