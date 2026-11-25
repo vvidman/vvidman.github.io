@@ -39,6 +39,7 @@ layout: page
 date: 2026-04-05
 series: RagLab
 part: 1
+topic: llm-infra
 image: /assets/images/infographics/raglab-01-square.png
 og_image: /assets/images/infographics/raglab-01-og.png
 ---
@@ -69,6 +70,7 @@ og_image: /assets/images/infographics/raglab-01-og.png
 | `date` | `yyyy-MM-dd`; posts are ordered by it |
 | `tags` | Comma-separated pills on the post header |
 | `series`, `part` | Groups posts into a series with a navigation tree and pager |
+| `topic` | Required on posts: `ai-workflow`, `llm-infra` or `tooling`. Groups the posts index; unknown value is a build error, missing value a warning (post listed under "Other"). All parts of a series must share one topic |
 | `image` | Square infographic (1200×1200), shown in the post and as the list thumbnail |
 | `og_image` | 1200×630 social image for `og:image` / `twitter:image` (fallback: profile photo) |
 | `redirect_from` | Comma-separated old slugs that get a redirect stub |
