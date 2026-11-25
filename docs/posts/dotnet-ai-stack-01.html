@@ -1,72 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en" data-theme="light" data-title-en="Viktor Vidman – Building the .NET AI Stack from First Principles" data-title-hu="Viktor Vidman – A .NET AI Stack felépítése az alapoktól">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-  <title>Viktor Vidman - Building the .NET AI Stack from First Principles</title>
+<script>(function(){var d=document.documentElement,l,t;try{l=localStorage.getItem('lang');t=localStorage.getItem('theme')}catch(e){}
+if(l!=='en'&&l!=='hu'){l=(navigator.language||'').toLowerCase().indexOf('hu')===0?'hu':'en'}
+if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-theme',t)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viktor Vidman – Building the .NET AI Stack from First Principles</title>
+<meta name="description" content="What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.">
+<meta name="author" content="Viktor Vidman">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#F4F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B121B" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://vvidman.github.io/posts/dotnet-ai-stack-01.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vvidman.github.io/posts/dotnet-ai-stack-01.html">
+<meta property="og:title" content="Viktor Vidman – Building the .NET AI Stack from First Principles">
+<meta property="og:description" content="What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="hu_HU">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Viktor Vidman – Building the .NET AI Stack from First Principles">
+<meta name="twitter:description" content="What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.">
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Building the .NET AI Stack from First Principles","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/dotnet-ai-stack-01.html","image":"https://vvidman.github.io/assets/images/vv-profile.jpg","datePublished":"2026-05-10"}</script>
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Viktor Vidman" href="/feed.xml">
+<script src="/assets/javascript/site.js" defer></script>
 
-  <meta name="description" content="What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.">
-  <meta name="author" content="Viktor Vidman">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#445f77">
-
-  <link rel="canonical" href="https://vvidman.github.io/posts/dotnet-ai-stack-01.html">
-
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://vvidman.github.io/posts/dotnet-ai-stack-01.html">
-  <meta property="og:title" content="Viktor Vidman - Building the .NET AI Stack from First Principles">
-  <meta property="og:description" content="What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:locale:alternate" content="hu_HU">
-  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
-
-  <!-- Schema.org: Person -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Viktor Vidman",
-    "url": "https://vvidman.github.io",
-    "jobTitle": "Backend Engineer",
-    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
-    "sameAs": [
-      "https://github.com/vvidman"
-    ]
-  }
-  </script>  
-
-  <link rel="stylesheet" href="/assets/css/site.css" />
-  <script src="/assets/javascript/site.js" defer></script>
-  <link rel="icon" href="/assets/icons/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 </head>
 <body>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href="/"><span>~/</span>vvidman</a>
+<nav class="nav" aria-label="Main">
+<a href="/posts/" aria-current="page">/blog</a>
+<a href="/about/">/about</a>
+</nav>
+<div class="toggles">
+<div class="seg" role="group" aria-label="Language">
+<button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+<button type="button" data-set-lang="hu" aria-pressed="false">HU</button>
+</div>
+<button type="button" class="icon-btn" data-toggle-theme aria-label="Toggle dark mode">
+<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+</div>
+</div>
+</header>
 
-  <header class="site-header">
-    <div class="page-header">
-      <div class="header-links">
-        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
-        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
-      </div>  
-      <h1>Building the .NET AI Stack from First Principles</h1>
-    </div>
-    <div class="indented">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/posts/">Blog</a>
-      </nav>      
-      <div class="lang-switch">
-        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
-        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
-      </div>
-    </div>
-  </header>
+<main>
+<div class="post-layout has-series">
+<aside class="series-tree" aria-label="Series">
+<h2>.NET Agentic AI</h2>
+<a href="/posts/dotnet-ai-stack-00.html"><span class="n">00</span><span data-l="en">From .NET Dev to AI Engineer — Why I Started This Series</span><span data-l="hu">.NET fejlesztőből AI Engineer — Miért kezdtem el ezt a sorozatot</span></a>
+<a href="/posts/dotnet-ai-stack-01.html" aria-current="page"><span class="n">01</span><span data-l="en">Building the .NET AI Stack from First Principles</span><span data-l="hu">A .NET AI Stack felépítése az alapoktól</span></a>
+</aside>
+<article class="article">
+<header class="post-head">
+<div class="pills"><span class="pill pill-accent">.NET Agentic AI · 2/2</span></div>
+<h1 class="post-title"><span data-l="en">Building the .NET AI Stack from First Principles</span><span data-l="hu">A .NET AI Stack felépítése az alapoktól</span></h1>
+<p class="post-lead"><span data-l="en">What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.</span><span data-l="hu">Amit a LlamaSharp, a Microsoft.Extensions.AI és a Semantic Kernel összekötésével tanultam — és miért nem mond el mindent a dokumentáció.</span></p>
+<p class="post-meta">2026-05-10 · <span data-l="en">5 min read</span><span data-l="hu">4 perc olvasás</span> · EN / HU</p>
+</header>
 
-  <main class="content">
-    <div class="lang-content" id="content-en">
-      <section class="page-section" data-key="intro">
+<div class="prose" data-l="en">
+<section class="page-section" data-key="intro">
   <h2 id="problem-statement">Problem statement</h2>
 <p>Every AI tutorial starts the same way. You add the OpenAI NuGet package, paste in an API key, call <code>CompleteAsync</code>, and you have a working chat app in ten minutes. What you also have, without realising it, is a hard dependency on a single provider baked into every layer of your code.</p>
 <p>I wanted to understand the stack properly before building anything on top of it. Not just which packages to install, but why the layers exist, what each one is responsible for, and what actually breaks when the documentation is wrong. This is Module 1 of my .NET Agentic AI curriculum — setting up the foundation that everything else will run on.</p>
@@ -100,30 +106,33 @@
   <h2 id="what-the-documentation-does-not-tell-you">What the documentation does not tell you</h2>
 <p>The module description I started from referenced a class called <code>LLamaSharpChatClient</code>. It does not exist.</p>
 <p>The actual class in <code>LLamaSharp.SemanticKernel</code> is <code>LLamaSharpChatCompletion</code>, which implements SK's <code>IChatCompletionService</code> — not M.E.AI's <code>IChatClient</code>. To bridge between them, you call <code>.AsChatClient()</code>:</p>
-<pre><code class="language-csharp">var llamaChat = new LLamaSharpChatCompletion(executor);
+<div class="csharp"><pre>
+<span class="tk-kw">var</span> llamaChat = <span class="tk-kw">new</span> LLamaSharpChatCompletion(executor);
 IChatClient chatClient = llamaChat.AsChatClient();
-</code></pre>
+</pre></div>
 <p>Before you can create the <code>executor</code>, you need to build the full LlamaSharp object chain. This was also missing from the original description:</p>
-<pre><code class="language-csharp">var modelParams = new ModelParams(modelPath)
+<div class="csharp"><pre>
+<span class="tk-kw">var</span> modelParams = <span class="tk-kw">new</span> ModelParams(modelPath)
 {
     ContextSize = contextSize,
     GpuLayerCount = gpuLayers
 };
 
-using var model   = LLamaWeights.LoadFromFile(modelParams);
-using var context = model.CreateContext(modelParams);
-var executor      = new InteractiveExecutor(context);
-</code></pre>
+<span class="tk-kw">using</span> <span class="tk-kw">var</span> model   = LLamaWeights.LoadFromFile(modelParams);
+<span class="tk-kw">using</span> <span class="tk-kw">var</span> context = model.CreateContext(modelParams);
+<span class="tk-kw">var</span> executor      = <span class="tk-kw">new</span> InteractiveExecutor(context);
+</pre></div>
 <p>The <code>model</code> and <code>context</code> objects are <code>IDisposable</code>. In a DI factory, they are never disposed — something to address in production with a hosted service wrapper.</p>
 <p>The second issue was with Semantic Kernel registration. The module code called <code>.Build()</code> on the result of <code>AddKernel()</code>. That throws:</p>
 <pre><code>System.InvalidOperationException: Build is not permitted on instances
 returned from AddKernel. Resolve the Kernel from the service provider.
 </code></pre>
 <p>The correct pattern is to register everything in a <code>ServiceCollection</code> and resolve <code>Kernel</code> from the built provider:</p>
-<pre><code class="language-csharp">services.AddSingleton&lt;IChatClient&gt;(sp =&gt;
+<div class="csharp"><pre>
+services.AddSingleton&lt;IChatClient&gt;(sp =&gt;
 {
-    var loggerFactory = sp.GetRequiredService&lt;ILoggerFactory&gt;();
-    return new ChatClientBuilder(LLamaSharpChatClientFactory(config))
+    <span class="tk-kw">var</span> loggerFactory = sp.GetRequiredService&lt;ILoggerFactory&gt;();
+    <span class="tk-kw">return</span> <span class="tk-kw">new</span> ChatClientBuilder(LLamaSharpChatClientFactory(config))
         .UseLogging(loggerFactory)
         .UseFunctionInvocation()
         .Build();
@@ -131,20 +140,21 @@ returned from AddKernel. Resolve the Kernel from the service provider.
 
 services.AddKernel();
 
-var provider = services.BuildServiceProvider();
-var kernel   = provider.GetRequiredService&lt;Kernel&gt;();
-</code></pre>
+<span class="tk-kw">var</span> provider = services.BuildServiceProvider();
+<span class="tk-kw">var</span> kernel   = provider.GetRequiredService&lt;Kernel&gt;();
+</pre></div>
 <p>Registering <code>IChatClient</code> as a factory lambda solves the dependency ordering problem: <code>loggerFactory</code> is available from the container when the factory runs, so there is no chicken-and-egg issue.</p>
 
 </section>
 <section class="page-section" data-key="middleware-pipeline">
   <h2 id="the-middleware-pipeline">The middleware pipeline</h2>
 <p>One of the most useful things M.E.AI provides is a composable middleware pipeline for <code>IChatClient</code>. It works exactly like ASP.NET Core middleware — layers wrap layers, running from outside in:</p>
-<pre><code class="language-csharp">IChatClient chatClient = new ChatClientBuilder(innerClient)
-    .UseLogging(loggerFactory)   // logs every request and response
-    .UseFunctionInvocation()     // executes tool calls automatically
+<div class="csharp"><pre>
+IChatClient chatClient = <span class="tk-kw">new</span> ChatClientBuilder(innerClient)
+    .UseLogging(loggerFactory)   <span class="tk-com">// logs every request and response</span>
+    .UseFunctionInvocation()     <span class="tk-com">// executes tool calls automatically</span>
     .Build();
-</code></pre>
+</pre></div>
 <p>This matters for two reasons. First, cross-cutting concerns — logging, telemetry, retry — are declared once and apply to every LLM call automatically. Second, <code>.UseFunctionInvocation()</code> is where automatic tool execution lives. When the model decides to call a tool, the middleware intercepts the response, invokes the function, and sends the result back — without any code in your business logic.</p>
 <p>The warning that comes with this: automatic function invocation means the model can trigger side effects without explicit approval. That is fine in development. In production, it is the reason Module 7 (HITL, guardrails) exists.</p>
 
@@ -152,31 +162,32 @@ var kernel   = provider.GetRequiredService&lt;Kernel&gt;();
 <section class="page-section" data-key="the-final-code">
   <h2 id="the-conversation-loop">The conversation loop</h2>
 <p>The mini challenge in Module 1 was building a multi-turn conversation with memory. The key insight: there is no magic. Memory is a <code>List&lt;ChatMessage&gt;</code> that you pass to every call. The model sees the entire history each time. That is all short-term memory is.</p>
-<pre><code class="language-csharp">var chatClient = provider.GetRequiredService&lt;IChatClient&gt;();
+<div class="csharp"><pre>
+<span class="tk-kw">var</span> chatClient = provider.GetRequiredService&lt;IChatClient&gt;();
 
-var messages = new List&lt;ChatMessage&gt;
+<span class="tk-kw">var</span> messages = <span class="tk-kw">new</span> List&lt;ChatMessage&gt;
 {
-    new(ChatRole.System, &quot;You are a helpful .NET expert assistant.&quot;)
+    <span class="tk-kw">new</span>(ChatRole.System, <span class="tk-str">&quot;You are a helpful .NET expert assistant.&quot;</span>)
 };
 
-using var cts = new CancellationTokenSource();
-Console.CancelKeyPress += (_, e) =&gt; { e.Cancel = true; cts.Cancel(); };
+<span class="tk-kw">using</span> <span class="tk-kw">var</span> cts = <span class="tk-kw">new</span> CancellationTokenSource();
+Console.CancelKeyPress += (_, e) =&gt; { e.Cancel = <span class="tk-kw">true</span>; cts.Cancel(); };
 
-while (!cts.Token.IsCancellationRequested)
+<span class="tk-kw">while</span> (!cts.Token.IsCancellationRequested)
 {
-    Console.Write(&quot;Next message: &quot;);
-    var input = Console.ReadLine();
-    if (string.IsNullOrWhiteSpace(input)) continue;
+    Console.Write(<span class="tk-str">&quot;Next message: &quot;</span>);
+    <span class="tk-kw">var</span> input = Console.ReadLine();
+    <span class="tk-kw">if</span> (<span class="tk-kw">string</span>.IsNullOrWhiteSpace(input)) <span class="tk-kw">continue</span>;
 
-    messages.Add(new ChatMessage(ChatRole.User, input));
+    messages.Add(<span class="tk-kw">new</span> ChatMessage(ChatRole.User, input));
 
-    var result = await chatClient.GetResponseAsync(
+    <span class="tk-kw">var</span> result = <span class="tk-kw">await</span> chatClient.GetResponseAsync(
         messages, cancellationToken: cts.Token);
 
-    messages.Add(new ChatMessage(ChatRole.Assistant, result.Text));
-    Console.WriteLine($&quot;\nAnswer: {result.Text}\n&quot;);
+    messages.Add(<span class="tk-kw">new</span> ChatMessage(ChatRole.Assistant, result.Text));
+    Console.WriteLine($<span class="tk-str">&quot;\nAnswer: {result.Text}\n&quot;</span>);
 }
-</code></pre>
+</pre></div>
 <p>Notice that <code>IChatClient</code> is resolved directly from the provider — not through the kernel. The kernel is registered and available, but at this stage, it is not doing anything yet. The agent capabilities come in Module 2 when plugins enter the picture.</p>
 <p>The choice to use <code>IChatClient</code> with <code>List&lt;ChatMessage&gt;</code> rather than SK's <code>IChatCompletionService</code> with <code>ChatHistory</code> was deliberate. The middleware pipeline runs on the <code>IChatClient</code>. Keeping everything at the M.E.AI layer in Module 1 means the logging and function invocation middleware is active, without needing to wire up an additional SK bridge.</p>
 
@@ -196,9 +207,9 @@ while (!cts.Token.IsCancellationRequested)
 
 </section>
 
-    </div>
-    <div class="lang-content" id="content-hu">
-      <section class="page-section" data-key="intro">
+</div>
+<div class="prose" data-l="hu">
+<section class="page-section" data-key="intro">
   <h2 id="problema-megfogalmazas">Probléma megfogalmazás</h2>
 <p>Minden AI tutorial ugyanúgy kezdődik. Hozzáadod az OpenAI NuGet csomagot, beilleszted az API kulcsot, meghívod a <code>CompleteAsync</code>-ot, és tíz perc alatt van egy működő chat appod. Amid szintén van — anélkül, hogy észrevennéd — az egy egyetlen providertől való kemény függőség, ami beégett a kódod minden rétegébe.</p>
 <p>Szerettem volna rendesen megérteni a stack-et, mielőtt bármit rá építek. Nem csak azt, hogy melyik csomagot kell telepíteni, hanem azt, hogy miért léteznek a rétegek, mindegyik miért felelős, és mi törik el valójában, amikor a dokumentáció nem mondja az egészet. Ez a .NET Agentic AI curriculumom 1. modulja — az alap felállítása, amelyre minden más épülni fog.</p>
@@ -232,30 +243,33 @@ while (!cts.Token.IsCancellationRequested)
   <h2 id="amit-a-dokumentacio-nem-mond-el">Amit a dokumentáció nem mond el</h2>
 <p>A kiindulópontul szolgáló modul leírás hivatkozott egy <code>LLamaSharpChatClient</code> nevű osztályra. Ilyen nem létezik.</p>
 <p>A <code>LLamaSharp.SemanticKernel</code>-ben lévő tényleges osztály a <code>LLamaSharpChatCompletion</code>, amely az SK <code>IChatCompletionService</code>-ét implementálja — nem az M.E.AI <code>IChatClient</code>-jét. A kettő közötti bridge a <code>.AsChatClient()</code> hívás:</p>
-<pre><code class="language-csharp">var llamaChat = new LLamaSharpChatCompletion(executor);
+<div class="csharp"><pre>
+<span class="tk-kw">var</span> llamaChat = <span class="tk-kw">new</span> LLamaSharpChatCompletion(executor);
 IChatClient chatClient = llamaChat.AsChatClient();
-</code></pre>
+</pre></div>
 <p>Mielőtt az <code>executor</code>-t létrehoznád, fel kell építeni a teljes LlamaSharp objektumláncot. Ez szintén hiányzott az eredeti leírásból:</p>
-<pre><code class="language-csharp">var modelParams = new ModelParams(modelPath)
+<div class="csharp"><pre>
+<span class="tk-kw">var</span> modelParams = <span class="tk-kw">new</span> ModelParams(modelPath)
 {
     ContextSize = contextSize,
     GpuLayerCount = gpuLayers
 };
 
-using var model   = LLamaWeights.LoadFromFile(modelParams);
-using var context = model.CreateContext(modelParams);
-var executor      = new InteractiveExecutor(context);
-</code></pre>
+<span class="tk-kw">using</span> <span class="tk-kw">var</span> model   = LLamaWeights.LoadFromFile(modelParams);
+<span class="tk-kw">using</span> <span class="tk-kw">var</span> context = model.CreateContext(modelParams);
+<span class="tk-kw">var</span> executor      = <span class="tk-kw">new</span> InteractiveExecutor(context);
+</pre></div>
 <p>A <code>model</code> és <code>context</code> objektumok <code>IDisposable</code>-ek. DI factory-ban soha nem kerülnek dispose-ra — ezt production kódban hosted service wrapperrel kell kezelni.</p>
 <p>A második probléma a Semantic Kernel regisztrációjával volt. A modul kódja <code>.Build()</code>-et hívott az <code>AddKernel()</code> visszatérési értékén. Ez kivételt dob:</p>
 <pre><code>System.InvalidOperationException: Build is not permitted on instances
 returned from AddKernel. Resolve the Kernel from the service provider.
 </code></pre>
 <p>A helyes pattern: mindent <code>ServiceCollection</code>-ben regisztrálni, és a <code>Kernel</code>-t a felépített providerből feloldani:</p>
-<pre><code class="language-csharp">services.AddSingleton&lt;IChatClient&gt;(sp =&gt;
+<div class="csharp"><pre>
+services.AddSingleton&lt;IChatClient&gt;(sp =&gt;
 {
-    var loggerFactory = sp.GetRequiredService&lt;ILoggerFactory&gt;();
-    return new ChatClientBuilder(LLamaSharpChatClientFactory(config))
+    <span class="tk-kw">var</span> loggerFactory = sp.GetRequiredService&lt;ILoggerFactory&gt;();
+    <span class="tk-kw">return</span> <span class="tk-kw">new</span> ChatClientBuilder(LLamaSharpChatClientFactory(config))
         .UseLogging(loggerFactory)
         .UseFunctionInvocation()
         .Build();
@@ -263,20 +277,21 @@ returned from AddKernel. Resolve the Kernel from the service provider.
 
 services.AddKernel();
 
-var provider = services.BuildServiceProvider();
-var kernel   = provider.GetRequiredService&lt;Kernel&gt;();
-</code></pre>
+<span class="tk-kw">var</span> provider = services.BuildServiceProvider();
+<span class="tk-kw">var</span> kernel   = provider.GetRequiredService&lt;Kernel&gt;();
+</pre></div>
 <p>Az <code>IChatClient</code> lambda factory-ként való regisztrálása megoldja a függőségi sorrend problémát: a <code>loggerFactory</code> elérhető a konténerből, amikor a factory fut, tehát nincs chicken-and-egg probléma.</p>
 
 </section>
 <section class="page-section" data-key="middleware-pipeline">
   <h2 id="a-middleware-pipeline">A middleware pipeline</h2>
 <p>Az egyik leghasznosabb dolog, amit az M.E.AI nyújt, egy kompozálható middleware pipeline az <code>IChatClient</code>-hez. Pontosan úgy működik mint az ASP.NET Core middleware — rétegek wrap-elik egymást, kívülről befelé futnak:</p>
-<pre><code class="language-csharp">IChatClient chatClient = new ChatClientBuilder(innerClient)
-    .UseLogging(loggerFactory)   // logol minden kérést és választ
-    .UseFunctionInvocation()     // automatikusan végrehajtja a tool hívásokat
+<div class="csharp"><pre>
+IChatClient chatClient = <span class="tk-kw">new</span> ChatClientBuilder(innerClient)
+    .UseLogging(loggerFactory)   <span class="tk-com">// logol minden k&#233;r&#233;st &#233;s v&#225;laszt</span>
+    .UseFunctionInvocation()     <span class="tk-com">// automatikusan v&#233;grehajtja a tool h&#237;v&#225;sokat</span>
     .Build();
-</code></pre>
+</pre></div>
 <p>Ez két okból fontos. Először, a cross-cutting concern-ök — logging, telemetria, retry — egyszer kerülnek deklarálásra, és automatikusan érvényesek minden LLM hívásra. Másodszor, a <code>.UseFunctionInvocation()</code> itt él az automatikus tool végrehajtás. Amikor a modell úgy dönt, hogy tool-t hív, a middleware lehallgatja a választ, meghívja a függvényt, és visszaküldi az eredményt — anélkül, hogy bármi kód lenne a business logikádban.</p>
 <p>A figyelmeztetés, ami ezzel jár: az automatikus function invocation azt jelenti, hogy a modell jóváhagyás nélkül tud mellékhatásokat kiváltani. Ez fejlesztés közben rendben van. Production-ban ez az oka annak, hogy létezik a 7. modul (HITL, guardrails).</p>
 
@@ -284,31 +299,32 @@ var kernel   = provider.GetRequiredService&lt;Kernel&gt;();
 <section class="page-section" data-key="the-final-code">
   <h2 id="a-conversation-loop">A conversation loop</h2>
 <p>A Modul 1 mini kihívása egy többkörös, memóriával rendelkező párbeszéd megépítése volt. A kulcsfontosságú felismerés: nincs varázslat. A memória egy <code>List&lt;ChatMessage&gt;</code>, amelyet minden hívásnak átadsz. A modell minden alkalommal látja a teljes előzményt. Ez minden, ami a short-term memory.</p>
-<pre><code class="language-csharp">var chatClient = provider.GetRequiredService&lt;IChatClient&gt;();
+<div class="csharp"><pre>
+<span class="tk-kw">var</span> chatClient = provider.GetRequiredService&lt;IChatClient&gt;();
 
-var messages = new List&lt;ChatMessage&gt;
+<span class="tk-kw">var</span> messages = <span class="tk-kw">new</span> List&lt;ChatMessage&gt;
 {
-    new(ChatRole.System, &quot;You are a helpful .NET expert assistant.&quot;)
+    <span class="tk-kw">new</span>(ChatRole.System, <span class="tk-str">&quot;You are a helpful .NET expert assistant.&quot;</span>)
 };
 
-using var cts = new CancellationTokenSource();
-Console.CancelKeyPress += (_, e) =&gt; { e.Cancel = true; cts.Cancel(); };
+<span class="tk-kw">using</span> <span class="tk-kw">var</span> cts = <span class="tk-kw">new</span> CancellationTokenSource();
+Console.CancelKeyPress += (_, e) =&gt; { e.Cancel = <span class="tk-kw">true</span>; cts.Cancel(); };
 
-while (!cts.Token.IsCancellationRequested)
+<span class="tk-kw">while</span> (!cts.Token.IsCancellationRequested)
 {
-    Console.Write(&quot;Next message: &quot;);
-    var input = Console.ReadLine();
-    if (string.IsNullOrWhiteSpace(input)) continue;
+    Console.Write(<span class="tk-str">&quot;Next message: &quot;</span>);
+    <span class="tk-kw">var</span> input = Console.ReadLine();
+    <span class="tk-kw">if</span> (<span class="tk-kw">string</span>.IsNullOrWhiteSpace(input)) <span class="tk-kw">continue</span>;
 
-    messages.Add(new ChatMessage(ChatRole.User, input));
+    messages.Add(<span class="tk-kw">new</span> ChatMessage(ChatRole.User, input));
 
-    var result = await chatClient.GetResponseAsync(
+    <span class="tk-kw">var</span> result = <span class="tk-kw">await</span> chatClient.GetResponseAsync(
         messages, cancellationToken: cts.Token);
 
-    messages.Add(new ChatMessage(ChatRole.Assistant, result.Text));
-    Console.WriteLine($&quot;\nAnswer: {result.Text}\n&quot;);
+    messages.Add(<span class="tk-kw">new</span> ChatMessage(ChatRole.Assistant, result.Text));
+    Console.WriteLine($<span class="tk-str">&quot;\nAnswer: {result.Text}\n&quot;</span>);
 }
-</code></pre>
+</pre></div>
 <p>Figyeld meg, hogy az <code>IChatClient</code> közvetlenül a providerből kerül feloldásra — nem a kernelen keresztül. A kernel regisztrálva és elérhető, de ebben a szakaszban még nem csinál semmit. Az agent képességek a 2. modulban jönnek, amikor a pluginek belépnek a képbe.</p>
 <p>Az a döntés, hogy az <code>IChatClient</code>-et <code>List&lt;ChatMessage&gt;</code>-dzsel használom az SK <code>IChatCompletionService</code>-e és <code>ChatHistory</code>-ja helyett, szándékos volt. A middleware pipeline az <code>IChatClient</code>-en fut. Azzal, hogy mindent az M.E.AI rétegen tartunk a Modul 1-ben, a logging és a function invocation middleware aktív — anélkül, hogy egy additional SK bridge-et kellene bekötni.</p>
 
@@ -328,14 +344,23 @@ while (!cts.Token.IsCancellationRequested)
 
 </section>
 
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="indented">
-      <p>© 2026 Viktor Vidman</p>
-    </div>
-  </footer>
+</div>
+<nav class="pager" aria-label="Series navigation">
+<a href="/posts/dotnet-ai-stack-00.html" rel="prev"><span class="dir">← <span data-l="en">Previous</span><span data-l="hu">Előző</span></span><span data-l="en">From .NET Dev to AI Engineer — Why I Started This Series</span><span data-l="hu">.NET fejlesztőből AI Engineer — Miért kezdtem el ezt a sorozatot</span></a>
+</nav>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p>© 2026 Viktor Vidman · <span data-l="en">built with a custom C# generator</span><span data-l="hu">saját C# generátorral építve</span></p>
+<nav aria-label="Footer">
+<a href="https://github.com/vvidman">github</a>
+<a href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">linkedin</a>
+<a href="/feed.xml">rss</a>
+</nav>
+</div>
+</footer>
 
 </body>
 </html>

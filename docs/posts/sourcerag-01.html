@@ -1,77 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en" data-theme="light" data-title-en="Viktor Vidman – VCS as Proof Store" data-title-hu="Viktor Vidman – VCS mint proof tár">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-  <title>Viktor Vidman - VCS as Proof Store</title>
+<script>(function(){var d=document.documentElement,l,t;try{l=localStorage.getItem('lang');t=localStorage.getItem('theme')}catch(e){}
+if(l!=='en'&&l!=='hu'){l=(navigator.language||'').toLowerCase().indexOf('hu')===0?'hu':'en'}
+if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+d.setAttribute('data-lang',l);d.setAttribute('lang',l);d.setAttribute('data-theme',t)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viktor Vidman – VCS as Proof Store</title>
+<meta name="description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
+<meta name="author" content="Viktor Vidman">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#F4F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B121B" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://vvidman.github.io/posts/sourcerag-01.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vvidman.github.io/posts/sourcerag-01.html">
+<meta property="og:title" content="Viktor Vidman – VCS as Proof Store">
+<meta property="og:description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="hu_HU">
+<meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Viktor Vidman – VCS as Proof Store">
+<meta name="twitter:description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
+<meta name="twitter:image" content="https://vvidman.github.io/assets/images/vv-profile.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"VCS as Proof Store","author":{"@type":"Person","name":"Viktor Vidman"},"url":"https://vvidman.github.io/posts/sourcerag-01.html","image":"https://vvidman.github.io/assets/images/vv-profile.jpg","datePublished":"2026-04-15"}</script>
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Viktor Vidman" href="/feed.xml">
+<script src="/assets/javascript/site.js" defer></script>
 
-  <meta name="description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
-  <meta name="author" content="Viktor Vidman">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#445f77">
-
-  <link rel="canonical" href="https://vvidman.github.io/posts/sourcerag-01.html">
-
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://vvidman.github.io/posts/sourcerag-01.html">
-  <meta property="og:title" content="Viktor Vidman - VCS as Proof Store">
-  <meta property="og:description" content="Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:locale:alternate" content="hu_HU">
-  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
-
-  <!-- Schema.org: Person -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Viktor Vidman",
-    "url": "https://vvidman.github.io",
-    "jobTitle": "Backend Engineer",
-    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
-    "sameAs": [
-      "https://github.com/vvidman"
-    ]
-  }
-  </script>  
-
-  <link rel="stylesheet" href="/assets/css/site.css" />
-  <script src="/assets/javascript/site.js" defer></script>
-  <link rel="icon" href="/assets/icons/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 </head>
 <body>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href="/"><span>~/</span>vvidman</a>
+<nav class="nav" aria-label="Main">
+<a href="/posts/" aria-current="page">/blog</a>
+<a href="/about/">/about</a>
+</nav>
+<div class="toggles">
+<div class="seg" role="group" aria-label="Language">
+<button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+<button type="button" data-set-lang="hu" aria-pressed="false">HU</button>
+</div>
+<button type="button" class="icon-btn" data-toggle-theme aria-label="Toggle dark mode">
+<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+</div>
+</div>
+</header>
 
-  <header class="site-header">
-    <div class="page-header">
-      <div class="header-links">
-        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
-        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
-      </div>  
-      <h1>VCS as Proof Store</h1>
-    </div>
-    <div class="indented">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/posts/">Blog</a>
-      </nav>      
-      <div class="lang-switch">
-        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
-        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
-      </div>
-    </div>
-  </header>
+<main>
+<div class="post-layout has-series">
+<aside class="series-tree" aria-label="Series">
+<h2>SourceRAG</h2>
+<a href="/posts/sourcerag-00.html"><span class="n">01</span><span data-l="en">Making a 2M-line legacy codebase queryable by AI</span><span data-l="hu">Legacy kódbázis, amit az AI is ismer</span></a>
+<a href="/posts/sourcerag-01.html" aria-current="page"><span class="n">02</span><span data-l="en">VCS as Proof Store</span><span data-l="hu">VCS mint proof tár</span></a>
+</aside>
+<article class="article">
+<header class="post-head">
+<div class="pills"><span class="pill pill-accent">SourceRAG · 2/2</span></div>
+<h1 class="post-title"><span data-l="en">VCS as Proof Store</span><span data-l="hu">VCS mint proof tár</span></h1>
+<p class="post-lead"><span data-l="en">Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.</span><span data-l="hu">Miért másoljuk a forrástartalmat egy proof adatbázisba, ha a verziókezelő már mindent követ? A SourceRAG magát a VCS-t használja proof tárként — tartalomduplikáció nélkül, teljes nyomon követhetőséggel.</span></p>
+<p class="post-meta">2026-04-15 · <span data-l="en">8 min read</span><span data-l="hu">7 perc olvasás</span> · EN / HU</p>
+</header>
 
-  <main class="content">
-    <div class="lang-content" id="content-en">
-      <section class="page-section" data-key="intro">
-  <h1 id="vcs-as-proof-store">VCS as Proof Store</h1>
-<p>Every RAG system I've built or studied follows the same pattern. You have a source repository. You extract the content. You store it in a proof database. You embed it. You search it. Two copies of everything, an ongoing sync obligation, and a proof store you have to maintain yourself.</p>
+<div class="prose" data-l="en">
+<section class="page-section" data-key="intro">
+  <p>Every RAG system I've built or studied follows the same pattern. You have a source repository. You extract the content. You store it in a proof database. You embed it. You search it. Two copies of everything, an ongoing sync obligation, and a proof store you have to maintain yourself.</p>
 <p>I kept coming back to the same question: the overhead is real, but is it necessary?</p>
 <p>Git already knows every file, every method, every author, every commit message — with exact timestamps and full revision history. If I'm already on source control, I'm already maintaining a proof store. I just haven't been querying it directly.</p>
 <p>SourceRAG is my attempt to test this hypothesis. This is a concept project — README and architecture decisions are in place, implementation is underway. I'm writing about it as I build.</p>
+
+</section>
+<section class="page-section" data-key="fig-overview">
+  <p><img src="/assets/images/sourcerag_part1.png" alt="SourceRAG Part 2 infographic: VCS as proof store" /></p>
 
 </section>
 <section class="page-section" data-key="problem">
@@ -112,16 +121,16 @@
 </code></pre>
 <p>The two hosting projects — <code>SourceRAG.Api</code> and <code>SourceRAG.McpHost</code> — share the same Application layer via MediatR. Neither knows about the other. This means the same use cases are available over REST and over MCP without any duplication of business logic.</p>
 <p>All provider choices — which VCS, which embedding model — are runtime-configurable via <code>appsettings.json</code>. No code change is needed to switch between Git and SVN, or between a local LLamaSharp model and an API-based embedding provider.</p>
-<pre><code class="language-json">{
-  &quot;SourceRAG&quot;: {
-    &quot;VcsProvider&quot;: &quot;Git&quot;,
-    &quot;EmbeddingProvider&quot;: &quot;Local&quot;,
-    &quot;RepositoryPath&quot;: &quot;/path/to/repo&quot;,
-    &quot;Branch&quot;: &quot;main&quot;
+<div class="json"><pre>
+{
+  <span>&quot;SourceRAG&quot;</span>: {
+    <span>&quot;VcsProvider&quot;</span>: <span>&quot;Git&quot;</span>,
+    <span>&quot;EmbeddingProvider&quot;</span>: <span>&quot;Local&quot;</span>,
+    <span>&quot;RepositoryPath&quot;</span>: <span>&quot;/path/to/repo&quot;</span>,
+    <span>&quot;Branch&quot;</span>: <span>&quot;main&quot;</span>
   }
 }
-</code></pre>
-
+</pre></div>
 </section>
 <section class="page-section" data-key="vcs_providers">
   <h2 id="vcs-providers-git-and-svn-as-vertical-slices">VCS providers: Git and SVN as vertical slices</h2>
@@ -150,19 +159,20 @@
   <h2 id="the-chunk-proof-payload">The chunk proof payload</h2>
 <p><strong>ADR-006</strong> defines what gets stored in Qdrant for each indexed chunk. The point ID is deterministic: <code>sha256(repoPath + filePath + symbolName + revision)</code>. The same chunk indexed twice produces the same ID — which means re-indexing is idempotent by construction.</p>
 <p>The payload is the proof structure:</p>
-<pre><code class="language-json">{
-  &quot;file_path&quot;: &quot;src/Core/ImageProcessor.cs&quot;,
-  &quot;symbol_name&quot;: &quot;ProcessTile&quot;,
-  &quot;symbol_type&quot;: &quot;Method&quot;,
-  &quot;revision&quot;: &quot;a3f9c12e&quot;,
-  &quot;author&quot;: &quot;vvidman&quot;,
-  &quot;commit_message&quot;: &quot;Fix OOM on large WSI files&quot;,
-  &quot;timestamp&quot;: &quot;2024-11-03T14:22:00Z&quot;,
-  &quot;branch&quot;: &quot;main&quot;,
-  &quot;start_line&quot;: 42,
-  &quot;end_line&quot;: 78
+<div class="json"><pre>
+{
+  <span>&quot;file_path&quot;</span>: <span>&quot;src/Core/ImageProcessor.cs&quot;</span>,
+  <span>&quot;symbol_name&quot;</span>: <span>&quot;ProcessTile&quot;</span>,
+  <span>&quot;symbol_type&quot;</span>: <span>&quot;Method&quot;</span>,
+  <span>&quot;revision&quot;</span>: <span>&quot;a3f9c12e&quot;</span>,
+  <span>&quot;author&quot;</span>: <span>&quot;vvidman&quot;</span>,
+  <span>&quot;commit_message&quot;</span>: <span>&quot;Fix OOM on large WSI files&quot;</span>,
+  <span>&quot;timestamp&quot;</span>: <span>&quot;2024-11-03T14:22:00Z&quot;</span>,
+  <span>&quot;branch&quot;</span>: <span>&quot;main&quot;</span>,
+  <span>&quot;start_line&quot;</span>: <span>42</span>,
+  <span>&quot;end_line&quot;</span>: <span>78</span>
 }
-</code></pre>
+</pre></div>
 <p>No source code is in this payload. At query time, the system takes <code>revision</code> and <code>file_path</code>, calls the VCS, and reconstructs the exact content as it existed at that commit. The proof isn't a stored copy — it's a pointer into version history.</p>
 <p>This is what makes the approach interesting: the payload is small, the vector store stays lean, and the auditability is richer than what a traditional proof database would give you. You get authorship and change intent, not just file content.</p>
 
@@ -172,12 +182,13 @@
 <p><strong>ADR-008</strong> is the most structurally significant decision in the solution: the same Application layer is shared by two independent host projects. <code>SourceRAG.Api</code> exposes a REST interface consumed by the Blazor web client. <code>SourceRAG.McpHost</code> exposes an MCP server consumed by AI agents — Claude Desktop, GitHub Copilot, or any MCP-compatible client.</p>
 <p>Neither host project contains business logic. Both dispatch to the Application layer via MediatR. Adding a third host — a CLI, a gRPC service — would require no changes to Application or Infrastructure.</p>
 <p>The MCP server exposes three tools:</p>
-<pre><code class="language-md">| Tool | Description |
+<div class="markdown"><pre>
+| Tool | Description |
 |---|---|
-| `search_codebase` | Semantic search over the indexed repository |
-| `index_repository` | Trigger full or incremental reindex |
-| `get_index_status` | Return current index state, last revision, chunk count |
-</code></pre>
+| <span>`search_codebase`</span> | Semantic search over the indexed repository |
+| <span>`index_repository`</span> | Trigger full or incremental reindex |
+| <span>`get_index_status`</span> | Return current index state, last revision, chunk count |
+</pre></div>
 <p><strong>ADR-009</strong> defines the Blazor client as a typed <code>HttpClient</code> targeting the REST API. The web client has no direct dependency on Application or Infrastructure — it's a consumer of the API, not a host.</p>
 <p><strong>ADR-011</strong> covers authentication. Both the Blazor web UI and the MCP server authenticate via Azure AD / Entra ID using OAuth 2.0. The decision to use Entra ID was driven by the multi-user design assumption — this isn't a single-developer local tool. Authentication is a first-class concern from the start.</p>
 
@@ -199,18 +210,21 @@
 <p>SourceRAG is at concept and README stage. The architecture decisions are locked, the solution structure is defined, and the core interfaces are sketched. Implementation is beginning.</p>
 <p>The question I'm actually testing is simple: does removing the proof store duplication produce a system that is meaningfully simpler to operate? The expected gains are clear on paper — no sync logic, no schema drift, richer traceability for free. Whether those gains survive contact with real repositories, real commit histories, and real query patterns is what the implementation will answer.</p>
 <p>I'll write about what I find — including what doesn't work. If you've built something similar, or if the VCS-as-proof-store idea surfaces a problem I haven't considered, I'd like to hear it.</p>
-<p><em>Related projects: <a href="https://github.com/vvidman/RagLab">RagLab</a> · <a href="https://github.com/vvidman/AiObservability">AiObservability</a> · <a href="https://github.com/vvidman/ScaffoldProtocol">Scaffold Protocol</a></em></p>
+<p><em>Related projects: <a href="https://github.com/vvidman/RagLab">RagLab</a> · <a href="https://github.com/vvidman/AiObservability">AiObservability</a> · <a href="https://github.com/vvidman/Dev_Scaffold">Scaffold Protocol</a></em></p>
 
 </section>
 
-    </div>
-    <div class="lang-content" id="content-hu">
-      <section class="page-section" data-key="intro">
-  <h1 id="vcs-mint-proof-tar">VCS mint proof tár</h1>
-<p>Minden RAG rendszer, amit eddig építettem vagy tanulmányoztam, ugyanazt a mintát követi. Van egy source repository. Kinyerjük a tartalmat. Betároljuk egy proof adatbázisba. Embedeljük. Keresünk benne. Minden adat két helyen él, folyamatos szinkronizációs kötelezettséggel, és egy proof tárral, amit magunknak kell karbantartani.</p>
+</div>
+<div class="prose" data-l="hu">
+<section class="page-section" data-key="intro">
+  <p>Minden RAG rendszer, amit eddig építettem vagy tanulmányoztam, ugyanazt a mintát követi. Van egy source repository. Kinyerjük a tartalmat. Betároljuk egy proof adatbázisba. Embedeljük. Keresünk benne. Minden adat két helyen él, folyamatos szinkronizációs kötelezettséggel, és egy proof tárral, amit magunknak kell karbantartani.</p>
 <p>Mindig visszatértem ugyanahhoz a kérdéshez: az overhead valós, de valóban szükséges?</p>
 <p>A git már tudja az összes fájlt, minden metódust, minden szerzőt, minden commit üzenetet — pontos időbélyeggel és teljes revíziótörténettel. Ha már source control alatt van a kódom, már fenntartok egy proof tárat. Csak nem kérdeztem le közvetlenül.</p>
 <p>A SourceRAG ennek a hipotézisnek a tesztelése. Ez egy koncepcióprojekt — a README és az architektúrális döntések megvannak, az implementáció folyamatban van. Menet közben írok róla.</p>
+
+</section>
+<section class="page-section" data-key="fig-overview">
+  <p><img src="/assets/images/sourcerag_part1.png" alt="SourceRAG 2. rész infografika: VCS mint proof tár" /></p>
 
 </section>
 <section class="page-section" data-key="problem">
@@ -251,16 +265,16 @@
 </code></pre>
 <p>A két host projekt — <code>SourceRAG.Api</code> és <code>SourceRAG.McpHost</code> — ugyanazt az Application réteget osztja MediatR-on keresztül. Egyik sem tud a másikról. Ez azt jelenti, hogy ugyanazok a use case-ek elérhetők REST-en és MCP-n is, üzleti logika duplikáció nélkül.</p>
 <p>Minden provider-választás — melyik VCS, melyik embedding modell — runtime-on konfigurálható <code>appsettings.json</code>-ban. Git és SVN, vagy lokális LLamaSharp modell és API-alapú embedding provider között váltáshoz nincs szükség kódmódosításra.</p>
-<pre><code class="language-json">{
-  &quot;SourceRAG&quot;: {
-    &quot;VcsProvider&quot;: &quot;Git&quot;,
-    &quot;EmbeddingProvider&quot;: &quot;Local&quot;,
-    &quot;RepositoryPath&quot;: &quot;/path/to/repo&quot;,
-    &quot;Branch&quot;: &quot;main&quot;
+<div class="json"><pre>
+{
+  <span>&quot;SourceRAG&quot;</span>: {
+    <span>&quot;VcsProvider&quot;</span>: <span>&quot;Git&quot;</span>,
+    <span>&quot;EmbeddingProvider&quot;</span>: <span>&quot;Local&quot;</span>,
+    <span>&quot;RepositoryPath&quot;</span>: <span>&quot;/path/to/repo&quot;</span>,
+    <span>&quot;Branch&quot;</span>: <span>&quot;main&quot;</span>
   }
 }
-</code></pre>
-
+</pre></div>
 </section>
 <section class="page-section" data-key="vcs_providers">
   <h2 id="vcs-providerek-git-es-svn-mint-vertikalis-szeletek">VCS providerek: Git és SVN mint vertikális szeletek</h2>
@@ -289,19 +303,20 @@
   <h2 id="a-chunk-proof-payload">A chunk proof payload</h2>
 <p>Az <strong>ADR-006</strong> azt határozza meg, mi kerül a Qdrantba minden indexelt chunk esetén. A pont azonosítója determinisztikus: <code>sha256(repoPath + filePath + symbolName + revision)</code>. Ugyanaz a chunk kétszer indexelve ugyanazt az azonosítót adja — ami azt jelenti, hogy az újraindexelés konstrukciónál fogva idempotens.</p>
 <p>A payload a proof-struktúra:</p>
-<pre><code class="language-json">{
-  &quot;file_path&quot;: &quot;src/Core/ImageProcessor.cs&quot;,
-  &quot;symbol_name&quot;: &quot;ProcessTile&quot;,
-  &quot;symbol_type&quot;: &quot;Method&quot;,
-  &quot;revision&quot;: &quot;a3f9c12e&quot;,
-  &quot;author&quot;: &quot;vvidman&quot;,
-  &quot;commit_message&quot;: &quot;Fix OOM on large WSI files&quot;,
-  &quot;timestamp&quot;: &quot;2024-11-03T14:22:00Z&quot;,
-  &quot;branch&quot;: &quot;main&quot;,
-  &quot;start_line&quot;: 42,
-  &quot;end_line&quot;: 78
+<div class="json"><pre>
+{
+  <span>&quot;file_path&quot;</span>: <span>&quot;src/Core/ImageProcessor.cs&quot;</span>,
+  <span>&quot;symbol_name&quot;</span>: <span>&quot;ProcessTile&quot;</span>,
+  <span>&quot;symbol_type&quot;</span>: <span>&quot;Method&quot;</span>,
+  <span>&quot;revision&quot;</span>: <span>&quot;a3f9c12e&quot;</span>,
+  <span>&quot;author&quot;</span>: <span>&quot;vvidman&quot;</span>,
+  <span>&quot;commit_message&quot;</span>: <span>&quot;Fix OOM on large WSI files&quot;</span>,
+  <span>&quot;timestamp&quot;</span>: <span>&quot;2024-11-03T14:22:00Z&quot;</span>,
+  <span>&quot;branch&quot;</span>: <span>&quot;main&quot;</span>,
+  <span>&quot;start_line&quot;</span>: <span>42</span>,
+  <span>&quot;end_line&quot;</span>: <span>78</span>
 }
-</code></pre>
+</pre></div>
 <p>Ebben a payloadban nincs forráskód. Lekérdezéskor a rendszer veszi a <code>revision</code>-t és a <code>file_path</code>-et, meghívja a VCS-t, és rekonstruálja a tartalmat pontosan úgy, ahogy az adott commitban létezett. A proof nem egy tárolt másolat — hanem egy mutató a verzióhistóriába.</p>
 <p>Ez teszi az megközelítést érdekessé: a payload kicsi, a vektortár karcsú marad, az auditálhatóság pedig gazdagabb, mint amit egy hagyományos proof adatbázis adna. Nem csak fájltartalmat kapsz — szerzőséget és változtatási szándékot is.</p>
 
@@ -311,12 +326,13 @@
 <p>Az <strong>ADR-008</strong> a solution leglényegesebb strukturális döntése: ugyanazt az Application réteget osztja két független host projekt. A <code>SourceRAG.Api</code> REST interfészt expozál, amelyet a Blazor web kliens fogyaszt. A <code>SourceRAG.McpHost</code> MCP szervert expozál, amelyet AI ügynökök fogyasztanak — Claude Desktop, GitHub Copilot, vagy bármely MCP-kompatibilis kliens.</p>
 <p>Egyik host projekt sem tartalmaz üzleti logikát. Mindkettő MediatR-on keresztül diszpécsel az Application rétegnek. Egy harmadik host hozzáadása — CLI, gRPC szolgáltatás — nem igényelne módosítást az Application vagy az Infrastructure oldalán.</p>
 <p>Az MCP szerver három toolt expozál:</p>
-<pre><code class="language-md">| Tool | Leírás |
+<div class="markdown"><pre>
+| Tool | Le&#237;r&#225;s |
 |---|---|
-| `search_codebase` | Szemantikus keresés az indexelt repositoryban |
-| `index_repository` | Teljes vagy inkrementális újraindexelés indítása |
-| `get_index_status` | Aktuális indexállapot, utolsó revízió, chunk-szám |
-</code></pre>
+| <span>`search_codebase`</span> | Szemantikus keres&#233;s az indexelt repositoryban |
+| <span>`index_repository`</span> | Teljes vagy inkrement&#225;lis &#250;jraindexel&#233;s ind&#237;t&#225;sa |
+| <span>`get_index_status`</span> | Aktu&#225;lis index&#225;llapot, utols&#243; rev&#237;zi&#243;, chunk-sz&#225;m |
+</pre></div>
 <p>Az <strong>ADR-009</strong> a Blazor klienst typed <code>HttpClient</code>-ként definiálja, amely a REST API-t célozza. A web kliens nem függ közvetlenül az Application vagy az Infrastructure rétegektől — az API fogyasztója, nem hostja.</p>
 <p>Az <strong>ADR-011</strong> a hitelesítést fedi le. A Blazor web UI és az MCP szerver is Azure AD / Entra ID-n keresztül hitelesít OAuth 2.0 használatával. Az Entra ID melletti döntést a többfelhasználós tervezési feltételezés vezérelte — ez nem egy egyfejlesztős lokális eszköz. A hitelesítés első osztályú elvárás a kezdetektől.</p>
 
@@ -338,18 +354,27 @@
 <p>A SourceRAG koncepció és README szinten van. Az architektúrális döntések rögzítve vannak, a solution struktúra definiált, az alapvető interfészek felvázolva. Az implementáció kezdődik.</p>
 <p>A kérdés, amelyet valójában tesztelek, egyszerű: a proof tár duplikáció eltávolítása egy érdemben egyszerűbben üzemeltetható rendszert produkál-e? A várható nyereségek papíron világosak — nincs szinkronizálási logika, nincs séma-drift, gazdagabb visszakövethetőség ingyen. Hogy ezek a nyereségek túlélik-e a találkozást valódi repositorykkal, valódi commithistóriával és valódi lekérdezési mintákkal — erre az implementáció fog válaszolni.</p>
 <p>Írok majd arról, amit tapasztalok — beleértve azt is, ami nem működik. Ha valami hasonlót építettél, vagy ha a VCS-as-proof-store ötlet olyan problémát vet fel, amelyet nem vettem figyelembe, szívesen hallom.</p>
-<p><em>Kapcsolódó projektek: <a href="https://github.com/vvidman/RagLab">RagLab</a> · <a href="https://github.com/vvidman/AiObservability">AiObservability</a> · <a href="https://github.com/vvidman/ScaffoldProtocol">Scaffold Protocol</a></em></p>
+<p><em>Kapcsolódó projektek: <a href="https://github.com/vvidman/RagLab">RagLab</a> · <a href="https://github.com/vvidman/AiObservability">AiObservability</a> · <a href="https://github.com/vvidman/Dev_Scaffold">Scaffold Protocol</a></em></p>
 
 </section>
 
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="indented">
-      <p>© 2026 Viktor Vidman</p>
-    </div>
-  </footer>
+</div>
+<nav class="pager" aria-label="Series navigation">
+<a href="/posts/sourcerag-00.html" rel="prev"><span class="dir">← <span data-l="en">Previous</span><span data-l="hu">Előző</span></span><span data-l="en">Making a 2M-line legacy codebase queryable by AI</span><span data-l="hu">Legacy kódbázis, amit az AI is ismer</span></a>
+</nav>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p>© 2026 Viktor Vidman · <span data-l="en">built with a custom C# generator</span><span data-l="hu">saját C# generátorral építve</span></p>
+<nav aria-label="Footer">
+<a href="https://github.com/vvidman">github</a>
+<a href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">linkedin</a>
+<a href="/feed.xml">rss</a>
+</nav>
+</div>
+</footer>
 
 </body>
 </html>
