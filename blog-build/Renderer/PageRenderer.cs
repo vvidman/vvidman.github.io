@@ -34,42 +34,64 @@ public static class PageRenderer
             rendered[lang] = EscapeTemplateLiterals(sb.ToString());
         }
 
-        var titleEn = DocumentTitle(m.Title);
-        var titleHu = DocumentTitle(string.IsNullOrWhiteSpace(m.TitleHu) ? m.Title : m.TitleHu);
-        var ogImage = string.IsNullOrWhiteSpace(m.OgImage) ? DefaultOgImage : m.OgImage;
+        var vars = BaseVars(
+            titleEn: DocumentTitle(m.Title),
+            titleHu: DocumentTitle(string.IsNullOrWhiteSpace(m.TitleHu) ? m.Title : m.TitleHu),
+            description: m.Description,
+            slug: m.Slug,
+            ogImage: string.IsNullOrWhiteSpace(m.OgImage) ? DefaultOgImage : m.OgImage,
+            ogType: isPost ? "article" : "website",
+            jsonLd: JsonLd(doc, string.IsNullOrWhiteSpace(m.OgImage) ? DefaultOgImage : m.OgImage),
+            navBlog: isPost,
+            navAbout: m.Slug.StartsWith("about/", StringComparison.OrdinalIgnoreCase));
 
-        var vars = new Dictionary<string, string>
-        {
-            ["title_en"]     = I18n.Encode(titleEn),
-            ["title_hu"]     = I18n.Encode(titleHu),
-            ["description"]  = I18n.Encode(m.Description),
-            ["canonical"]    = Urls.Absolute(m.Slug),
-            ["og_image"]     = AbsoluteUrl(ogImage),
-            ["og_type"]      = isPost ? "article" : "website",
-            ["json_ld"]      = JsonLd(doc, ogImage),
-            ["nav_blog"]     = isPost ? CurrentPage : "",
-            ["nav_about"]    = m.Slug.StartsWith("about/", StringComparison.OrdinalIgnoreCase) ? CurrentPage : "",
-            ["year"]         = DateTime.UtcNow.Year.ToString(),
-            ["layout_class"] = series is not null ? "post-layout has-series" : isPost ? "post-layout" : "page-layout",
-            ["post_header"]  = PostChromeRenderer.Header(doc, series, Minutes(doc, "en"), Minutes(doc, "hu")),
-            ["series_tree"]  = PostChromeRenderer.SeriesTree(series),
-            ["figure"]       = PostChromeRenderer.Figure(doc),
-            ["pager"]        = PostChromeRenderer.Pager(series),
-            ["content_en"]   = rendered.GetValueOrDefault("en", ""),
-            ["content_hu"]   = rendered.GetValueOrDefault("hu", ""),
-        };
+        vars["layout_class"] = series is not null ? "post-layout has-series" : isPost ? "post-layout" : "page-layout";
+        vars["post_header"]  = PostChromeRenderer.Header(doc, series, Minutes(doc, "en"), Minutes(doc, "hu"));
+        vars["series_tree"]  = PostChromeRenderer.SeriesTree(series);
+        vars["figure"]       = PostChromeRenderer.Figure(doc);
+        vars["pager"]        = PostChromeRenderer.Pager(series);
+        vars["content_en"]   = rendered.GetValueOrDefault("en", "");
+        vars["content_hu"]   = rendered.GetValueOrDefault("hu", "");
 
         var layout = string.IsNullOrWhiteSpace(m.Layout) ? "page" : m.Layout;
         return engine.Render(layout, vars);
     }
 
+    /// <summary>Variables every full page needs for the head, header and footer partials.</summary>
+    internal static Dictionary<string, string> BaseVars(
+        string titleEn, string titleHu, string description, string slug,
+        string ogImage, string ogType, string jsonLd, bool navBlog, bool navAbout) => new()
+    {
+        ["title_en"]    = I18n.Encode(titleEn),
+        ["title_hu"]    = I18n.Encode(titleHu),
+        ["description"] = I18n.Encode(description),
+        ["canonical"]   = Urls.Absolute(slug),
+        ["og_image"]    = AbsoluteUrl(ogImage),
+        ["og_type"]     = ogType,
+        ["json_ld"]     = jsonLd,
+        ["nav_blog"]    = navBlog ? CurrentPage : "",
+        ["nav_about"]   = navAbout ? CurrentPage : "",
+        ["year"]        = DateTime.UtcNow.Year.ToString(),
+    };
+
     internal static string AbsoluteUrl(string pathOrUrl) =>
         pathOrUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pathOrUrl : Urls.Origin + pathOrUrl;
 
-    private static int Minutes(PageDocument doc, string lang) =>
+    internal static int Minutes(PageDocument doc, string lang) =>
         ReadingTime.Minutes(string.Join("\n\n", doc.Sections
             .Select(s => SectionRenderer.ResolveBlock(s, lang)?.Markdown)
             .Where(md => md is not null)));
+
+    internal static string PersonJsonLd() => JsonSerializer.Serialize(new Dictionary<string, object>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "Person",
+        ["name"] = SiteName,
+        ["url"] = Urls.Origin,
+        ["jobTitle"] = "Software Architect",
+        ["knowsAbout"] = new[] { "C#", ".NET", "Backend Architecture", "AI-Augmented Development", "Human-in-the-Loop Workflows", "Multi-Agent Systems", "Software Design" },
+        ["sameAs"] = new[] { "https://github.com/vvidman", "https://www.linkedin.com/in/viktor-vidman-55a2a197" },
+    });
 
     private static string JsonLd(PageDocument doc, string ogImage)
     {
@@ -91,18 +113,7 @@ public static class PageRenderer
                 data["datePublished"] = d.ToString("yyyy-MM-dd");
         }
         else
-        {
-            data = new()
-            {
-                ["@context"] = "https://schema.org",
-                ["@type"] = "Person",
-                ["name"] = SiteName,
-                ["url"] = Urls.Origin,
-                ["jobTitle"] = "Software Architect",
-                ["knowsAbout"] = new[] { "C#", ".NET", "Backend Architecture", "AI-Augmented Development", "Human-in-the-Loop Workflows", "Multi-Agent Systems", "Software Design" },
-                ["sameAs"] = new[] { "https://github.com/vvidman", "https://www.linkedin.com/in/viktor-vidman-55a2a197" },
-            };
-        }
+            return PersonJsonLd();
 
         // The default encoder escapes '<', '>' and '&', so the JSON cannot close the <script> element.
         return JsonSerializer.Serialize(data);

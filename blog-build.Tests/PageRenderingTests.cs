@@ -11,7 +11,7 @@ public class PageRenderingTests : IClassFixture<SiteFixture>, IClassFixture<NoHu
     public PageRenderingTests(SiteFixture site, NoHuSiteFixture noHu) { _site = site; _noHu = noHu; }
 
     [Fact]
-    public void Real_content_builds_without_errors() => Assert.Equal(0, _site.Report.Errors);
+    public void Real_content_builds_without_errors() => Assert.True(_site.Report.Errors == 0, _site.Log);
 
     [Fact]
     public void Series_post_has_tree_pager_and_meta()

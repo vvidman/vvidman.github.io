@@ -8,6 +8,7 @@ public class SiteFixture : IDisposable
 {
     public string Output { get; } = Path.Combine(Path.GetTempPath(), "site-" + Guid.NewGuid().ToString("N"));
     public BuildReport Report { get; }
+    public string Log { get; }
 
     public SiteFixture() : this(Path.Combine(TestPaths.RepoRoot, "content")) { }
 
@@ -19,7 +20,9 @@ public class SiteFixture : IDisposable
             Defaults = new DefaultConfig { Languages = new[] { "en", "hu" }, Layout = "page" }
         };
         var paths = new ResolvedPaths(projectDir, input, Path.Combine(projectDir, "templates"), Output);
-        Report = SiteBuilder.Build(cfg, paths);
+        var log = new StringWriter();
+        Report = SiteBuilder.Build(cfg, paths, log);
+        Log = log.ToString();
     }
 
     public string Read(string slug) => File.ReadAllText(Path.Combine(Output, slug));

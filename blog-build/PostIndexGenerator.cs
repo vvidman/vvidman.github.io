@@ -1,123 +1,81 @@
-using System.Net;
 using System.Text;
 using VVidman.BlogBuild.Models;
+using VVidman.BlogBuild.Renderers;
 
 namespace VVidman.BlogBuild;
 
 public static class PostIndexGenerator
 {
-    // Az infografika palettájából — sorozatonként automatikusan kiosztva
-    private static readonly string[] SeriesPalette =
-    [
-        "#e8a24a", // amber
-        "#4a749c", // blue
-        "#bd6450", // terra
-        "#6ec99a", // green
-        "#7b68c8", // violet
-        "#5fb3d4", // sky
-    ];
+    public const string Slug = "posts/index.html";
 
-    public static string Generate(
-        IReadOnlyList<PageDocument> posts,
-        string templateHtml,
-        IReadOnlyList<string> languages)
+    private const string Description = "Articles on .NET, software architecture, and AI-augmented development.";
+
+    public static string Generate(SiteIndex index, TemplateEngine engine)
     {
-        var seriesGroups = posts
-            .Where(p => !string.IsNullOrWhiteSpace(p.Metadata.Series))
-            .GroupBy(p => p.Metadata.Series!, StringComparer.OrdinalIgnoreCase)
-            .Select((g, i) => (
-                Name:  g.Key,
-                Color: SeriesPalette[i % SeriesPalette.Length],
-                Posts: g.OrderBy(p => p.Metadata.Part ?? int.MaxValue).ToList()
-            ))
-            .OrderByDescending(g => g.Posts
-                .Select(p => p.Metadata.Date ?? DateOnly.MinValue)
-                .DefaultIfEmpty(DateOnly.MinValue)
-                .Min())
-            .ToList();
+        var body = new StringBuilder();
 
-        var standalones = posts
-            .Where(p => string.IsNullOrWhiteSpace(p.Metadata.Series))
-            .OrderByDescending(p => p.Metadata.Date ?? DateOnly.MinValue)
-            .ToList();
+        foreach (var (name, parts) in index.Series)
+        {
+            body.Append("<section class=\"series-block\">\n<div class=\"series-head\">");
+            body.Append("<h2>").Append(I18n.Encode(name)).Append("</h2>");
+            body.Append("<span>").Append(I18n.Text(
+                parts.Count == 1 ? "1 part" : $"{parts.Count} parts",
+                $"{parts.Count} rész")).Append("</span></div>\n<ul class=\"post-list\">\n");
 
-        var renderedByLang = new Dictionary<string, string>();
-        foreach (var lang in languages)
-            renderedByLang[lang] = BuildContent(seriesGroups, standalones, lang);
+            for (var i = 0; i < parts.Count; i++)
+                body.Append(Row(parts[i], $"#{parts[i].Metadata.Part ?? i + 1}"));
 
-        return templateHtml
-            .Replace("{{title}}",       "Posts")
-            .Replace("{{lang}}",        languages.FirstOrDefault() ?? "en")
-            .Replace("{{slug}}",        "posts/index.html")
-            .Replace("{{description}}", "Articles on .NET, software architecture, and AI-augmented development.")
-            .Replace("{{content_en}}",  renderedByLang.GetValueOrDefault("en", ""))
-            .Replace("{{content_hu}}",  renderedByLang.GetValueOrDefault("hu", ""));
+            body.Append("</ul>\n</section>\n");
+        }
+
+        var standalone = index.Posts.Where(p => string.IsNullOrWhiteSpace(p.Metadata.Series)).ToList();
+        if (standalone.Count > 0)
+        {
+            body.Append("<section class=\"series-block\">\n<div class=\"series-head\"><h2>")
+                .Append(I18n.Label("standalone")).Append("</h2></div>\n<ul class=\"post-list\">\n");
+            foreach (var post in standalone)
+                body.Append(Row(post, badge: null));
+            body.Append("</ul>\n</section>\n");
+        }
+
+        var vars = PageRenderer.BaseVars(
+            titleEn: PageRenderer.DocumentTitle("Posts"),
+            titleHu: PageRenderer.DocumentTitle("Bejegyzések"),
+            description: Description,
+            slug: Slug,
+            ogImage: "/assets/images/vv-profile.jpg",
+            ogType: "website",
+            jsonLd: PageRenderer.PersonJsonLd(),
+            navBlog: true,
+            navAbout: false);
+        vars["title_heading"] = I18n.Text("Posts", "Bejegyzések");
+        vars["index_body"] = body.ToString();
+
+        return engine.Render("posts-index", vars);
     }
 
-    private static string BuildContent(
-        IReadOnlyList<(string Name, string Color, List<PageDocument> Posts)> seriesGroups,
-        IReadOnlyList<PageDocument> standalones,
-        string lang)
+    private static string Row(PageDocument post, string? badge)
     {
+        var m = post.Metadata;
         var sb = new StringBuilder();
-        var isHu = lang == "hu";
+        sb.Append("<li><a class=\"post-row\" href=\"").Append(Urls.Path(m.Slug)).Append("\">");
 
-        if (seriesGroups.Count > 0)
-        {
-            sb.AppendLine($"<section class=\"post-index-section\">");
-            sb.AppendLine($"  <h2>{(isHu ? "Sorozatok" : "Series")}</h2>");
+        if (badge is not null)
+            sb.Append("<span class=\"part-badge\">").Append(I18n.Encode(badge)).Append("</span>");
 
-            foreach (var (name, color, posts) in seriesGroups)
-            {
-                sb.AppendLine($"  <div class=\"series-group\" style=\"--series-color: {color}\">");
-                sb.AppendLine($"    <div class=\"series-header\">");
-                sb.AppendLine($"      <span class=\"series-stripe\"></span>");
-                sb.AppendLine($"      <span class=\"series-name\">{WebUtility.HtmlEncode(name)}</span>");
-                sb.AppendLine($"    </div>");
-                sb.AppendLine($"    <ul class=\"series-post-list\">");
+        sb.Append("<span class=\"row-main\"><span class=\"row-title\">")
+          .Append(I18n.Text(m.Title, m.TitleHu))
+          .Append("</span></span>");
 
-                foreach (var post in posts)
-                {
-                    var title = isHu && !string.IsNullOrWhiteSpace(post.Metadata.TitleHu)
-                        ? post.Metadata.TitleHu
-                        : post.Metadata.Title;
+        var meta = new List<string>();
+        if (m.Date is { } date)
+            meta.Add($"<span>{date:yyyy-MM-dd}</span>");
+        meta.Add("<span>" + I18n.Text(
+            $"{PageRenderer.Minutes(post, "en")} min read",
+            $"{PageRenderer.Minutes(post, "hu")} perc olvasás") + "</span>");
 
-                    var partBadge = post.Metadata.Part.HasValue
-                        ? $"<span class=\"part-badge\">#{post.Metadata.Part}</span>"
-                        : "<span class=\"part-badge\"></span>";
-
-                    sb.AppendLine($"      <li>");
-                    sb.AppendLine($"        {partBadge}");
-                    sb.AppendLine($"        <a href=\"/{post.Metadata.Slug}\">{WebUtility.HtmlEncode(title)}</a>");
-                    sb.AppendLine($"      </li>");
-                }
-
-                sb.AppendLine($"    </ul>");
-                sb.AppendLine($"  </div>");
-            }
-
-            sb.AppendLine($"</section>");
-        }
-
-        if (standalones.Count > 0)
-        {
-            sb.AppendLine($"<section class=\"post-index-section\">");
-            sb.AppendLine($"  <h2>{(isHu ? "Egyéb bejegyzések" : "Standalone posts")}</h2>");
-            sb.AppendLine($"  <ul class=\"post-list\">");
-
-            foreach (var post in standalones)
-            {
-                var title = isHu && !string.IsNullOrWhiteSpace(post.Metadata.TitleHu)
-                    ? post.Metadata.TitleHu
-                    : post.Metadata.Title;
-
-                sb.AppendLine($"    <li><a href=\"/{post.Metadata.Slug}\">{WebUtility.HtmlEncode(title)}</a></li>");
-            }
-
-            sb.AppendLine($"  </ul>");
-            sb.AppendLine($"</section>");
-        }
-
+        sb.Append("<span class=\"row-meta\">").Append(string.Concat(meta)).Append("</span>");
+        sb.Append("</a></li>\n");
         return sb.ToString();
     }
 }
