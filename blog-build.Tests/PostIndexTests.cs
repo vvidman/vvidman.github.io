@@ -98,7 +98,7 @@ public class PostIndexTests : IClassFixture<SiteFixture>, IClassFixture<MixedTop
     public void Home_lab_posts_are_their_own_series_inside_tooling()
     {
         Assert.Contains("<h2>Home Lab</h2>", Index);
-        Assert.Contains("<h2>Complications</h2>", Index);
+        Assert.Contains("<h2>Gotchas</h2>", Index);
     }
 
     [Fact]
