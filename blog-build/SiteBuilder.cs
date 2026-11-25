@@ -17,9 +17,12 @@ public static class SiteBuilder
         // Fázis 1: minden .md parse-olása
         CollectPages(paths.Input, allPages, ref errors);
 
+        var index  = new SiteIndex(allPages);
+        var engine = new TemplateEngine(paths.Templates);
+
         // Fázis 2: egyedi oldalak renderelése és kiírása
         foreach (var page in allPages)
-            RenderAndWrite(cfg, paths, page, templateCache, written, ref errors);
+            RenderAndWrite(cfg, paths, page, index, engine, written, ref errors);
 
         // Fázis 3: posts/index.html generálása
         GeneratePostsIndex(cfg, paths, allPages, templateCache, written, ref errors);
@@ -60,15 +63,11 @@ public static class SiteBuilder
 
     private static void RenderAndWrite(
         BuildConfig cfg, ResolvedPaths paths, PageDocument page,
-        Dictionary<string, string> templateCache, List<string> written, ref int errors)
+        SiteIndex index, TemplateEngine engine, List<string> written, ref int errors)
     {
         try
         {
-            var layoutName = string.IsNullOrWhiteSpace(page.Metadata.Layout)
-                ? cfg.Defaults.Layout
-                : page.Metadata.Layout;
-
-            var html = PageRenderer.Render(page, Template(paths, templateCache, layoutName), cfg.Defaults.Languages);
+            var html = PageRenderer.Render(page, index, engine, cfg.Defaults.Languages);
 
             var pagePath = Path.Combine(paths.Output, page.Metadata.Slug);
             var pageDir  = Path.GetDirectoryName(pagePath)

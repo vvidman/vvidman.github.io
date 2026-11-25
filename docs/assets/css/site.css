@@ -323,6 +323,7 @@ a { color: var(--accent); }
   text-decoration: none;
   border-left: 2px solid var(--line);
 }
+.series-tree a .n { flex: 0 0 auto; margin-right: 12px; color: var(--line-no); }
 .series-tree a:hover { color: var(--ink); }
 .series-tree a[aria-current="page"] { color: var(--accent); background: var(--accent-soft); border-left: 3px solid var(--accent); }
 .article { flex: 1; min-width: 0; max-width: 760px; width: 100%; }

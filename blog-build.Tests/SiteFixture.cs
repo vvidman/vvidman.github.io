@@ -1,0 +1,31 @@
+using VVidman.BlogBuild;
+using VVidman.BlogBuild.Models;
+
+namespace BlogBuild.Tests;
+
+/// <summary>Builds a content folder into a temp output dir once per test class.</summary>
+public class SiteFixture : IDisposable
+{
+    public string Output { get; } = Path.Combine(Path.GetTempPath(), "site-" + Guid.NewGuid().ToString("N"));
+    public BuildReport Report { get; }
+
+    public SiteFixture() : this(Path.Combine(TestPaths.RepoRoot, "content")) { }
+
+    protected SiteFixture(string input)
+    {
+        var projectDir = Path.Combine(TestPaths.RepoRoot, "blog-build");
+        var cfg = new BuildConfig
+        {
+            Defaults = new DefaultConfig { Languages = new[] { "en", "hu" }, Layout = "page" }
+        };
+        var paths = new ResolvedPaths(projectDir, input, Path.Combine(projectDir, "templates"), Output);
+        Report = SiteBuilder.Build(cfg, paths);
+    }
+
+    public string Read(string slug) => File.ReadAllText(Path.Combine(Output, slug));
+
+    public void Dispose() { if (Directory.Exists(Output)) Directory.Delete(Output, true); }
+}
+
+public sealed class NoHuSiteFixture()
+    : SiteFixture(Path.Combine(TestPaths.RepoRoot, "blog-build.Tests", "Fixtures", "nohu"));

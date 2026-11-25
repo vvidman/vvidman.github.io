@@ -1,83 +1,26 @@
 <!DOCTYPE html>
-<html lang="{{lang}}">
+<html lang="en" data-lang="en" data-theme="light" data-title-en="{{title_en}}" data-title-hu="{{title_hu}}">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-  <title>Viktor Vidman - {{title}}</title>
-
-  <meta name="description" content="{{description}}">
-  <meta name="author" content="Viktor Vidman">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#445f77">
-
-  <link rel="canonical" href="https://vvidman.github.io/{{slug}}">
-
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://vvidman.github.io/{{slug}}">
-  <meta property="og:title" content="Viktor Vidman - {{title}}">
-  <meta property="og:description" content="{{description}}">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:locale:alternate" content="hu_HU">
-  <meta property="og:image" content="https://vvidman.github.io/assets/images/vv-profile.png">
-
-  <!-- Schema.org: Person -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Viktor Vidman",
-    "url": "https://vvidman.github.io",
-    "jobTitle": "Backend Engineer",
-    "knowsAbout": ["C#", ".NET", "Backend Architecture", "Software Design"],
-    "sameAs": [
-      "https://github.com/vvidman"
-    ]
-  }
-  </script>  
-
-  <link rel="stylesheet" href="/assets/css/site.css" />
-  <script src="/assets/javascript/site.js" defer></script>
-  <link rel="icon" href="/assets/icons/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+{{> head}}
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="page-header">
-      <div class="header-links">
-        <a id="linked_ref" href="https://www.linkedin.com/in/viktor-vidman-55a2a197/">Contact me</a>
-        <a id="forkme_banner" href="https://github.com/vvidman/vvidman.github.io">View on GitHub</a>
-      </div>  
-      <h1>{{title}}</h1>
-    </div>
-    <div class="indented">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/posts/">Blog</a>
-      </nav>      
-      <div class="lang-switch">
-        <button class="btn-icon-en" onclick="setLang('en')" id="btn-en" aria-label="Switch to English" />
-        <button class="btn-icon-hu" onclick="setLang('hu')" id="btn-hu" aria-label="Váltás magyarra" />
-      </div>
-    </div>
-  </header>
-
-  <main class="content">
-    <div class="lang-content" id="content-en">
-      {{content_en}}
-    </div>
-    <div class="lang-content" id="content-hu">
-      {{content_hu}}
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="indented">
-      <p>© 2026 Viktor Vidman</p>
-    </div>
-  </footer>
-
+{{> header}}
+<main>
+<div class="{{layout_class}}">
+{{series_tree}}
+<article class="article">
+{{post_header}}
+{{figure}}
+<div class="prose" data-l="en">
+{{content_en}}
+</div>
+<div class="prose" data-l="hu">
+{{content_hu}}
+</div>
+{{pager}}
+</article>
+</div>
+</main>
+{{> footer}}
 </body>
 </html>
