@@ -3,6 +3,7 @@ title: ChaosForge - Let Go of the Reins
 title_hu: ChaosForge – Engedd el a gyeplőt
 slug: posts/post-chaosforge-01.html
 description: From Scaffold Protocol to ChaosForge – why I stopped trying to control every AI step, and what I built instead.
+description_hu: A Scaffold Protocoltól a ChaosForge-ig – miért hagytam abba az AI minden lépésének kontrollálását, és mit építettem helyette.
 layout: page
 date: 2026-03-22
 series: ChaosForge
@@ -12,9 +13,6 @@ part: 1
 :::section intro
 
 :::lang en
-
-# ChaosForge - Let Go of the Reins
-
 There's a moment in every engineering project where you stop and ask: *am I solving the right problem?*
 
 For me, that moment came midway through building Scaffold Protocol – a human-in-the-loop, step-by-step AI workflow tool for .NET development. The system worked. Agents produced output. Validators caught bad results. The human reviewed everything. Controlled. Predictable.
@@ -30,9 +28,6 @@ This is ChaosForge.
 :::lang
 
 :::lang hu
-
-# ChaosForge - Engedd el a gyeplőt
-
 Minden mérnöki projektben eljön az a pillanat, amikor megállsz és megkérdezed magadtól: *tényleg a jó problémát oldom meg?*
 
 Nekem ez a pillanat a Scaffold Protocol fejlesztésének közepén érkezett – egy human-in-the-loop, lépésenkénti AI workflow eszköz .NET fejlesztéshez. A rendszer működött. Az ágensek outputot adtak. A validátor kiszűrte a rosszakat. Az ember minden lépést átnézett. Kontrollált. Kiszámítható.
@@ -48,6 +43,19 @@ Ez a ChaosForge.
 :::lang
 
 :::section
+
+:::section fig-overview
+
+:::lang en
+![ChaosForge infographic: let go of the reins](/assets/images/chaosforge-infographic-01.png)
+:::lang
+
+:::lang hu
+![ChaosForge infografika: engedd el a gyeplőt](/assets/images/chaosforge-infographic-01.png)
+:::lang
+
+:::section
+
 
 :::section scaffold_context
 

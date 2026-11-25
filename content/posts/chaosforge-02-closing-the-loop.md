@@ -3,6 +3,7 @@ title: Closing the Loop
 title_hu: Zárd le a hurkot
 slug: posts/post-chaosforge-02.html
 description: A practical workflow for pairing a reasoning model with an agentic coding assistant — and closing the structural gap between planning and implementation.
+description_hu: Gyakorlati workflow egy gondolkodó (reasoning) modell és egy agentic kódolóasszisztens párosításához — és a tervezés és a megvalósítás közötti strukturális rés bezárásához.
 layout: page
 date: 2026-03-26
 series: ChaosForge
@@ -12,9 +13,6 @@ part: 2
 :::section intro
 
 :::lang en
-
-# Closing the Loop
-
 This workflow came out of a concrete frustration.
 
 I was building a hobby project using two AI tools side by side: a conversational AI for planning and architecture, and an agentic coding assistant that works directly in the repository. Each tool is excellent at its job. Together, they have a structural gap that neither one solves on its own.
@@ -26,9 +24,6 @@ The pattern is tool-agnostic. Examples use Claude Desktop and Claude Code, but t
 :::lang
 
 :::lang hu
-
-# Zárd le a hurkot
-
 Ez a workflow egy konkrét frusztrációból született.
 
 Egy hobbi projekten dolgoztam két AI eszközzel egymás mellett: egy társalgó AI-t használtam tervezéshez és architektúrához, és egy ágentikus kód-asszisztenst, ami közvetlenül a repositoryban dolgozik. Mindkét eszköz kiváló a maga feladatában. Együtt azonban van egy strukturális résük, amit egyik sem old meg önmagában.
@@ -276,6 +271,19 @@ Minden nyíl explicit és dokumentált. Senki fejében nincs semmi elrejtve.
 :::lang
 
 :::section
+
+:::section fig-closed-loop
+
+:::lang en
+![Closing the loop infographic: reasoning model and coding assistant](/assets/images/closed-loop-infographics.png)
+:::lang
+
+:::lang hu
+![Zárd le a hurkot infografika: reasoning modell és kódoló asszisztens](/assets/images/closed-loop-infographics.png)
+:::lang
+
+:::section
+
 
 :::section context_window
 

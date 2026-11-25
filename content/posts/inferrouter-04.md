@@ -1,8 +1,10 @@
 ---
 title: InferRouter Part 4: Observability
+title_hu: InferRouter 4. rész: Megfigyelhetőség
 slug: posts/inferrouter-04.html
 layout: page
 description: How InferRouter makes its internal state visible — a provider-agnostic JSONL operation log and three HTTP endpoints for live health, quota stats, and log history.
+description_hu: Hogyan teszi láthatóvá az InferRouter a belső állapotát — provider-független JSONL műveleti napló és három HTTP végpont az élő állapothoz, a kvótastatisztikákhoz és a naplótörténethez.
 date: 2026-06-03
 series: InferRouter
 part: 4
@@ -11,22 +13,31 @@ part: 4
 :::section intro
 
 :::lang en
-## Part 4: Observability
-
 [Part 3](/posts/inferrouter-03.html) covered secret management. The core concerns — inference strategy, execution loop, key handling — are now closed. This part covers the remaining question: once the proxy is running, how do you know what is actually happening inside it?
 
 InferRouter answers this in two layers. The first is the operation log: a structured JSONL file that captures every inference event in a provider-agnostic format. The second is three HTTP endpoints that expose live internal state without requiring log file access.
 :::lang
 
 :::lang hu
-## 4. rész: Megfigyelhetőség
-
 A [3. rész](/posts/inferrouter-03.html) a titkos kulcsok kezelését tárgyalta. Az alapvető szempontok — inferencia stratégia, végrehajtási ciklus, kulcs kezelés — most már le vannak zárva. Ez a rész a fennmaradó kérdéssel foglalkozik: ha a proxy fut, hogyan tudod, mi történik valójában benne?
 
 Az InferRouter erre két rétegen válaszol. Az első a műveleti napló: egy strukturált JSONL fájl, amely minden inferencia eseményt provider-agnosztikus formátumban rögzít. A második három HTTP végpont, amelyek az élő belső állapotot teszik láthatóvá naplófájl-hozzáférés nélkül.
 :::lang
 
 :::section
+
+:::section fig-overview
+
+:::lang en
+![InferRouter Part 4 infographic: observability](/assets/images/inferrouter-04-infograph.png)
+:::lang
+
+:::lang hu
+![InferRouter 4. rész infografika: megfigyelhetőség](/assets/images/inferrouter-04-infograph.png)
+:::lang
+
+:::section
+
 
 :::section log
 

@@ -3,6 +3,7 @@ title: VCS as Proof Store
 title_hu: VCS mint proof tár
 slug: posts/sourcerag-01.html
 description: Why duplicate source content into a proof database when source control already tracks everything? SourceRAG uses the VCS itself as its proof store — no content duplication, full traceability.
+description_hu: Miért másoljuk a forrástartalmat egy proof adatbázisba, ha a verziókezelő már mindent követ? A SourceRAG magát a VCS-t használja proof tárként — tartalomduplikáció nélkül, teljes nyomon követhetőséggel.
 layout: page
 date: 2026-04-15
 series: SourceRAG
@@ -12,8 +13,6 @@ part: 2
 :::section intro
 
 :::lang en
-# VCS as Proof Store
-
 Every RAG system I've built or studied follows the same pattern. You have a source repository. You extract the content. You store it in a proof database. You embed it. You search it. Two copies of everything, an ongoing sync obligation, and a proof store you have to maintain yourself.
 
 I kept coming back to the same question: the overhead is real, but is it necessary?
@@ -24,8 +23,6 @@ SourceRAG is my attempt to test this hypothesis. This is a concept project — R
 :::lang
 
 :::lang hu
-# VCS mint proof tár
-
 Minden RAG rendszer, amit eddig építettem vagy tanulmányoztam, ugyanazt a mintát követi. Van egy source repository. Kinyerjük a tartalmat. Betároljuk egy proof adatbázisba. Embedeljük. Keresünk benne. Minden adat két helyen él, folyamatos szinkronizációs kötelezettséggel, és egy proof tárral, amit magunknak kell karbantartani.
 
 Mindig visszatértem ugyanahhoz a kérdéshez: az overhead valós, de valóban szükséges?
@@ -36,6 +33,19 @@ A SourceRAG ennek a hipotézisnek a tesztelése. Ez egy koncepcióprojekt — a 
 :::lang
 
 :::section
+
+:::section fig-overview
+
+:::lang en
+![SourceRAG Part 2 infographic: VCS as proof store](/assets/images/sourcerag_part1.png)
+:::lang
+
+:::lang hu
+![SourceRAG 2. rész infografika: VCS mint proof tár](/assets/images/sourcerag_part1.png)
+:::lang
+
+:::section
+
 
 :::section problem
 
@@ -408,7 +418,7 @@ The question I'm actually testing is simple: does removing the proof store dupli
 
 I'll write about what I find — including what doesn't work. If you've built something similar, or if the VCS-as-proof-store idea surfaces a problem I haven't considered, I'd like to hear it.
 
-*Related projects: [RagLab](https://github.com/vvidman/RagLab) · [AiObservability](https://github.com/vvidman/AiObservability) · [Scaffold Protocol](https://github.com/vvidman/ScaffoldProtocol)*
+*Related projects: [RagLab](https://github.com/vvidman/RagLab) · [AiObservability](https://github.com/vvidman/AiObservability) · [Scaffold Protocol](https://github.com/vvidman/Dev_Scaffold)*
 :::lang
 
 :::lang hu
@@ -420,7 +430,7 @@ A kérdés, amelyet valójában tesztelek, egyszerű: a proof tár duplikáció 
 
 Írok majd arról, amit tapasztalok — beleértve azt is, ami nem működik. Ha valami hasonlót építettél, vagy ha a VCS-as-proof-store ötlet olyan problémát vet fel, amelyet nem vettem figyelembe, szívesen hallom.
 
-*Kapcsolódó projektek: [RagLab](https://github.com/vvidman/RagLab) · [AiObservability](https://github.com/vvidman/AiObservability) · [Scaffold Protocol](https://github.com/vvidman/ScaffoldProtocol)*
+*Kapcsolódó projektek: [RagLab](https://github.com/vvidman/RagLab) · [AiObservability](https://github.com/vvidman/AiObservability) · [Scaffold Protocol](https://github.com/vvidman/Dev_Scaffold)*
 :::lang
 
 :::section

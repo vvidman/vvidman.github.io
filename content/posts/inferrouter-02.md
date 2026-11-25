@@ -1,8 +1,10 @@
 ---
 title: InferRouter Part 2: Inference Strategies
+title_hu: InferRouter 2. rész: Inferencia stratégiák
 slug: posts/inferrouter-02.html
 layout: page
 description: How InferRouter decides which provider handles each request — three configurable inference strategies, the ProviderOrchestrator execution loop, and the local fallback that is always last.
+description_hu: Hogyan dönti el az InferRouter, melyik provider kezel egy kérést — három konfigurálható inferencia stratégia, a ProviderOrchestrator végrehajtási ciklusa, és a helyi fallback, amely mindig az utolsó.
 date: 2026-06-03
 series: InferRouter
 part: 2
@@ -11,8 +13,6 @@ part: 2
 :::section intro
 
 :::lang en
-## Part 2: Inference Strategies
-
 [Part 1](/posts/inferrouter-01.html) described the concept: one proxy, one endpoint, strategy-based routing across any number of OpenAI-compatible providers. This part goes into how that routing actually works.
 
 InferRouter does not have a hardcoded fallback chain. It has an inference strategy. The strategy is responsible for one thing: given the current state of the configured providers, return an ordered list of candidates to try. Everything else — executing attempts, handling errors, logging, rate limit tracking — belongs to the execution loop.
@@ -21,8 +21,6 @@ The local LlamaSharp model is not part of any strategy. It is the guaranteed fal
 :::lang
 
 :::lang hu
-## 2. rész: Inferencia stratégiák
-
 Az [1. rész](/posts/inferrouter-01.html) leírta a koncepciót: egy proxy, egy végpont, stratégia alapú routing bármennyi OpenAI-kompatibilis provideren át. Ez a rész arról szól, hogyan működik ez a routing valójában.
 
 Az InferRouternek nincs beégetett fallback lánca. Inferencia stratégiája van. A stratégia egyetlen dologért felelős: az aktuális provider állapot alapján visszaad egy sorrendezett jelölt listát, amelyet meg kell próbálni. Minden más — kísérletek végrehajtása, hibakezelés, naplózás, rate limit követés — a végrehajtási ciklushoz tartozik.
@@ -31,6 +29,19 @@ A helyi LlamaSharp modell nem része egyetlen stratégiának sem. Ez a garantál
 :::lang
 
 :::section
+
+:::section fig-overview
+
+:::lang en
+![InferRouter Part 2 infographic: inference strategies](/assets/images/inferrouter-02-infograph.png)
+:::lang
+
+:::lang hu
+![InferRouter 2. rész infografika: inferencia stratégiák](/assets/images/inferrouter-02-infograph.png)
+:::lang
+
+:::section
+
 
 :::section architecture
 

@@ -1,8 +1,10 @@
 ---
 title: InferRouter: One Endpoint, Any Provider
+title_hu: InferRouter: egy végpont, bármilyen provider
 slug: posts/inferrouter-01.html
 layout: page
 description: Why managing LLM providers per project breaks down — and how a single self-hosted proxy with strategy-based inference routing solves it.
+description_hu: Miért omlik össze az LLM providerek projektenkénti kezelése — és hogyan oldja meg ezt egyetlen self-hosted proxy stratégia alapú inferencia routinggal.
 date: 2026-06-03
 series: InferRouter
 part: 1
@@ -11,8 +13,6 @@ part: 1
 :::section intro
 
 :::lang en
-## InferRouter: One Endpoint, Any Provider
-
 Running multiple AI projects in parallel means every one of them needs LLM inference. For a while, every one of them handled it separately — which provider to call, how to manage the API key, what to do when a quota runs out.
 
 The duplication wasn't incidental. It was structural: provider management was treated as application logic rather than infrastructure. The fix is to move it one layer up.
@@ -24,8 +24,6 @@ Available on Github: [InferRouter](https://github.com/vvidman/InferRouter)
 :::lang
 
 :::lang hu
-## InferRouter: egy végpont, bármilyen provider
-
 Párhuzamosan több AI projekten dolgozni azt jelenti, hogy mindegyiknek LLM inferenciára van szüksége. Egy ideig mindegyik külön kezelte — melyik providert hívja, hogyan kezelje az API kulcsot, mit tegyen, ha elfogy a kvóta.
 
 A duplikáció nem véletlen volt. Strukturális volt: a provider menedzsmentet alkalmazáslogikának tekintették, nem infrastruktúrának. A megoldás az, hogy egy réteggel feljebb toljuk.
@@ -36,6 +34,19 @@ Elérhető a Githubon: [InferRouter](https://github.com/vvidman/InferRouter)
 :::lang
 
 :::section
+
+:::section fig-overview
+
+:::lang en
+![InferRouter Part 1 infographic: one endpoint, any provider](/assets/images/inferrouter-01-infograph.png)
+:::lang
+
+:::lang hu
+![InferRouter 1. rész infografika: egy végpont, bármilyen provider](/assets/images/inferrouter-01-infograph.png)
+:::lang
+
+:::section
+
 
 :::section problem
 

@@ -2,22 +2,21 @@
 title: Why I built my own static site generator — not because the others are bad
 title_hu: Miért írtam saját statikus oldalgenerátort? (Nem azért, mert a többi rossz.)
 slug: posts/post-02.html
-description: Why I built my own static site generator — not because the others are bad
+description: Why I wrote my own static site generator for this blog: I never compared generators — the first question I asked was what a blog actually is.
+description_hu: Miért írtam saját statikus oldalgenerátort ehhez a bloghoz: nem hasonlítottam össze generátorokat — az első kérdésem az volt, hogy mi is valójában egy blog.
 layout: page
 date: 2026-03-01
-series: SiteGenerator
+series: Site Generator
 part: 1
 ---
 
 :::section title
 :::lang en
-### Why I built my own static site generator — not because the others are bad
-#### I never had a problem with Jekyll. I never tried it. That was intentional.
+## I never had a problem with Jekyll. I never tried it. That was intentional.
 :::lang
 
 :::lang hu
-### Miért írtam saját statikus oldalgenerátort? (Nem azért, mert a többi rossz.)
-#### Nem volt bajom a Jekyll-lel. Soha nem is próbáltam. Szándékos döntés volt.
+## Nem volt bajom a Jekyll-lel. Soha nem is próbáltam. Szándékos döntés volt.
 :::lang
 :::section
 

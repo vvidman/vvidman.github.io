@@ -1,8 +1,10 @@
 ---
 title: InferRouter Part 3: Secret Management
+title_hu: InferRouter 3. rész: Titkos kulcsok kezelése
 slug: posts/inferrouter-03.html
 layout: page
 description: Where API keys live in InferRouter — why not environment variables, why not config files, and what per-request key reading gives you in practice.
+description_hu: Hol élnek az API kulcsok az InferRouterben — miért nem környezeti változókban, miért nem konfigurációs fájlokban, és mit ad a gyakorlatban a kérésenkénti kulcsolvasás.
 date: 2026-06-03
 series: InferRouter
 part: 3
@@ -11,22 +13,31 @@ part: 3
 :::section intro
 
 :::lang en
-## Part 3: Secret Management
-
 [Part 2](/posts/inferrouter-02.html) covered inference strategies: how ProviderOrchestrator selects providers and routes requests. The execution loop knows which providers to try. What it still needs at request time is the API key for each cloud provider.
 
 This is a question that is easy to get wrong.
 :::lang
 
 :::lang hu
-## 3. rész: Titkos kulcsok kezelése
-
 A [2. rész](/posts/inferrouter-02.html) az inferencia stratégiákkal foglalkozott: hogyan választja ki a ProviderOrchestrator a providereket és irányítja a kéréseket. A végrehajtási ciklus tudja, melyik providereket próbálja meg. Amit kérés időpontban még szükséges: minden cloud provider API kulcsa.
 
 Ez egy könnyen elrontható kérdés.
 :::lang
 
 :::section
+
+:::section fig-overview
+
+:::lang en
+![InferRouter Part 3 infographic: secret management](/assets/images/inferrouter-03-infograph.png)
+:::lang
+
+:::lang hu
+![InferRouter 3. rész infografika: titkos kulcsok kezelése](/assets/images/inferrouter-03-infograph.png)
+:::lang
+
+:::section
+
 
 :::section comparison
 

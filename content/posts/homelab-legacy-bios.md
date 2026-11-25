@@ -1,23 +1,22 @@
 ---
 title: The Legacy BIOS + GPT Trap
+title_hu: A Legacy BIOS + GPT csapda
 slug: posts/homelab-legacy-bios.html
 description: Why older machines refuse to boot after a successful Linux installation, and how to fix it with Debian's classic installer.
+description_hu: Miért nem bootolnak a régebbi gépek egy sikeres Linux-telepítés után, és hogyan javítható ez a Debian klasszikus telepítőjével.
 layout: page
+date: 2026-05-31
 ---
 
 :::section intro
 
 :::lang en
-# The Legacy BIOS + GPT Trap
-
 If you're trying to install Linux on an older machine and keep hitting **"Boot Device Not Found"** after a seemingly successful installation, you're probably caught in the Legacy BIOS + GPT trap. This post documents the problem, how to diagnose it, and how to solve it — so you don't spend hours on what I did.
 
 > **This is a companion post to:** [Home Lab Docker Server and Deploy Workflow](/posts/homelab-docker-server.html)
 :::lang
 
 :::lang hu
-# A Legacy BIOS + GPT csapda
-
 Ha Linuxot próbálsz telepíteni egy régebbi gépre, és az egyébként sikeres telepítés után újra és újra **"Boot Device Not Found"** üzenettel találkozol, valószínűleg a Legacy BIOS + GPT csapdába estél. Ez a post dokumentálja a problémát, a diagnosztikát és a megoldást — hogy ne kelljen órákig keresnod azt, amit én már megtaláltam.
 
 > **Ez egy companion post ehhez:** [Otthoni Docker szerver és deploy workflow](/posts/homelab-docker-server.html)

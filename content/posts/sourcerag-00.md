@@ -3,6 +3,7 @@ title: Making a 2M-line legacy codebase queryable by AI
 title_hu: Legacy kódbázis, amit az AI is ismer
 slug: posts/sourcerag-00.html
 description: I designed a system to make a 2M+ line on-premise legacy codebase queryable by any AI tool. It was presented, never implemented. Here is the design — and the question it left open.
+description_hu: Terveztem egy rendszert, amellyel egy 2M+ soros, on-premise legacy kódbázis bármely AI eszközzel lekérdezhetővé válik. Bemutatták, de soha nem valósult meg. Íme a terv — és a kérdés, amelyet nyitva hagyott.
 layout: page
 date: 2026-04-13
 series: SourceRAG
@@ -28,6 +29,19 @@ Ez egy rendszer tervdokumentuma, amelyet soha nem építettem meg. CaKB-nak neve
 :::lang
 
 :::section
+
+:::section fig-overview
+
+:::lang en
+![SourceRAG infographic: making a legacy codebase queryable by AI](/assets/images/sourcerag-00.png)
+:::lang
+
+:::lang hu
+![SourceRAG infografika: legacy kódbázis, amit az AI is ismer](/assets/images/sourcerag-00.png)
+:::lang
+
+:::section
+
 
 :::section problem
 

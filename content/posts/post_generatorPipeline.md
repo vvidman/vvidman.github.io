@@ -3,19 +3,18 @@ title: The generator pipeline — from Markdown to GitHub Pages
 title_hu: A generátor pipeline — Markdowntól a GitHub Pages-ig
 slug: posts/post-04.html
 description: No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.
+description_hu: Nincs CI/CD. Nincs build szerver. Egy lokális parancs, egy docs/ mappa, és egy git push. Ez az egész.
 layout: page
 date: 2026-03-03
-series: SiteGenerator
+series: Site Generator
 part: 3
 ---
 
 :::section title
 :::lang en
-### The generator pipeline — from Markdown to GitHub Pages
 > No CI/CD. No build server. A local command, a docs/ folder, and a git push. Here's the full picture.
 :::lang
 :::lang hu
-### A generátor pipeline — Markdowntól a GitHub Pages-ig
 > Nincs CI/CD. Nincs build szerver. Egy lokális parancs, egy docs/ mappa, és egy git push. Ez az egész.
 :::lang
 :::section

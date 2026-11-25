@@ -3,6 +3,7 @@ title: Building the .NET AI Stack from First Principles
 title_hu: A .NET AI Stack felépítése az alapoktól
 slug: posts/dotnet-ai-stack-01.html
 description: What I learned by wiring together LlamaSharp, Microsoft.Extensions.AI, and Semantic Kernel — and why the documentation does not tell the whole story.
+description_hu: Amit a LlamaSharp, a Microsoft.Extensions.AI és a Semantic Kernel összekötésével tanultam — és miért nem mond el mindent a dokumentáció.
 layout: page
 date: 2026-05-10
 series: .NET Agentic AI

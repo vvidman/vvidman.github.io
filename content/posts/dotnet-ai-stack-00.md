@@ -3,6 +3,7 @@ title: From .NET Dev to AI Engineer — Why I Started This Series
 title_hu: .NET fejlesztőből AI Engineer — Miért kezdtem el ezt a sorozatot
 slug: posts/dotnet-ai-stack-00.html
 description: I completed a strong theoretical course on Agentic AI. Then I realised I could not build anything with it. This is what I did about that.
+description_hu: Elvégeztem egy erős, elméleti Agentic AI kurzust. Aztán rájöttem, hogy semmit sem tudok építeni vele. Ezt tettem ellene.
 layout: page
 date: 2026-05-10
 series: .NET Agentic AI

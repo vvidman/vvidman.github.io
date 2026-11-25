@@ -4,19 +4,9 @@ title_hu: Képzések és tanúsítványok
 slug: posts/post-01.html
 layout: page
 description: My licenses and certifications
+description_hu: Képzéseim és tanúsítványaim.
 ---
 
-:::section title
-
-:::lang en
-### Licenses & certifications
-:::lang
-
-:::lang hu
-### Képzések és tanúsítványok
-:::lang
-
-:::section
 
 :::section certs-featured
 

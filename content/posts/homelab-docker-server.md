@@ -1,23 +1,22 @@
 ---
 title: Home Lab Docker Server and Deploy Workflow
+title_hu: Otthoni Docker szerver és deploy workflow
 slug: posts/homelab-docker-server.html
 description: How to turn an old machine or WSL2 into a personal Docker host, and set up a deploy workflow that works identically on both.
+description_hu: Hogyan lehet egy régi gépből vagy a WSL2-ből személyes Docker hosztot csinálni, és olyan deploy workflow-t felállítani, amely mindkettőn ugyanúgy működik.
 layout: page
+date: 2026-05-31
 ---
 
 :::section intro
 
 :::lang en
-# Home Lab Docker Server and Deploy Workflow
-
 So you want a personal Docker host. Somewhere to run side projects, self-hosted services, or AI experiments without paying for cloud infrastructure. You have two realistic options: an old PC or laptop running Linux, or WSL2 on your Windows machine. This post covers both — and more importantly, how to deploy to either of them using the exact same workflow.
 
 > **Companion post:** If you run into boot problems during Linux installation on older hardware, see [The Legacy BIOS + GPT Trap](/posts/homelab-legacy-bios.html).
 :::lang
 
 :::lang hu
-# Otthoni Docker szerver és deploy workflow
-
 Egy személyes Docker hoszt — hely ahol mellékprojekteket, self-hosted szolgáltatásokat vagy AI kísérleteket futtathatsz anélkül, hogy felhőinfrastruktúráért fizetnél. Két reális opció van: egy régi gép Linuxszal, vagy WSL2 Windows alatt. Ez a post mindkettőt lefedi — és ami fontosabb, egy egységes deploy workflow-t mutat be, ami mindkét esetben ugyanúgy működik.
 
 > **Kapcsolódó post:** Ha régi hardverre telepítés közben bootolási problémákba ütközöl, lásd: [A Legacy BIOS + GPT csapda](/posts/homelab-legacy-bios.html).

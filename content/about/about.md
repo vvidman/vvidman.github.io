@@ -7,10 +7,10 @@ description: Software architect with 16+ years in .NET backend development and a
 
 :::section me
 :::lang en
-![Viktor Vidman](/assets/images/vv-profile.png){width=380}
+![Viktor Vidman](/assets/images/vv-profile.jpg){width=380}
 :::lang
 :::lang hu
-![Vidman Viktor](/assets/images/vv-profile.png){width=380}
+![Vidman Viktor](/assets/images/vv-profile.jpg){width=380}
 :::lang
 :::section
 
@@ -104,7 +104,7 @@ That principle runs through everything I build in this space.
 On the **pipeline side**: [Scaffold Protocol](/posts/post-sp01.html) is a human-in-the-loop AI pipeline
 with explicit orchestration and revision gates. [ChaosForge](/posts/post-chaosforge-01.html) is a
 multi-agent Scrum simulator where agent roles and revision gates are first-class design concerns.
-[RagLab](/posts/post-raglab-01.html) is a handbuilt RAG pipeline in .NET — because understanding
+[RagLab](/posts/raglab-01.html) is a handbuilt RAG pipeline in .NET — because understanding
 what retrieval-augmented generation actually does requires building it yourself, not wrapping a library.
 [AiObservability](https://github.com/vvidman/AiObservability) is a cross-project tracing library that instruments all
 three: every LLM call, retrieval step, and agent action becomes a queryable span.
@@ -136,7 +136,7 @@ Ez az elv húzódik végig mindenen, amit ezen a területen építek.
 **Pipeline oldalon**: a [Scaffold Protocol](/posts/post-sp01.html) egy human-in-the-loop AI pipeline
 explicit orchestrációval és revision gate-ekkel. A [ChaosForge](/posts/post-chaosforge-01.html) egy
 multi-agent Scrum szimulátor, ahol az ágensszerepek és a revision gate-ek first-class tervezési
-szempontok. A [RagLab](/posts/post-raglab-01.html) egy saját kezűleg épített RAG pipeline .NET-ben —
+szempontok. A [RagLab](/posts/raglab-01.html) egy saját kezűleg épített RAG pipeline .NET-ben —
 mert a retrieval-augmented generation megértéséhez fel kell építeni, nem csak becsomagolni egy könyvtárat.
 Az [AiObservability](https://github.com/vvidman/AiObservability) egy cross-project tracing könyvtár, amely mindhárom
 projektet lefedi: minden LLM hívás, retrieval lépés és agent akció lekérdezhető spanként tárolódik.

@@ -3,20 +3,19 @@ title: Designing a minimal DSL for bilingual Markdown content
 title_hu: Minimális DSL tervezése kétnyelvű Markdown tartalomhoz
 slug: posts/post-03.html
 description: One file. Two languages. No duplication. Here's the syntax that makes it work.
+description_hu: Egy fájl. Két nyelv. Duplikáció nélkül. Ez a szintaxis, ami működővé teszi.
 layout: page
 date: 2026-03-02
-series: SiteGenerator
+series: Site Generator
 part: 2
 ---
 
 :::section title
 :::lang en
-### Designing a minimal DSL for bilingual Markdown content
 > One file. Two languages. No duplication. Here's the syntax that makes it work.
 :::lang
 
 :::lang hu
-### Minimális DSL tervezése kétnyelvű Markdown tartalomhoz
 > Egy fájl. Két nyelv. Duplikáció nélkül. Ez a szintaxis, ami működővé teszi.
 :::lang
 :::section
