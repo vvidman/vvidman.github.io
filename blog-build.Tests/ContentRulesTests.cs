@@ -90,4 +90,14 @@ public class ContentRulesTests : IClassFixture<SiteFixture>
         Assert.Contains("<strong>AI-augmented workflow</strong>", about);
         Assert.Contains("<strong>LLM infrastructure in .NET</strong>", about);
     }
+
+    [Fact]
+    public void Every_page_with_a_description_has_a_hungarian_one()
+    {
+        var bad = Directory.GetFiles(Path.Combine(TestPaths.RepoRoot, "content"), "*.md", SearchOption.AllDirectories)
+            .Select(f => (File: Path.GetFileName(f), Meta: MarkdownDslParser.Parse(f).Metadata))
+            .Where(p => !string.IsNullOrWhiteSpace(p.Meta.Description) && string.IsNullOrWhiteSpace(p.Meta.DescriptionHu))
+            .Select(p => p.File).ToList();
+        Assert.True(bad.Count == 0, "Missing description_hu: " + string.Join(", ", bad));
+    }
 }
